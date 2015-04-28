@@ -17,6 +17,11 @@ public class Example {
         return "Hello Andrew!";
     }
 
+    @RequestMapping("/stuart")
+    String stuart() {
+        return "Hello Stuart from Heroku via Circle CI deployment!!";
+    }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Example.class, args);
     }

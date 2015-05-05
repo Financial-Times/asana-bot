@@ -51,6 +51,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.3</version>
+        </dependency>
+
         <!-- add production ready features e.g. /health -->
         <!-- see: http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html -->
         <dependency>

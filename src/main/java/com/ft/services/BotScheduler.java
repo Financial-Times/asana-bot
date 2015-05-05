@@ -1,9 +1,7 @@
 package com.ft.services;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import net.joelinn.asana.Asana;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,23 +9,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class BotScheduler {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    Logger logger = LoggerFactory.getLogger("com.ft.services.BotScheduler");
 
     @Autowired
     AsanaService asanaService;
 
-    @Scheduled(fixedRate = 5000)
-    public void pictureBot() {
+    @Scheduled(fixedRate = 20000)
+    public void graphicsBot() {
+        logger.info("Graphicsbot grabbing tasks for project");
 
-        System.out.println(asanaService.getAssignedTasks());
+        asanaService.addGraphicsProjectToGraphicsBotAssignedTasks();
 
-        asanaService.addAssignedTasksToPictures();
-
-        System.out.println("Picturebot time is now " + dateFormat.format(new Date()));
+        logger.info("Graphicsbot finished processing tasks for project");
     }
 
-    @Scheduled(fixedRate = 5000)
-    public void graphicsBot(){
-        //TODO
+    @Scheduled(fixedRate = 20000)
+    public void picturesBot(){
+        logger.info("Picturesbot grabbing tasks for project");
+
+        asanaService.addPicturesProjectToGraphicsBotAssignedTasks();
+
+        logger.info("Picturesbot finished processing tasks for project");
     }
 }

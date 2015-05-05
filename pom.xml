@@ -35,6 +35,29 @@
             <version>1.9.0</version>
         </dependency>
         <!-- END -->
+
+        <!-- to support yml config files -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.16-SNAPSHOT</version>
+        </dependency>
+        <!-- END -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- add production ready features e.g. /health -->
+        <!-- see: http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -51,6 +74,13 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <!-- report on the git change id -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
+
         </plugins>
     </build>
     <!-- (you don't need this if you are using a .RELEASE version) -->
@@ -63,6 +93,11 @@
         <repository>
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
+        </repository>
+        <repository>
+            <id>Sonatype-public</id>
+            <name>SnakeYAML repository</name>
+            <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>

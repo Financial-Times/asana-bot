@@ -13,17 +13,7 @@ public class AsanaBot {
 
     @RequestMapping("/")
     String home() {
-        return "Hello World!";
-    }
-
-    @RequestMapping("/andrew")
-    String andrew() {
-        return "Hello Andrew!";
-    }
-
-    @RequestMapping("/stuart")
-    String stuart() {
-        return "Hello Stuart from Heroku via Circle CI deployment!!";
+        return "Placeholder";
     }
 
     public static void main(String[] args) throws Exception {

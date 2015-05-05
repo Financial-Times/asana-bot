@@ -4,31 +4,36 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="asana")
+@ConfigurationProperties(prefix = "asana")
 public class Config {
 
     //From application.yml
+    private static String workspace;
     private static String graphicsId;
     private static String picturesId;
-    private static String apiKey;
 
-    public void setGraphicsId(String graphicsId){
-        Config.graphicsId = graphicsId;
+    //GETTERS AND SETTERS
+    public static String getPicturesId() {
+        return picturesId;
     }
 
     public static void setPicturesId(String picturesId) {
         Config.picturesId = picturesId;
     }
 
-    public static String getPicturesId(){
-        return picturesId;
+    public static String getGraphicsId() {
+        return graphicsId;
     }
 
-    public static String getApiKey() {
-        return apiKey;
+    public void setGraphicsId(String graphicsId) {
+        Config.graphicsId = graphicsId;
     }
 
-    public static void setApiKey(String apiKey) {
-        Config.apiKey = apiKey;
+    public static String getWorkspace() {
+        return workspace;
+    }
+
+    public static void setWorkspace(String workspace) {
+        Config.workspace = workspace;
     }
 }

@@ -118,7 +118,7 @@ public class AsanaClient {
         asana = restAdapter.create(Asana.class);
     }
 
-    public void addProjectToCurrentlyAssignedUncompleteTasks(String projectId){
+    public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId){
 
         //get list of assigned tasks
         List<Task> tasks = asana.tasks("me", workspaceId, "now").data;

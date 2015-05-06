@@ -21,7 +21,7 @@ public class AsanaClientTest {
     @Ignore
     @Test
     public void testIntegrationMoveTasks() {
-        asanaClient.addProjectToCurrentlyAssignedUncompleteTasks(ASANA_TEST_DESTINATION_PROJECT);
+        asanaClient.addProjectToCurrentlyAssignedIncompleteTasks(ASANA_TEST_DESTINATION_PROJECT);
         Assert.assertTrue("PLACEHOLDER", true);
     }
 }

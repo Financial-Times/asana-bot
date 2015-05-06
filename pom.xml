@@ -81,12 +81,6 @@
                 </configuration>
             </plugin>
 
-            <!-- report on the git change id -->
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-            </plugin>
-
         </plugins>
     </build>
     <!-- (you don't need this if you are using a .RELEASE version) -->

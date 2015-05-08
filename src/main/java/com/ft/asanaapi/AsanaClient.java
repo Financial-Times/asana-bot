@@ -37,29 +37,42 @@ public class AsanaClient {
         }
     }
 
-    static class Data {
+    static class TaskData {
+        static class Task {
+            String id;
+            String name;
+
+            @Override
+            public String toString() {
+                return "id: " + id + " , name: " + name;
+            }
+        }
         List<Task> data;
+    }
+
+    static class ProjectData {
+        static class ProjectInfo {
+            String id;
+            String name;
+            String notes;
+        }
+        ProjectInfo data;
     }
 
     static class EmptyData {
     }
 
-    static class Task {
-        String id;
-        String name;
-
-        @Override
-        public String toString() {
-            return "id: " + id + " , name: " + name;
-        }
-    }
-
     interface Asana {
         @GET("/tasks")
-        Data tasks(
+        TaskData tasks(
                 @Query("assignee") String assignee,
                 @Query("workspace") String workspace,
                 @Query("completed_since") String completedSince
+        );
+
+        @GET("/projects/{project-id}")
+        ProjectData project(
+                @Path("project-id") String projectId
         );
 
         @FormUrlEncoded
@@ -71,14 +84,14 @@ public class AsanaClient {
 
         @FormUrlEncoded
         @PUT("/tasks/{task-id}")
-        Data updateTask(
+        TaskData updateTask(
                 @Path("task-id") String taskId,
                 @Field("assignee") String assignee
         );
 
         @FormUrlEncoded
         @POST("/tasks/{task-id}/stories")
-        Data commentOnTask(
+        EmptyData commentOnTask(
                 @Path("task-id") String taskId,
                 @Field("text") String text
         );
@@ -100,17 +113,17 @@ public class AsanaClient {
         asana = restAdapter.create(Asana.class);
     }
 
-    public void addProjectToCurrentlyAssignedUncompleteTasks(String projectId){
+    public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId){
 
         //get list of assigned tasks
-        List<Task> tasks = asana.tasks("me", workspaceId, "now").data;
+        List<TaskData.Task> tasks = asana.tasks("me", workspaceId, "now").data;
 
-        //for all assigned tasks add to the project
-        tasks.stream().forEach(task -> asana.addProjectToTask(task.id, projectId));
-
-        //after adding to project remove from assignment
         tasks.stream().forEach(task -> {
-            asana.commentOnTask(task.id, "Added to Project");
+            //for all assigned tasks add to the project
+            asana.addProjectToTask(task.id, projectId);
+            //add a comment
+            asana.commentOnTask(task.id, "I have added to " + asana.project(projectId).data.name);
+            //after adding to project remove from assignment
             asana.updateTask(task.id, "null");
         });
     }

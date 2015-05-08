@@ -27,7 +27,7 @@ public class BotScheduler {
     public void picturesBot(){
         logger.info("Picturesbot grabbing tasks for project");
 
-        asanaService.addPicturesProjectToGraphicsBotAssignedTasks();
+        asanaService.addPicturesProjectToPicturesBotAssignedTasks();
 
         logger.info("Picturesbot finished processing tasks for project");
     }

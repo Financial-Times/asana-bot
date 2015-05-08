@@ -16,11 +16,10 @@ public class AsanaService {
     }
 
     public void addGraphicsProjectToGraphicsBotAssignedTasks(){
-        graphicsAsanaClient.addProjectToCurrentlyAssignedUncompleteTasks(Config.getGraphicsId());
+        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getGraphicsId());
     };
 
-    public void addPicturesProjectToGraphicsBotAssignedTasks(){
-        picturesAsanaClient.addProjectToCurrentlyAssignedUncompleteTasks(Config.getPicturesId());
+    public void addPicturesProjectToPicturesBotAssignedTasks(){
+        picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getPicturesId());
     };
-
 }

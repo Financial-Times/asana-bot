@@ -46,38 +46,12 @@ public class AsanaClient {
 
     static class Task {
         String id;
-//        String assignee;
-//        String assignee_status;
-//        String created_at;
-//        String completed;
-//        String completed_at;
-//        String due_on;
-//        String due_at;
-//        String external;
-//        String followers;
-//        String hearted;
-//        String hearts;
-//        String modified_at;
         String name;
-//        String notes;
-//        String num_hearts;
-//        String projects;
-//        String parent;
-//        String workspace;
-//        String memberships;
 
         @Override
         public String toString() {
             return "id: " + id + " , name: " + name;
         }
-
-//        public boolean isComplete(){
-//            if (completed != null && completed.equals("false")){
-//                return false;
-//            } else {
-//                return true;
-//            }
-//        }
     }
 
     interface Asana {
@@ -101,6 +75,14 @@ public class AsanaClient {
                 @Path("task-id") String taskId,
                 @Field("assignee") String assignee
         );
+
+        @FormUrlEncoded
+        @POST("/tasks/{task-id}/stories")
+        Data commentOnTask(
+                @Path("task-id") String taskId,
+                @Field("text") String text
+        );
+
     }
 
     public AsanaClient(String apiKey, String workspaceId) {
@@ -127,6 +109,9 @@ public class AsanaClient {
         tasks.stream().forEach(task -> asana.addProjectToTask(task.id, projectId));
 
         //after adding to project remove from assignment
-        tasks.stream().forEach(task -> asana.updateTask(task.id, "null"));
+        tasks.stream().forEach(task -> {
+            asana.commentOnTask(task.id, "Added to Project");
+            asana.updateTask(task.id, "null");
+        });
     }
 }

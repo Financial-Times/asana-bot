@@ -34,6 +34,8 @@ Two config files are included:
 * Procfile for [Heroku](http://docs.spring.io/spring-boot/docs/current/reference/html/cloud-deployment-heroku.html) deployment.
 * circle.yml for [CircleCI](http://circleci.com) continous integration/deployment configuration. 
 
+The Heroku instance will also need the system.properties set. [Heroku has some documentation on how to do so](https://devcenter.heroku.com/articles/config-vars)
+
 
 
 

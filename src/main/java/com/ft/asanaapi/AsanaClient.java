@@ -37,55 +37,42 @@ public class AsanaClient {
         }
     }
 
-    static class Data {
+    static class TaskData {
+        static class Task {
+            String id;
+            String name;
+
+            @Override
+            public String toString() {
+                return "id: " + id + " , name: " + name;
+            }
+        }
         List<Task> data;
+    }
+
+    static class ProjectData {
+        static class ProjectInfo {
+            String id;
+            String name;
+            String notes;
+        }
+        ProjectInfo data;
     }
 
     static class EmptyData {
     }
 
-    static class Task {
-        String id;
-//        String assignee;
-//        String assignee_status;
-//        String created_at;
-//        String completed;
-//        String completed_at;
-//        String due_on;
-//        String due_at;
-//        String external;
-//        String followers;
-//        String hearted;
-//        String hearts;
-//        String modified_at;
-        String name;
-//        String notes;
-//        String num_hearts;
-//        String projects;
-//        String parent;
-//        String workspace;
-//        String memberships;
-
-        @Override
-        public String toString() {
-            return "id: " + id + " , name: " + name;
-        }
-
-//        public boolean isComplete(){
-//            if (completed != null && completed.equals("false")){
-//                return false;
-//            } else {
-//                return true;
-//            }
-//        }
-    }
-
     interface Asana {
         @GET("/tasks")
-        Data tasks(
+        TaskData tasks(
                 @Query("assignee") String assignee,
                 @Query("workspace") String workspace,
                 @Query("completed_since") String completedSince
+        );
+
+        @GET("/projects/{project-id}")
+        ProjectData project(
+                @Path("project-id") String projectId
         );
 
         @FormUrlEncoded
@@ -97,10 +84,18 @@ public class AsanaClient {
 
         @FormUrlEncoded
         @PUT("/tasks/{task-id}")
-        Data updateTask(
+        TaskData updateTask(
                 @Path("task-id") String taskId,
                 @Field("assignee") String assignee
         );
+
+        @FormUrlEncoded
+        @POST("/tasks/{task-id}/stories")
+        EmptyData commentOnTask(
+                @Path("task-id") String taskId,
+                @Field("text") String text
+        );
+
     }
 
     public AsanaClient(String apiKey, String workspaceId) {
@@ -121,12 +116,15 @@ public class AsanaClient {
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId){
 
         //get list of assigned tasks
-        List<Task> tasks = asana.tasks("me", workspaceId, "now").data;
+        List<TaskData.Task> tasks = asana.tasks("me", workspaceId, "now").data;
 
-        //for all assigned tasks add to the project
-        tasks.stream().forEach(task -> asana.addProjectToTask(task.id, projectId));
-
-        //after adding to project remove from assignment
-        tasks.stream().forEach(task -> asana.updateTask(task.id, "null"));
+        tasks.stream().forEach(task -> {
+            //for all assigned tasks add to the project
+            asana.addProjectToTask(task.id, projectId);
+            //add a comment
+            asana.commentOnTask(task.id, "I have added to " + asana.project(projectId).data.name);
+            //after adding to project remove from assignment
+            asana.updateTask(task.id, "null");
+        });
     }
 }

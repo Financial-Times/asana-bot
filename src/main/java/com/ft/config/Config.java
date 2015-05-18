@@ -3,6 +3,10 @@ package com.ft.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * A class to hold configuration properties for various projects and static
+ * settings that the bot interacts with.
+ */
 @Component
 @ConfigurationProperties(prefix = "asana")
 public class Config {

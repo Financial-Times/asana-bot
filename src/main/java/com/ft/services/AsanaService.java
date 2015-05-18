@@ -20,6 +20,6 @@ public class AsanaService {
     };
 
     public void addPicturesProjectToPicturesBotAssignedTasks(){
-        picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getPicturesId());
+        //picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getPicturesId());
     };
 }

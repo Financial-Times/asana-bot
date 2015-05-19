@@ -12,32 +12,41 @@ import org.springframework.stereotype.Component;
 public class Config {
 
     //From application.yml
-    private static String workspace;
-    private static String graphicsId;
-    private static String picturesId;
+    private String workspace;
+    private String graphicsId;
+    private String picturesId;
+    private String baseUrl;
 
     //GETTERS AND SETTERS
-    public static String getPicturesId() {
+    public String getPicturesId() {
         return picturesId;
     }
 
-    public static void setPicturesId(String picturesId) {
-        Config.picturesId = picturesId;
+    public void setPicturesId(String picturesId) {
+        this.picturesId = picturesId;
     }
 
-    public static String getGraphicsId() {
+    public String getGraphicsId() {
         return graphicsId;
     }
 
     public void setGraphicsId(String graphicsId) {
-        Config.graphicsId = graphicsId;
+        this.graphicsId = graphicsId;
     }
 
-    public static String getWorkspace() {
+    public String getWorkspace() {
         return workspace;
     }
 
-    public static void setWorkspace(String workspace) {
-        Config.workspace = workspace;
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

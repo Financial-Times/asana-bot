@@ -7,8 +7,6 @@ import retrofit.http.*;
 
 public interface Asana {
 
-    String ASANA_API_URL = "https://app.asana.com/api/1.0";
-
     /**
      * Get all tasks in project.
      *

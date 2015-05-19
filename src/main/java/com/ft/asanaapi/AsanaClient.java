@@ -3,22 +3,23 @@ package com.ft.asanaapi;
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.model.Task;
 import com.ft.asanaapi.model.TasksData;
+import com.ft.config.Config;
 import retrofit.RestAdapter;
 
 import java.util.List;
 
 public class AsanaClient {
 
-    private String workspaceId;
+    private Config config;
     private Asana asana;
 
-    public AsanaClient(String apiKey, String workspaceId, String baseUrl) {
+    public AsanaClient(String apiKey, Config config) {
 
-        this.workspaceId = workspaceId;
+        this.config = config;
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setRequestInterceptor((new BasicAuthRequestInterceptor()).setPassword(apiKey))
-                .setEndpoint(baseUrl)
+                .setEndpoint(config.getBaseUrl())
                 .build();
 
         asana = restAdapter.create(Asana.class);
@@ -27,7 +28,7 @@ public class AsanaClient {
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId){
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", workspaceId, "now","id,name,parent.id,parent.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now","id,name,parent.id,parent.name");
 
 
         System.out.println(tasksData);

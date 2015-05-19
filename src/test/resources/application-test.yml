@@ -2,8 +2,4 @@ asana:
   workspace: 324300775153
   picturesId: 29414423499815
   graphicsId: 25587620489018
-  baseUrl: https://app.asana.com/api/1.0
-spring:
-  profiles:
-    active: production
-
+  baseUrl: http://localhost:8888/api/1.0

@@ -1,28 +1,34 @@
 package com.ft.asanaapi;
 
+import com.ft.AsanaBot;
 import com.ft.services.AsanaService;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
-public class AsanaWireMockTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = AsanaBot.class)
+@ActiveProfiles("test")
+public class AsanaServiceIntegrationTest {
 
-    private AsanaService asanaService;
-    private static final String testWorkspaceId = "123456";
+
+    private static final String testWorkspaceId = "324300775153";
     private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name";
 
     public static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
     public static final String APPLICATION_FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
     private static final String BASIC_AUTH_HEADER = "Basic OVBGeG1DaXkuNVpzUVBJWHZFcXU2Qjk2emY1QlRlQjU6";
 
-    @Before
-    public void setup(){
-        asanaService = new AsanaService(testWorkspaceId, "http://localhost:8888/api/1.0");
-    }
+    @Autowired
+    private AsanaService asanaService;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8888));
@@ -65,6 +71,7 @@ public class AsanaWireMockTest {
                         .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                         .withRequestBody(matching("project=[0-9]+"))
         );
+
     }
 
 }

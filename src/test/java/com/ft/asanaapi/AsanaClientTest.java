@@ -22,7 +22,8 @@ public class AsanaClientTest {
     public void setup(){
         asanaClient = new AsanaClient(
                 System.getenv("ASANA_TEST_API_KEY"),
-                System.getenv("ASANA_TEST_WORKSPACE"));
+                System.getenv("ASANA_TEST_WORKSPACE"),
+                Asana.ASANA_API_URL);
     }
 
     @Ignore

@@ -12,13 +12,13 @@ public class AsanaClient {
     private String workspaceId;
     private Asana asana;
 
-    public AsanaClient(String apiKey, String workspaceId) {
+    public AsanaClient(String apiKey, String workspaceId, String baseUrl) {
 
         this.workspaceId = workspaceId;
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setRequestInterceptor((new BasicAuthRequestInterceptor()).setPassword(apiKey))
-                .setEndpoint(Asana.ASANA_API_URL)
+                .setEndpoint(baseUrl)
                 .build();
 
         asana = restAdapter.create(Asana.class);

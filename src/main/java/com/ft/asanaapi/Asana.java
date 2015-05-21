@@ -1,21 +1,12 @@
 package com.ft.asanaapi;
 
-import com.ft.asanaapi.model.EmptyData;
 import com.ft.asanaapi.model.ProjectData;
 import com.ft.asanaapi.model.TasksData;
+import retrofit.client.Response;
 import retrofit.http.*;
 
 public interface Asana {
 
-    /**
-     * Get all tasks in project.
-     *
-     * @param assignee
-     * @param workspace
-     * @param completedSince
-     * @param optionalFields
-     * @return
-     */
     @GET("/tasks")
     TasksData tasks(
             @Query("assignee") String assignee,
@@ -31,7 +22,7 @@ public interface Asana {
 
     @FormUrlEncoded
     @POST("/tasks/{task-id}/addProject")
-    EmptyData addProjectToTask(
+    Response addProjectToTask(
             @Path("task-id") String taskId,
             @Field("project") String projectId
     );
@@ -45,7 +36,7 @@ public interface Asana {
 
     @FormUrlEncoded
     @POST("/tasks/{task-id}/stories")
-    EmptyData commentOnTask(
+    Response commentOnTask(
             @Path("task-id") String taskId,
             @Field("text") String text
     );

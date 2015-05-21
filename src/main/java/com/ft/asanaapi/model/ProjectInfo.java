@@ -1,7 +1,10 @@
 package com.ft.asanaapi.model;
 
+import lombok.Data;
+
+@Data
 public class ProjectInfo {
-    public String id;
-    public String name;
-    public String notes;
+    private String id;
+    private String name;
+    private String notes;
 }

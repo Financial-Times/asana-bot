@@ -1,15 +1,24 @@
 package com.ft.asanaapi.model;
 
+import lombok.Data;
+import lombok.NonNull;
+
 import java.util.List;
 
 /**
  * A class to respresent the data wrapper object which contains a list of task info
  */
+@Data
 public class TasksData {
-    public List<Task> data;
+
+    private List<Task> data;
+
     @Override
     public String toString(){
-        String intro = (data != null || data.size() == 0) ? data.size() + " tasks: \n" : "No Tasks";
-        return  intro + data.parallelStream().map(data -> data.toString()).reduce("", (a,b) -> a + b );
+        if (data == null || data.size() == 0) {
+            return "No tasks";
+        }
+        String intro = data.size() + " tasks: \n";
+        return  intro + data.parallelStream().map(Task::toString).reduce("", (a, b) -> a + b);
     }
 }

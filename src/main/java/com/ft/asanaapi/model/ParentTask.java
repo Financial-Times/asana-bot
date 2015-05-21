@@ -1,6 +1,9 @@
 package com.ft.asanaapi.model;
 
+import lombok.Data;
+
+@Data
 public class ParentTask {
-    public String id;
-    public String name;
+    private String id;
+    private String name;
 }

@@ -33,19 +33,19 @@ public class AsanaClient {
 
         System.out.println(tasksData);
 
-        List<Task> tasks = tasksData.data;
+        List<Task> tasks = tasksData.getData();
 
 
         tasks.stream().forEach(task -> {
             //for all assigned tasks add to the project
-            asana.addProjectToTask(task.id, projectId);
+            asana.addProjectToTask(task.getId(), projectId);
             //add a comment to the parent task if one exists
-            if (task.parent != null) {
-                asana.commentOnTask(task.parent.id, "I have added the task "
-                        + task.name + " to " + asana.project(projectId).data.name);
+            if (task.getParent() != null) {
+                asana.commentOnTask(task.getParent().getId(), "I have added the task "
+                        + task.getName() + " to " + asana.project(projectId).getData().getName());
             }
             //after adding to project remove from assignment
-            asana.updateTask(task.id, "null");
+            asana.updateTask(task.getId(), "null");
         });
     }
 }

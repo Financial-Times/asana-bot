@@ -25,7 +25,7 @@ public class AsanaServiceIntegrationTest {
 
     public static final String APPLICATION_JSON_CONTENT_TYPE = "application/json";
     public static final String APPLICATION_FORM_CONTENT_TYPE = "application/x-www-form-urlencoded";
-    private static final String BASIC_AUTH_HEADER = "Basic OVBGeG1DaXkuNVpzUVBJWHZFcXU2Qjk2emY1QlRlQjU6";
+    private static final String BASIC_AUTH_HEADER = "Basic ";
 
     @Autowired
     private AsanaService asanaService;

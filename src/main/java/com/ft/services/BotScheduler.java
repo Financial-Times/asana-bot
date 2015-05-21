@@ -1,8 +1,6 @@
 package com.ft.services;
 
-import com.ft.config.Config;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Profile("production")
 public class BotScheduler {
 
-    @Autowired
+    @Autowired @Setter
     private AsanaService asanaService;
 
     @Scheduled(fixedRate = 20000)

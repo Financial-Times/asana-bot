@@ -33,47 +33,61 @@ public class AsanaServiceIntegrationSpec extends Specification {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8888))
 
-    public void "add graphics project to graphics bot assigned tasks"() {
+    public void "add graphics project to graphics bot assignedTasks"() {
         given:
-            wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/tasks"))
-                    .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                    .withQueryParam("assignee", equalTo("me"))
-                    .withQueryParam("workspace", equalTo(testWorkspaceId))
-                    .withQueryParam("completed_since", equalTo("now"))
-                    .withQueryParam("opt_fields", equalTo(encodedOptFields))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
-                            .withBodyFile("my_tasks.json")))
-
-            wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/addProject")).willReturn(aResponse().withStatus(201)))
-
-            wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/[0-9]+"))
-                    .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withBodyFile("project.json")))
-
-            wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/stories"))
-                    .withRequestBody(containing("text=I+have+added+the+task+test+subtask+to+DevGraphicsRequests"))
-                    .willReturn(aResponse().withStatus(201)))
-
-            wireMockRule.stubFor(put(urlMatching("/api/1.0/tasks/[0-9]+"))
-                    .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
-                    .withRequestBody(matching("assignee=null"))
-                    .willReturn(aResponse().withStatus(201)))
+            stubGetTasks()
+            stubPostAddProject()
+            stubGetProjects()
+            stubPostStories()
+            stubPutTasks()
 
         when:
             asanaService.addGraphicsProjectToGraphicsBotAssignedTasks()
-
 
         then:
             wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))
                             .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                             .withRequestBody(matching("project=[0-9]+"))
         )
+    }
 
+    private stubPutTasks() {
+        wireMockRule.stubFor(put(urlMatching("/api/1.0/tasks/[0-9]+"))
+                .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
+                .withRequestBody(matching("assignee=null"))
+                .willReturn(aResponse().withStatus(201)))
+    }
+
+    private stubPostStories() {
+        wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/stories"))
+                .withRequestBody(containing("text=I+have+added+the+task+test+subtask+to+DevGraphicsRequests"))
+                .willReturn(aResponse().withStatus(201)))
+    }
+
+    private stubGetProjects() {
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/[0-9]+"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBodyFile("project.json")))
+    }
+
+    private stubPostAddProject() {
+        wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/addProject")).willReturn(aResponse().withStatus(201)))
+    }
+
+    private stubGetTasks() {
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/tasks"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("assignee", equalTo("me"))
+                .withQueryParam("workspace", equalTo(testWorkspaceId))
+                .withQueryParam("completed_since", equalTo("now"))
+                .withQueryParam("opt_fields", equalTo(encodedOptFields))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
+                .withBodyFile("my_tasks.json")))
     }
 
 }

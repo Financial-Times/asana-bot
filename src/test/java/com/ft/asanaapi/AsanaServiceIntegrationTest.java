@@ -64,7 +64,7 @@ public class AsanaServiceIntegrationTest {
                 .withRequestBody(matching("assignee=null"))
                 .willReturn(aResponse().withStatus(201)));
 
-        asanaService.addGraphicsProjectToGraphicsBotAssignedTasks("25587620489018");
+        asanaService.addGraphicsProjectToGraphicsBotAssignedTasks();
 
 
         wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))

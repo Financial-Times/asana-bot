@@ -1,6 +1,5 @@
 package com.ft.services;
 
-import com.ft.asanaapi.Asana;
 import com.ft.asanaapi.AsanaClient;
 import com.ft.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,7 @@ public class AsanaService {
     @Autowired private Config config;
 
     public void addGraphicsProjectToGraphicsBotAssignedTasks(){
-        addGraphicsProjectToGraphicsBotAssignedTasks(config.getGraphicsId());
-    }
-
-    public void addGraphicsProjectToGraphicsBotAssignedTasks(String projectId){
-        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(projectId);
+        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getGraphicsId());
     }
 
     public void addPicturesProjectToPicturesBotAssignedTasks(){

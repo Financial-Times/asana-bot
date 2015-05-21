@@ -6,4 +6,7 @@ asana:
 spring:
   profiles:
     active: production
+logging:
+  level:
+    com.ft: DEBUG
 

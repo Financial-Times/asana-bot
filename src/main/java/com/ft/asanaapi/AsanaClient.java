@@ -4,11 +4,15 @@ import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.model.Task;
 import com.ft.asanaapi.model.TasksData;
 import com.ft.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 
 import java.util.List;
 
 public class AsanaClient {
+
+    private static Logger logger = LoggerFactory.getLogger(AsanaClient.class);
 
     private Config config;
     private Asana asana;
@@ -30,8 +34,10 @@ public class AsanaClient {
         //get list of assigned tasks
         TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now","id,name,parent.id,parent.name");
 
-
-        System.out.println(tasksData);
+        if (logger.isDebugEnabled()) {
+            logger.debug("About to add tasks to project {}", projectId);
+            logger.debug(tasksData.toString());
+        }
 
         List<Task> tasks = tasksData.getData();
 
@@ -46,6 +52,9 @@ public class AsanaClient {
             }
             //after adding to project remove from assignment
             asana.updateTask(task.getId(), "null");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Successfully added task {} to {} project.", task, projectId);
+            }
         });
     }
 }

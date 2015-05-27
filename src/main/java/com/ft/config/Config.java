@@ -1,39 +1,24 @@
 package com.ft.config;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * A class to hold configuration properties for various projects and static
+ * settings that the bot interacts with.
+ */
 @Component
 @ConfigurationProperties(prefix = "asana")
+@Getter @Setter @NoArgsConstructor
 public class Config {
 
     //From application.yml
-    private static String workspace;
-    private static String graphicsId;
-    private static String picturesId;
-
-    //GETTERS AND SETTERS
-    public static String getPicturesId() {
-        return picturesId;
-    }
-
-    public static void setPicturesId(String picturesId) {
-        Config.picturesId = picturesId;
-    }
-
-    public static String getGraphicsId() {
-        return graphicsId;
-    }
-
-    public void setGraphicsId(String graphicsId) {
-        Config.graphicsId = graphicsId;
-    }
-
-    public static String getWorkspace() {
-        return workspace;
-    }
-
-    public static void setWorkspace(String workspace) {
-        Config.workspace = workspace;
-    }
+    private String workspace;
+    private String graphicsId;
+    private String picturesId;
+    private String baseUrl;
 }

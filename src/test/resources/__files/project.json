@@ -1,0 +1,44 @@
+{
+  "data": {
+    "id": 25587620489018,
+    "created_at": "2015-01-30T11:46:28.090Z",
+    "modified_at": "2015-05-19T10:37:07.235Z",
+    "public": true,
+    "name": "DevGraphicsRequests",
+    "notes": "This captures all graphics requests.",
+    "archived": false,
+    "workspace": {
+      "id": 324300775153,
+      "name": "GraphicsTest"
+    },
+    "color": null,
+    "members": [
+      {
+        "id": 324301335343,
+        "name": "Stuart Turner"
+      },
+      {
+        "id": 26042639098961,
+        "name": "Claire Powell"
+      },
+      {
+        "id": 26045479987919,
+        "name": "victoria.morgansmith@ft.com"
+      }
+    ],
+    "followers": [
+      {
+        "id": 324301335343,
+        "name": "Stuart Turner"
+      },
+      {
+        "id": 26042639098961,
+        "name": "Claire Powell"
+      },
+      {
+        "id": 26045479987919,
+        "name": "victoria.morgansmith@ft.com"
+      }
+    ]
+  }
+}

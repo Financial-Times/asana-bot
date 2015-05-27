@@ -2,24 +2,24 @@ package com.ft.services;
 
 import com.ft.asanaapi.AsanaClient;
 import com.ft.config.Config;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 @Service
+@EnableConfigurationProperties(Config.class)
 public class AsanaService {
 
-    AsanaClient picturesAsanaClient;
-    AsanaClient graphicsAsanaClient;
+    @Autowired private AsanaClient picturesAsanaClient;
+    @Autowired private AsanaClient graphicsAsanaClient;
 
-    AsanaService(){
-        graphicsAsanaClient = new AsanaClient(System.getenv("ASANA_GRAPHICS_KEY"), Config.getWorkspace());
-        picturesAsanaClient = new AsanaClient(System.getenv("ASANA_PICTURES_KEY"), Config.getWorkspace());
-    }
+    @Autowired private Config config;
 
     public void addGraphicsProjectToGraphicsBotAssignedTasks(){
-        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getGraphicsId());
-    };
+        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getGraphicsId());
+    }
 
     public void addPicturesProjectToPicturesBotAssignedTasks(){
-        picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(Config.getPicturesId());
-    };
+        picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getPicturesId());
+    }
 }

@@ -1,8 +1,10 @@
 # AsanaBot 
 
-A [bot](http://en.wikipedia.org/wiki/Internet_bot) for use with [Asana](http://asana.com) so when tasks are 
-assigned to particular users it add those tasks to a corresponding project and a comment to the origional task
-when done.
+A [bot](http://en.wikipedia.org/wiki/Internet_bot) for use with [Asana](http://asana.com).
+ 
+When tasks are assigned to Asana users which the bot runs, it adds tasks assigned to these users to 
+corresponding projects (for example the GraphicsProject) and also puts a comment on the task to highlight 
+it has been added when done.
 
 * GraphicsBot -> when assigned adds tasks to the Graphics project
 * PicturesBot -> when assigned adds tasks to the Pictures project

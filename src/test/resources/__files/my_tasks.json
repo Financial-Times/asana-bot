@@ -3,15 +3,40 @@
     {
       "id": 34761621630973,
       "name": "test subtask",
+      "tags": [],
       "parent": {
         "id": 34761621630965,
         "name": "test task"
-      }
+      },
+      "projects": [
+        {
+          "id": 25587620489018,
+          "name": "DevGraphicsRequests",
+          "team": { "name": "Market" }
+        }
+      ]
     },
     {
       "id": 34761621630965,
       "name": "test task",
-      "parent": null
+      "tags": [],
+      "parent": null,
+      "projects": [
+        {
+          "id": 25587620489018,
+          "name": "DevGraphicsRequests",
+          "team": { "name": "Market" }
+        }
+      ]
+    },
+    {
+      "id": 34761621630974,
+      "name": "another task",
+      "workspace": {
+        "id": 324300775153,
+        "name": "GraphicsTest"
+      },
+      "tags": []
     }
   ]
 }

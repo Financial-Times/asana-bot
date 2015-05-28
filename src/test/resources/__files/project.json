@@ -7,6 +7,10 @@
     "name": "DevGraphicsRequests",
     "notes": "This captures all graphics requests.",
     "archived": false,
+    "team": {
+      "id": 12345,
+      "name": "Market"
+    },
     "workspace": {
       "id": 324300775153,
       "name": "GraphicsTest"
@@ -20,10 +24,6 @@
       {
         "id": 26042639098961,
         "name": "Claire Powell"
-      },
-      {
-        "id": 26045479987919,
-        "name": "victoria.morgansmith@ft.com"
       }
     ],
     "followers": [
@@ -34,10 +34,6 @@
       {
         "id": 26042639098961,
         "name": "Claire Powell"
-      },
-      {
-        "id": 26045479987919,
-        "name": "victoria.morgansmith@ft.com"
       }
     ]
   }

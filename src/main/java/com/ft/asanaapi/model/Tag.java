@@ -3,9 +3,7 @@ package com.ft.asanaapi.model;
 import lombok.Data;
 
 @Data
-public class ProjectInfo {
+public class Tag {
     private String id;
     private String name;
-    private String notes;
-    private Team team;
 }

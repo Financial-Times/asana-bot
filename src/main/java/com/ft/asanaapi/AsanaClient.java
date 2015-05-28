@@ -1,14 +1,14 @@
 package com.ft.asanaapi;
 
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
-import com.ft.asanaapi.model.Task;
-import com.ft.asanaapi.model.TasksData;
+import com.ft.asanaapi.model.*;
 import com.ft.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AsanaClient {
 
@@ -39,6 +39,9 @@ public class AsanaClient {
             logger.debug(tasksData.toString());
         }
 
+        ProjectInfo projectInfo = asana.project(projectId).getData();
+        List<Tag> tags = asana.tags(config.getWorkspace()).getData();
+
         List<Task> tasks = tasksData.getData();
 
 
@@ -48,7 +51,13 @@ public class AsanaClient {
             //add a comment to the parent task if one exists
             if (task.getParent() != null) {
                 asana.commentOnTask(task.getParent().getId(), "I have added the task "
-                        + task.getName() + " to " + asana.project(projectId).getData().getName());
+                        + task.getName() + " to " + projectInfo.getName());
+            }
+
+            //add tag with team name
+            if (isProjectAssignedToTeam(projectInfo)) {
+                Tag tag = findOrCreateTagByName(projectInfo.getTeam(), tags);
+                asana.addTagToTask(task.getId(), tag.getId());
             }
             //after adding to project remove from assignment
             asana.updateTask(task.getId(), "null");
@@ -56,5 +65,26 @@ public class AsanaClient {
                 logger.debug("Successfully added task {} to {} project.", task, projectId);
             }
         });
+    }
+
+    private void processTask(Task task) {
+
+    }
+
+    private boolean isProjectAssignedToTeam(ProjectInfo projectInfo) {
+        return projectInfo.getTeam() != null;
+    }
+
+    private Tag findOrCreateTagByName(Team team, List<Tag> tags) {
+        Optional<Tag> existingTag = tags.stream()
+                .filter(tag -> tag.getName().equals(team.getName()))
+                .findFirst();
+
+        if (existingTag.isPresent()) {
+            return existingTag.get();
+        }
+        Tag newTag = asana.createTag(config.getWorkspace(), team.getName()).getData();
+        tags.add(newTag);
+        return newTag;
     }
 }

@@ -36,7 +36,13 @@
         "id": 324300775153,
         "name": "GraphicsTest"
       },
-      "tags": []
+      "tags": [],
+      "projects": [
+        {
+          "id": 25500020489000,
+          "name": "Project not assigned to a team"
+        }
+      ]
     }
   ]
 }

@@ -21,8 +21,8 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 public class AsanaServiceIntegrationSpec extends Specification {
 
     private static final String testWorkspaceId = "324300775153"
-    private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name"
-    private static final String decodedOptFields = "id,name,parent.id,parent.name"
+    private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name%2Cprojects.team.name"
+    private static final String decodedOptFields = "id,name,parent.id,parent.name,projects.team.name"
 
     private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json"
     private static final String APPLICATION_FORM_CONTENT_TYPE = "application/x-www-form-urlencoded"
@@ -102,7 +102,7 @@ public class AsanaServiceIntegrationSpec extends Specification {
 
     private stubPostTag() {
         wireMockRule.stubFor(post(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                //.withRequestBody(containing("name=Market"))
+                .withRequestBody(containing("name=Market"))
                 .willReturn(aResponse().withStatus(201).withBodyFile("create_tag.json")))
     }
 
@@ -162,7 +162,7 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyPostAddTag() {
-        wireMockRule.verify(3, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
+        wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("tag=[0-9]+")))
         return true

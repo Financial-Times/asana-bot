@@ -2,6 +2,8 @@ package com.ft.asanaapi.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Basic info about a task.
  */
@@ -10,6 +12,7 @@ public class Task {
     private String id;
     private String name;
     private ParentTask parent;
+    private List<ProjectInfo> projects;
 
     public boolean isSubTask() {
         return parent != null;

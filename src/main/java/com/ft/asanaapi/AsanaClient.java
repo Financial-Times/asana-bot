@@ -32,7 +32,7 @@ public class AsanaClient {
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId) {
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,projects.team.name");
 
         logTaskProcessingStart(projectId, tasksData);
 
@@ -48,8 +48,9 @@ public class AsanaClient {
                 addCommentToParent(projectInfo, task);
             }
 
-            if (projectInfo.isAssignedToTeam()) {
-                Tag tag = findOrCreateTagByName(projectInfo.getTeam(), tags);
+            ProjectInfo originalProject = task.getProjects().get(0);
+            if (originalProject.isAssignedToTeam()) {
+                Tag tag = findOrCreateTagByName(originalProject.getTeam(), tags);
                 asana.addTagToTask(task.getId(), tag.getId());
             }
 

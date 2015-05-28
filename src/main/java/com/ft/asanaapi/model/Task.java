@@ -11,6 +11,10 @@ public class Task {
     private String name;
     private ParentTask parent;
 
+    public boolean isSubTask() {
+        return parent != null;
+    }
+
     @Override
     public String toString() {
         return "id: " + id + " , name: " + name + "\n";

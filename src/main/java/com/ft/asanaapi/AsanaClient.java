@@ -29,50 +29,45 @@ public class AsanaClient {
         asana = restAdapter.create(Asana.class);
     }
 
-    public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId){
+    public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId) {
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now","id,name,parent.id,parent.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name");
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("About to add tasks to project {}", projectId);
-            logger.debug(tasksData.toString());
-        }
+        logTaskProcessingStart(projectId, tasksData);
 
         ProjectInfo projectInfo = asana.project(projectId).getData();
         List<Tag> tags = asana.tags(config.getWorkspace()).getData();
 
         List<Task> tasks = tasksData.getData();
 
-
         tasks.stream().forEach(task -> {
-            //for all assigned tasks add to the project
             asana.addProjectToTask(task.getId(), projectId);
-            //add a comment to the parent task if one exists
-            if (task.getParent() != null) {
-                asana.commentOnTask(task.getParent().getId(), "I have added the task "
-                        + task.getName() + " to " + projectInfo.getName());
+
+            if (task.isSubTask()) {
+                addCommentToParent(projectInfo, task);
             }
 
-            //add tag with team name
-            if (isProjectAssignedToTeam(projectInfo)) {
+            if (projectInfo.isAssignedToTeam()) {
                 Tag tag = findOrCreateTagByName(projectInfo.getTeam(), tags);
                 asana.addTagToTask(task.getId(), tag.getId());
             }
-            //after adding to project remove from assignment
-            asana.updateTask(task.getId(), "null");
-            if (logger.isDebugEnabled()) {
-                logger.debug("Successfully added task {} to {} project.", task, projectId);
-            }
+
+            unassignTask(task);
+            logTaskProcessingSuccess(projectId, task);
         });
     }
 
-    private void processTask(Task task) {
-
+    private void logTaskProcessingStart(String projectId, TasksData tasksData) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("About to add tasks to project {}", projectId);
+            logger.debug(tasksData.toString());
+        }
     }
 
-    private boolean isProjectAssignedToTeam(ProjectInfo projectInfo) {
-        return projectInfo.getTeam() != null;
+    private void addCommentToParent(ProjectInfo projectInfo, Task task) {
+        asana.commentOnTask(task.getParent().getId(),
+                "I have added the task " + task.getName() + " to " + projectInfo.getName());
     }
 
     private Tag findOrCreateTagByName(Team team, List<Tag> tags) {
@@ -86,5 +81,15 @@ public class AsanaClient {
         Tag newTag = asana.createTag(config.getWorkspace(), team.getName()).getData();
         tags.add(newTag);
         return newTag;
+    }
+
+    private void unassignTask(Task task) {
+        asana.updateTask(task.getId(), "null");
+    }
+
+    private void logTaskProcessingSuccess(String projectId, Task task) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Successfully added task {} to {} project.", task, projectId);
+        }
     }
 }

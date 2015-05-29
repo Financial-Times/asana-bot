@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class AsanaClient {
 
@@ -69,7 +68,8 @@ public class AsanaClient {
     }
 
     public Tag findOrCreateTagByName(Team team) {
-        List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), team.getName()).getData();
+        String tagName = mapTeamToTag(team);
+        List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), tagName).getData();
         Optional<Tag> existingTag = existingTags.stream()
                 .filter(tag -> tag.getName().equals(team.getName()))
                 .findFirst();
@@ -79,6 +79,15 @@ public class AsanaClient {
         }
 
         return asana.createTag(config.getWorkspace(), team.getName()).getData();
+    }
+
+    private String mapTeamToTag(Team team) {
+        Map<String, String> tagToTeamMapping = new HashMap<>();
+        tagToTeamMapping.put("Companies", "COS");
+        tagToTeamMapping.put("World", "WN");
+        tagToTeamMapping.put("UK", "UKN");
+        tagToTeamMapping.put("Pictures", "Pic");
+        return tagToTeamMapping.getOrDefault(team.getName(), team.getName());
     }
 
     private void unassignTask(Task task) {

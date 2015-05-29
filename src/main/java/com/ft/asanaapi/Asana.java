@@ -1,7 +1,6 @@
 package com.ft.asanaapi;
 
-import com.ft.asanaapi.model.ProjectData;
-import com.ft.asanaapi.model.TasksData;
+import com.ft.asanaapi.model.*;
 import retrofit.client.Response;
 import retrofit.http.*;
 
@@ -29,7 +28,7 @@ public interface Asana {
 
     @FormUrlEncoded
     @PUT("/tasks/{task-id}")
-    TasksData updateTask(
+    Response updateTask(
             @Path("task-id") String taskId,
             @Field("assignee") String assignee
     );
@@ -39,5 +38,25 @@ public interface Asana {
     Response commentOnTask(
             @Path("task-id") String taskId,
             @Field("text") String text
+    );
+
+    @GET("/workspaces/{workspace-id}/typeahead?type=tag")
+    TagsData queryForTag(
+            @Path("workspace-id") String workspaceId,
+            @Query("query") String tagName
+    );
+
+    @FormUrlEncoded
+    @POST("/tasks/{task-id}/addTag")
+    Response addTagToTask(
+            @Path("task-id") String taskId,
+            @Field("tag") String tagId
+    );
+
+    @FormUrlEncoded
+    @POST("/workspaces/{workspace-id}/tags")
+    TagData createTag(
+            @Path("workspace-id") String workspaceId,
+            @Field("name")String tagName
     );
 }

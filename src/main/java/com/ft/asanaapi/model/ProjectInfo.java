@@ -7,4 +7,9 @@ public class ProjectInfo {
     private String id;
     private String name;
     private String notes;
+    private Team team;
+
+    public boolean isAssignedToTeam() {
+        return team != null;
+    }
 }

@@ -86,7 +86,7 @@ public class AsanaClient {
         tagToTeamMapping.put("Companies", "COS");
         tagToTeamMapping.put("World", "WN");
         tagToTeamMapping.put("UK", "UKN");
-        tagToTeamMapping.put("Pictures", "Pic");
+        tagToTeamMapping.put("Pictures", "PIC");
         return tagToTeamMapping.getOrDefault(team.getName(), team.getName());
     }
 

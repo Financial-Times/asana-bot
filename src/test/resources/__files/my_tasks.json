@@ -6,15 +6,16 @@
       "tags": [],
       "parent": {
         "id": 34761621630965,
-        "name": "test task"
+        "name": "test task",
+        "projects": [
+          {
+            "id": 25587620489018,
+            "name": "DevGraphicsRequests",
+            "team": { "name": "Market" }
+          }
+        ]
       },
-      "projects": [
-        {
-          "id": 25587620489018,
-          "name": "DevGraphicsRequests",
-          "team": { "name": "Market" }
-        }
-      ]
+      "projects": []
     },
     {
       "id": 34761621630965,

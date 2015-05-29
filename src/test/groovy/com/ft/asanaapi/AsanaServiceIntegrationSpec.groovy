@@ -21,8 +21,8 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 public class AsanaServiceIntegrationSpec extends Specification {
 
     private static final String testWorkspaceId = "324300775153"
-    private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name%2Cprojects.team.name"
-    private static final String decodedOptFields = "id,name,parent.id,parent.name,projects.team.name"
+    private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name%2Cparent.projects.team.name%2Cprojects.team.name"
+    private static final String decodedOptFields = "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name"
 
     private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json"
     private static final String APPLICATION_FORM_CONTENT_TYPE = "application/x-www-form-urlencoded"

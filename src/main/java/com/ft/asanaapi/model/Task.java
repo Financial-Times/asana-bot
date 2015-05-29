@@ -11,7 +11,7 @@ import java.util.List;
 public class Task {
     private String id;
     private String name;
-    private ParentTask parent;
+    private Task parent;
     private List<ProjectInfo> projects;
 
     public boolean isSubTask() {

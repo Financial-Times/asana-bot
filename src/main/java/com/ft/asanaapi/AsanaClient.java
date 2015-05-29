@@ -31,7 +31,7 @@ public class AsanaClient {
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId) {
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,projects.team.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name");
         logTaskProcessingStart(projectId, tasksData);
         List<Task> tasks = tasksData.getData();
 
@@ -44,7 +44,7 @@ public class AsanaClient {
                 addCommentToParent(projectInfo, task);
             }
 
-            ProjectInfo originalProject = task.getProjects().get(0);
+            ProjectInfo originalProject = extractProjectFromTask(task);
             if (originalProject.isAssignedToTeam()) {
                 Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
@@ -67,7 +67,14 @@ public class AsanaClient {
                 "I have added the task " + task.getName() + " to " + projectInfo.getName());
     }
 
-    public Tag findOrCreateTagByName(Team team) {
+    private ProjectInfo extractProjectFromTask(Task task) {
+        if (task.isSubTask()) {
+            return task.getParent().getProjects().get(0);
+        }
+        return task.getProjects().get(0);
+    }
+
+    private Tag findOrCreateTagByName(Team team) {
         String tagName = mapTeamToTag(team);
         List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), tagName).getData();
         Optional<Tag> existingTag = existingTags.stream()

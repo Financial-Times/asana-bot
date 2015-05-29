@@ -82,8 +82,10 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private stubGetWorkspaceTags() {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("type", equalTo("tag"))
+                .withQueryParam("query", equalTo("Market"))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -144,8 +146,10 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyWorkspaceTags() {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                .withHeader("Authorization", containing(BASIC_AUTH_HEADER)))
+        wireMockRule.verify(2, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("type", equalTo("tag"))
+                .withQueryParam("query", equalTo("Market")))
         return true
     }
 
@@ -156,7 +160,7 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyPostTag() {
-        wireMockRule.verify(1, postRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
+        wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
                 .withRequestBody(containing("name=Market")))
         return true
     }

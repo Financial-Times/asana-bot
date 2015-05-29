@@ -33,13 +33,10 @@ public class AsanaClient {
 
         //get list of assigned tasks
         TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,projects.team.name");
-
         logTaskProcessingStart(projectId, tasksData);
+        List<Task> tasks = tasksData.getData();
 
         ProjectInfo projectInfo = asana.project(projectId).getData();
-        List<Tag> tags = asana.tags(config.getWorkspace()).getData();
-
-        List<Task> tasks = tasksData.getData();
 
         tasks.stream().forEach(task -> {
             asana.addProjectToTask(task.getId(), projectId);
@@ -50,7 +47,7 @@ public class AsanaClient {
 
             ProjectInfo originalProject = task.getProjects().get(0);
             if (originalProject.isAssignedToTeam()) {
-                Tag tag = findOrCreateTagByName(originalProject.getTeam(), tags);
+                Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
             }
 
@@ -71,17 +68,17 @@ public class AsanaClient {
                 "I have added the task " + task.getName() + " to " + projectInfo.getName());
     }
 
-    private Tag findOrCreateTagByName(Team team, List<Tag> tags) {
-        Optional<Tag> existingTag = tags.stream()
+    public Tag findOrCreateTagByName(Team team) {
+        List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), team.getName()).getData();
+        Optional<Tag> existingTag = existingTags.stream()
                 .filter(tag -> tag.getName().equals(team.getName()))
                 .findFirst();
 
         if (existingTag.isPresent()) {
             return existingTag.get();
         }
-        Tag newTag = asana.createTag(config.getWorkspace(), team.getName()).getData();
-        tags.add(newTag);
-        return newTag;
+
+        return asana.createTag(config.getWorkspace(), team.getName()).getData();
     }
 
     private void unassignTask(Task task) {

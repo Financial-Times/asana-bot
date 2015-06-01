@@ -11,7 +11,16 @@ import java.util.*;
 
 public class AsanaClient {
 
-    private static Logger logger = LoggerFactory.getLogger(AsanaClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsanaClient.class);
+
+    private static final Map<String, String> tagToTeamMapping = new HashMap<String, String>() {
+        {
+            put("Companies", "COS");
+            put("World", "WN");
+            put("UK", "UKN");
+            put("Pictures", "PIC");
+        }
+    };
 
     private Config config;
     private Asana asana;
@@ -89,11 +98,6 @@ public class AsanaClient {
     }
 
     private String mapTeamToTag(Team team) {
-        Map<String, String> tagToTeamMapping = new HashMap<>();
-        tagToTeamMapping.put("Companies", "COS");
-        tagToTeamMapping.put("World", "WN");
-        tagToTeamMapping.put("UK", "UKN");
-        tagToTeamMapping.put("Pictures", "PIC");
         return tagToTeamMapping.getOrDefault(team.getName(), team.getName());
     }
 

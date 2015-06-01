@@ -85,7 +85,7 @@ public class AsanaServiceIntegrationSpec extends Specification {
         wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("type", equalTo("tag"))
-                .withQueryParam("query", equalTo("Market"))
+                .withQueryParam("query", matching(".*"))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -133,7 +133,7 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyPostAddProject() {
-        wireMockRule.verify(3, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))
+        wireMockRule.verify(4, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("project=[0-9]+")))
         return true
@@ -146,10 +146,10 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyWorkspaceTags() {
-        wireMockRule.verify(2, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
+        wireMockRule.verify(3, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("type", equalTo("tag"))
-                .withQueryParam("query", equalTo("Market")))
+                .withQueryParam("query", matching(".*")))
         return true
     }
 
@@ -166,14 +166,14 @@ public class AsanaServiceIntegrationSpec extends Specification {
     }
 
     private boolean verifyPostAddTag() {
-        wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
+        wireMockRule.verify(3, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("tag=[0-9]+")))
         return true
     }
 
     private boolean verifyPutTasks() {
-        wireMockRule.verify(3, putRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+"))
+        wireMockRule.verify(4, putRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("assignee=null")))
         return true

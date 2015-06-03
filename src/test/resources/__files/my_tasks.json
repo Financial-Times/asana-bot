@@ -6,15 +6,16 @@
       "tags": [],
       "parent": {
         "id": 34761621630965,
-        "name": "test task"
+        "name": "test task",
+        "projects": [
+          {
+            "id": 25587620489018,
+            "name": "DevGraphicsRequests",
+            "team": { "name": "Market" }
+          }
+        ]
       },
-      "projects": [
-        {
-          "id": 25587620489018,
-          "name": "DevGraphicsRequests",
-          "team": { "name": "Market" }
-        }
-      ]
+      "projects": []
     },
     {
       "id": 34761621630965,
@@ -41,6 +42,22 @@
         {
           "id": 25500020489000,
           "name": "Project not assigned to a team"
+        }
+      ]
+    },
+    {
+      "id": 34761621631111,
+      "name": "Task assigned to project",
+      "workspace": {
+        "id": 324300775153,
+        "name": "GraphicsTest"
+      },
+      "tags": [],
+      "projects": [
+        {
+          "id": 25500020489000,
+          "name": "Project assigned to a team",
+          "team": { "name": "existing tag" }
         }
       ]
     }

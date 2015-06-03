@@ -3,10 +3,52 @@ asana:
   picturesId: 29414423499815
   graphicsId: 28686036279645
   baseUrl: https://app.asana.com/api/1.0
+---
+server:
+  port: 8080
+  address: asanareports.ft.com
+
+security:
+  basic:
+    enabled: false
+  ignored: /,/favicon.ico,/index.html,/js/**,/css/**
+  sessions: ALWAYS
+management:
+  security:
+    role: MGMT
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.netflix.discovery: 'OFF'
+
 spring:
-  profiles:
-    active: production
+  oauth2:
+    sso:
+      loginPath: /login
+      logoutPath: /logout
+  view:
+    prefix: /WEB-INF/jsp/
+    suffix: .jsp
+
+---
+spring:
+  profiles: production
+  oauth2:
+    client:
+      clientId: 882128426769-r7d7s6kgbmclfpgdfr22mfv6een23a02.apps.googleusercontent.com
+      clientSecret: CV0MhPumgM4Tgn2ut64_HgcP
+      accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      clientAuthenticationScheme: form
+      scope:
+        - openid
+        - email
+    resource:
+      userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+      preferTokenInfo: false
+---
 logging:
   level:
     com.ft: DEBUG
-
+    org.springframework.security: INFO

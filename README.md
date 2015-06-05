@@ -1,4 +1,5 @@
 # AsanaBot 
+[![Circle CI](https://circleci.com/gh/Financial-Times/asana-bot.svg?style=svg&circle-token=de0b7c29ace590cf37f1e1bf0600dff2fa9c6035)](https://circleci.com/gh/Financial-Times/asana-bot)
 
 A [bot](http://en.wikipedia.org/wiki/Internet_bot) for use with [Asana](http://asana.com).
  

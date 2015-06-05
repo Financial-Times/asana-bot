@@ -1,0 +1,22 @@
+asana:
+  workspace: 36628479813449
+  picturesId: 36788370362617
+  graphicsId: 36788370362615
+---
+security:
+  basic:
+    enabled: false
+  ignored: /,/favicon.ico,/index.html,/js/**,/css/**
+  sessions: ALWAYS
+  user:
+    name: user
+    password: user
+---
+logging:
+    level:
+      com.ft: DEBUG
+      org.springframework.security: INFO
+      com.netflix.discovery: 'OFF'
+
+report:
+  hostDomain: ftqa.org

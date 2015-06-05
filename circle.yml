@@ -11,7 +11,7 @@ deployment:
   staging:
     branch: master
     heroku:
-      appname: tranquil-sands-8627
+      appname: asana-bot-staging
 test:
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/

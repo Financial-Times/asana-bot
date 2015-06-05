@@ -41,13 +41,13 @@ class AuthorizationServiceIntegrationSpec extends Specification {
     @Unroll
     void "authorize - success #scenario"() {
         given:
-            String TEST_EMAIL = "test@ft.com"
+            String TEST_EMAIL = "test@ftqa.com"
             String ENCODED_TEST_EMAIL = encodeEmail(TEST_EMAIL)
             String responseFileSuffix = 'success'
 
             Map<String, String> authenticationDetails = [
-                    email: 'test@ft.com',
-                    hd   : 'ft.com'
+                    email: TEST_EMAIL,
+                    hd   : 'ftqa.com'
             ]
         and:
             stubGetUserByEmail(ENCODED_TEST_EMAIL, responseFileSuffix)
@@ -93,9 +93,9 @@ class AuthorizationServiceIntegrationSpec extends Specification {
             !authenticationDetails['teams']
 
         where:
-            scenario                              | email              | hostDomain    | getUserByEmailCalls | userFile    | expectedException      | expectedMessage
-            'due to invalid domain'               | 'test@example.com' | 'example.com' | 0                   | 'success'   | InvalidDomainException | 'Only FT account are authorized'
-            'due to user not registered in Asana' | 'non.asana@ft.com' | 'ft.com'      | 1                   | 'non_asana' | NonAsanaUserException  | 'FT user is not registered for Asana'
+            scenario                              | email                | hostDomain    | getUserByEmailCalls | userFile    | expectedException      | expectedMessage
+            'due to invalid domain'               | 'test@example.com'   | 'example.com' | 0                   | 'success'   | InvalidDomainException | 'Only FT account are authorized'
+            'due to user not registered in Asana' | 'non.asana@ftqa.com' | 'ftqa.com'    | 1                   | 'non_asana' | NonAsanaUserException  | 'FT user is not registered for Asana'
 
     }
 

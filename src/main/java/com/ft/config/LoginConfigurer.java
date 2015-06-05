@@ -1,5 +1,7 @@
 package com.ft.config;
 
+import com.ft.asanaapi.auth.InvalidDomainException;
+import com.ft.asanaapi.auth.NonAsanaUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.security.oauth2.sso.OAuth2SsoConfigurerAdapter;
@@ -62,7 +64,13 @@ public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
                     cookie.setPath("/");
                     response.addCookie(cookie);
                 }
-                filterChain.doFilter(request, response);
+                try {
+
+                    filterChain.doFilter(request, response);
+                } catch (InvalidDomainException | NonAsanaUserException ex) {
+                    response.sendRedirect("/logout");
+                }
+
             }
         };
     }

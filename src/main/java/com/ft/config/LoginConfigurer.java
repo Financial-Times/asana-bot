@@ -1,7 +1,11 @@
 package com.ft.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.security.oauth2.sso.OAuth2SsoConfigurerAdapter;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -20,15 +24,27 @@ import java.io.IOException;
 @Component
 public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
 
+    static Logger logger = LoggerFactory.getLogger(LoginConfigurer.class);
+
     @Override
     public void match(RequestMatchers matchers) {
         matchers.antMatchers("/**");
     }
 
+    private ObjectPostProcessor<FilterSecurityInterceptor> objectPostProcessor() {
+        return new ObjectPostProcessor<FilterSecurityInterceptor>() {
+            public <T extends FilterSecurityInterceptor> T postProcess(T filterSecurityInterceptor) {
+                filterSecurityInterceptor.setPublishAuthorizationSuccess(true);
+                return filterSecurityInterceptor;
+            }
+        };
+    }
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests().anyRequest()
-                .authenticated().and().csrf()
+                .authenticated().withObjectPostProcessor(objectPostProcessor())
+                .and().csrf()
                 .csrfTokenRepository(csrfTokenRepository()).and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }

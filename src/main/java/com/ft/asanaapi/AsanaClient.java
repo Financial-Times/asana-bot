@@ -1,6 +1,7 @@
 package com.ft.asanaapi;
 
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
+import com.ft.asanaapi.auth.NonAsanaUserException;
 import com.ft.asanaapi.model.*;
 import com.ft.config.Config;
 import org.slf4j.Logger;
@@ -62,6 +63,20 @@ public class AsanaClient {
             unassignTask(task);
             logTaskProcessingSuccess(projectId, task);
         });
+    }
+
+    public List<Team> findTeams(String email) {
+        User user =  findUserByEmail(email);
+        TeamsData teamsData = asana.getUserTeams(config.getWorkspace(), user.getId());
+        return teamsData.getData();
+    }
+
+    private User findUserByEmail(String email) {
+        UserData userData = asana.getUserByEmail(config.getWorkspace(), email);
+        if (userData == null || userData.getData() == null || userData.getData().size() == 0) {
+            throw new NonAsanaUserException();
+        }
+        return userData.getData().get(0);
     }
 
     private void logTaskProcessingStart(String projectId, TasksData tasksData) {

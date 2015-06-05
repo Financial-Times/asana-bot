@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * A class to hold configuration properties for various projects and static
  * settings that the bot interacts with.
@@ -21,4 +23,6 @@ public class Config {
     private String graphicsId;
     private String picturesId;
     private String baseUrl;
+
+    private List<String> authorizedTeams;
 }

@@ -6,18 +6,7 @@
     <body>
         <h4>Asana Reporting Tool home page</h4>
         <div>
-        <!-- Credentials display -->
-        Your are logged in as <sec:authentication property="userAuthentication.details.email"/>
-        ...
-        <!-- Roles display -->
-        <sec:authentication property="authorities" var="roles" scope="page" />
-        Your roles are:
-        <ul>
-            <c:forEach var="role" items="${roles}">
-                <li>${role}</li>
-            </c:forEach>
-        </ul>
-
+        Your are logged in as <sec:authentication property="userAuthentication.details"/>
         </div>
     </body>
 </html>

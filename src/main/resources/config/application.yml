@@ -50,8 +50,8 @@ spring:
   profiles: production
   oauth2:
     client:
-      clientId: 882128426769-r7d7s6kgbmclfpgdfr22mfv6een23a02.apps.googleusercontent.com
-      clientSecret: CV0MhPumgM4Tgn2ut64_HgcP
+      clientId: ${OAUTH_CLIENT_ID}
+      clientSecret: ${OAUTH_CLIENT_SECRET}
       accessTokenUri: https://www.googleapis.com/oauth2/v3/token
       userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
       clientAuthenticationScheme: form

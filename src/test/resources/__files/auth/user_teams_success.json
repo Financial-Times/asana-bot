@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": 91001,
+      "name": "Markets"
+    },
+    {
+      "id": 91002,
+      "name": "World"
+    },
+    {
+      "id": 91003,
+      "name": "Companies"
+    },
+    {
+      "id": 91004,
+      "name": "Unauthorized team"
+    }
+  ]
+}

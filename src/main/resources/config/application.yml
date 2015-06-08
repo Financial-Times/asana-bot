@@ -3,10 +3,64 @@ asana:
   picturesId: 29414423499815
   graphicsId: 28686036279645
   baseUrl: https://app.asana.com/api/1.0
-spring:
-  profiles:
-    active: production
+  authorizedTeams:
+    - Markets
+    - Companies
+    - World
+    - UK
+    - Pictures
+    - Graphics
+---
+server:
+  port: 8080
+  address: asanareports.ft.com
+---
+security:
+  basic:
+    enabled: false
+  ignored: /,/favicon.ico,/index.html,/js/**,/css/**
+  sessions: ALWAYS
+  user:
+    name: user
+    password: user
+---
+management:
+  address: localhost
+  port: 8090
+  security:
+    enabled: false
+---
 logging:
-  level:
-    com.ft: DEBUG
+    level:
+      com.ft: DEBUG
+      org.springframework.security: INFO
+      com.netflix.discovery: 'OFF'
 
+spring:
+  oauth2:
+    sso:
+      loginPath: /login
+      logoutPath: /logout
+  view:
+    prefix: /WEB-INF/jsp/
+    suffix: .jsp
+
+---
+spring:
+  profiles: production
+  oauth2:
+    client:
+      clientId: ${OAUTH_CLIENT_ID}
+      clientSecret: ${OAUTH_CLIENT_SECRET}
+      accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      clientAuthenticationScheme: form
+      scope:
+        - openid
+        - email
+    resource:
+      userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
+      preferTokenInfo: false
+---
+report:
+  hostDomain: ft.com

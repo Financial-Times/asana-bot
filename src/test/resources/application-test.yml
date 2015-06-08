@@ -3,3 +3,6 @@ asana:
   picturesId: 25587620489018
   graphicsId: 25587620489018
   baseUrl: http://localhost:8888/api/1.0
+---
+report:
+  hostDomain: ftqa.com

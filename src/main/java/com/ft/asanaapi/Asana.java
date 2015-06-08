@@ -59,4 +59,15 @@ public interface Asana {
             @Path("workspace-id") String workspaceId,
             @Field("name")String tagName
     );
+
+    @GET("/users/{user-id}/teams")
+    TeamsData getUserTeams(
+            @Query("organization") String organizationId,
+            @Path("user-id") String userId
+    );
+
+    @GET("/workspaces/{workspace-id}/typeahead?type=user")
+    UserData getUserByEmail(
+            @Path("workspace-id") String workspaceId,
+            @Query("query") String email);
 }

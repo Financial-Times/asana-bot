@@ -1,5 +1,4 @@
 package com.ft.asanaapi.auth
-
 import com.ft.AsanaBot
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import org.junit.Rule
@@ -13,13 +12,7 @@ import spock.lang.Unroll
 
 import java.nio.charset.Charset
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import static com.github.tomakehurst.wiremock.client.WireMock.containing
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import static com.github.tomakehurst.wiremock.client.WireMock.get
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
-import static com.github.tomakehurst.wiremock.client.WireMock.matching
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching
+import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 @IntegrationTest
@@ -52,6 +45,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
         and:
             stubGetUserByEmail(ENCODED_TEST_EMAIL, responseFileSuffix)
             stubGetUserTeams(TEST_USER_ID, userTeamsFile)
+            defaultUnmatchedRequest()
 
         when:
             authorizationService.authorize(authenticationDetails)
@@ -79,6 +73,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
         and:
             stubGetUserByEmail(encodeEmail(email), userFile)
             stubGetUserTeams(TEST_USER_ID, 'success')
+            defaultUnmatchedRequest()
 
         when:
             authorizationService.authorize(authenticationDetails)
@@ -104,7 +99,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
     }
 
     private stubGetUserByEmail(String email, String responseFile) {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/" + testWorkspaceId + "/typeahead\\?.*"))
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/" + testWorkspaceId + "/typeahead\\?.*")).atPriority(1)
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("type", equalTo("user"))
                 .withQueryParam("query", matching(email))
@@ -115,7 +110,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
     }
 
     private stubGetUserTeams(String userId, String responseFile) {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/users/" + userId + "/teams\\?.*"))
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/users/" + userId + "/teams\\?.*")).atPriority(1)
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("organization", matching(".*"))
                 .willReturn(aResponse()
@@ -137,5 +132,12 @@ class AuthorizationServiceIntegrationSpec extends Specification {
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("organization", matching(".*")))
         return true
+    }
+
+    private defaultUnmatchedRequest() {
+        stubFor(get(urlMatching(".*")).atPriority(6) // default priority is 5
+                .willReturn(aResponse()
+                .withStatus(404)
+                .withBody("Error in code somewhere")));
     }
 }

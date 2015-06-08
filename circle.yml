@@ -9,7 +9,7 @@ machine:
     ASANA_PICTURES_KEY: dummyPicturesKey
 deployment:
   staging:
-    branch: master
+    branch: staging
     heroku:
       appname: asana-bot-staging
 test:

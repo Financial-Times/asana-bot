@@ -41,14 +41,6 @@ spring:
     sso:
       loginPath: /login
       logoutPath: /logout
-  view:
-    prefix: /WEB-INF/jsp/
-    suffix: .jsp
-
----
-spring:
-  profiles: production
-  oauth2:
     client:
       clientId: ${OAUTH_CLIENT_ID}
       clientSecret: ${OAUTH_CLIENT_SECRET}
@@ -61,6 +53,10 @@ spring:
     resource:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
       preferTokenInfo: false
+  view:
+    prefix: /WEB-INF/jsp/
+    suffix: .jsp
+
 ---
 report:
   hostDomain: ft.com

@@ -58,4 +58,4 @@ spring:
 
 ---
 report:
-  hostDomain: ft.com
+  hostDomain: ftqa.org

@@ -17,6 +17,3 @@ logging:
       com.ft: DEBUG
       org.springframework.security: INFO
       com.netflix.discovery: 'OFF'
-
-report:
-  hostDomain: ftqa.org

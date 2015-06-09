@@ -13,7 +13,6 @@ asana:
 ---
 server:
   port: 8080
-  address: asanareports.ft.com
 ---
 security:
   basic:

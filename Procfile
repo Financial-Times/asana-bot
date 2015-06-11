@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/asana-bot-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -Dspring.profiles.active=$SPRING_PROFILE,scheduling -jar target/asana-bot-0.1.0-SNAPSHOT.jar

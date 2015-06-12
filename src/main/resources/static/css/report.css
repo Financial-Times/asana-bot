@@ -1,0 +1,89 @@
+header {
+    font-weight: normal;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+    padding: 6px;
+    border-color: #e3e3e3;
+    line-height: 1.2em;
+    font-size: 11pt;
+}
+
+.table-condensed {
+    margin-bottom: 0;
+}
+
+.complete {
+    color: #00A000;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.notes {
+    color: #666666;
+    font-style: italic;
+    font-size: 12px;
+}
+
+ul {
+    margin-top: 4px;
+    list-style-type: square;
+}
+
+ul li {
+    font-size: 12px;
+}
+
+.tags {
+    font-size: 11px;
+    font-weight: normal;
+    text-transform: none;
+    background-color: #EEE;
+    color: #333;
+    padding: 2px 6px 4px 6px;
+    margin-bottom: 0;
+    margin-top: 0;
+    border: 1px solid #E3E3E3;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 0;
+}
+
+.tags_sm {
+    text-align: right;
+    font-size: 10px;
+    text-transform: none;
+    color: #999;
+    padding: 1px;
+}
+
+.tags_sm:first-of-type::before {
+    content: " Also: ";
+    text-transform: none;
+    color: #999;
+}
+
+.tags_sm:first-of-type::after {
+    content: ", ";
+    text-transform: none;
+    color: #999;
+}
+
+.tags_sm span {
+    background-color: #EEE;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li:before {
+    content: '\2610';
+    margin: 0 4px 0 20px;
+}
+
+.one-line-block {
+    display: block;
+}

@@ -6,4 +6,9 @@ import lombok.Data;
 public class Tag {
     private String id;
     private String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

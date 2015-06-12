@@ -3,17 +3,18 @@ asana:
   picturesId: 36788370362617
   graphicsId: 36788370362615
 ---
-security:
-  basic:
-    enabled: false
-  ignored: /,/favicon.ico,/index.html,/js/**,/css/**
-  sessions: ALWAYS
-  user:
-    name: user
-    password: user
----
 logging:
     level:
       com.ft: DEBUG
       org.springframework.security: INFO
       com.netflix.discovery: 'OFF'
+---
+report:
+  hostDomain: ft.com
+  desks:
+    Companies:
+      projectId: 37532256694653
+    World:
+      projectId: 36788370362611
+    UK:
+      projectId: 37532256694667

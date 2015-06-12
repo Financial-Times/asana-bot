@@ -71,6 +71,7 @@ public class ReportsController {
         model.put("criteria", criteria);
         return "reports/home";
     }
+
     @RequestMapping(method = RequestMethod.POST)
     public String create(@ModelAttribute Criteria criteria, ModelMap modelMap) {
         modelMap.addAttribute("criteria", criteria);

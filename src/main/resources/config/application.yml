@@ -32,7 +32,7 @@ spring:
       clientId: ${OAUTH_CLIENT_ID}
       clientSecret: ${OAUTH_CLIENT_SECRET}
       accessTokenUri: https://www.googleapis.com/oauth2/v3/token
-      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth?hd=ft.com
       clientAuthenticationScheme: form
       scope:
         - openid

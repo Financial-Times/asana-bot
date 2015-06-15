@@ -1,5 +1,7 @@
 package com.ft.report
 
+import com.ft.report.model.ReportTask
+import com.ft.report.model.ReportType
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -1,6 +1,10 @@
 package com.ft.report;
 
 import com.ft.asanaapi.model.Tag;
+import com.ft.report.model.Desk;
+import com.ft.report.model.Report;
+import com.ft.report.model.ReportTask;
+import com.ft.report.model.ReportType;
 import com.ft.services.AsanaService;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,13 +56,13 @@ public class ReportGenerator {
             return NOT_TAGGED_TAG;
         }
 
-        List<String> premiumCompaniesTags = desks.get(team).getPremiumTags();
-        if (premiumCompaniesTags == null || premiumCompaniesTags.isEmpty()) {
+        List<String> premiumTags = desks.get(team).getPremiumTags();
+        if (premiumTags == null || premiumTags.isEmpty()) {
             Tag firstTag = tags.remove(0);
             return firstTag.getName();
         }
 
-        Optional<Tag> candidate = tags.stream().filter(tag -> premiumCompaniesTags.contains(tag.getName())).findFirst();
+        Optional<Tag> candidate = tags.stream().filter(tag -> premiumTags.contains(tag.getName())).findFirst();
         if (candidate.isPresent()) {
             tags.remove(candidate.get());
             return candidate.get().getName();

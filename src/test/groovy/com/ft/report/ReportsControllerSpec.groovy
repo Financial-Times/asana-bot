@@ -1,5 +1,8 @@
 package com.ft.report
 
+import com.ft.report.model.Criteria
+import com.ft.report.model.Report
+import com.ft.report.model.ReportType
 import org.springframework.ui.ModelMap
 import spock.lang.Specification
 import spock.lang.Unroll

@@ -1,4 +1,4 @@
-package com.ft.report;
+package com.ft.report.model;
 
 import com.ft.asanaapi.model.Tag;
 import lombok.Data;

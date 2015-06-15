@@ -1,5 +1,8 @@
 package com.ft.report;
 
+import com.ft.report.model.Criteria;
+import com.ft.report.model.Report;
+import com.ft.report.model.ReportType;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -23,7 +23,7 @@ public class AuthorizationListener implements ApplicationListener<AuthorizedEven
         Authentication auth = auditApplicationEvent.getAuthentication();
         if (auth instanceof OAuth2Authentication) {
             OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) auth;
-            Map<String, String> details = (Map) oAuth2Authentication.getUserAuthentication().getDetails();
+            Map details = (Map<String, Object>) oAuth2Authentication.getUserAuthentication().getDetails();
             authorizationService.authorize(details);
         }
     }

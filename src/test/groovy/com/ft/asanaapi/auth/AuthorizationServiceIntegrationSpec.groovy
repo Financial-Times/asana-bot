@@ -1,24 +1,13 @@
 package com.ft.asanaapi.auth
-import com.ft.AsanaBot
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import org.junit.Rule
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
-import spock.lang.Unroll
 
+import com.ft.test.IntegrationSpec
+import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.Unroll
 import java.nio.charset.Charset
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
-@IntegrationTest
-@ContextConfiguration(classes = AsanaBot.class, loader = SpringApplicationContextLoader.class)
-@ActiveProfiles("test")
-class AuthorizationServiceIntegrationSpec extends Specification {
+class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
 
     @Autowired
     AuthorizationService authorizationService
@@ -27,10 +16,6 @@ class AuthorizationServiceIntegrationSpec extends Specification {
     private static final String TEST_USER_ID = "676767"
     private static final String BASIC_AUTH_HEADER = "Basic "
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8888))
-
-
     @Unroll
     void "authorize - success #scenario"() {
         given:
@@ -38,7 +23,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
             String ENCODED_TEST_EMAIL = encodeEmail(TEST_EMAIL)
             String responseFileSuffix = 'success'
 
-            Map<String, String> authenticationDetails = [
+            Map authenticationDetails = [
                     email: TEST_EMAIL,
                     hd   : 'ftqa.com'
             ]
@@ -58,7 +43,7 @@ class AuthorizationServiceIntegrationSpec extends Specification {
             authenticationDetails['teams'] == expectedTeams
         where:
             scenario                      | userTeamsFile | expectedFtAuthorized | expectedTeams
-            'fully authorized user'       | 'success'     | 'true'               | 'Markets, World, Companies'
+            'fully authorized user'       | 'success'     | 'true'               | ['World', 'Companies']
             'user not in authorized team' | 'failure'     | null                 | null
 
     }

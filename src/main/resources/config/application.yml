@@ -4,12 +4,9 @@ asana:
   graphicsId: 28686036279645
   baseUrl: https://app.asana.com/api/1.0
   authorizedTeams:
-    - Markets
     - Companies
     - World
     - UK
-    - Pictures
-    - Graphics
 ---
 server:
   port: 8080
@@ -17,24 +14,15 @@ server:
 security:
   basic:
     enabled: false
-  ignored: /,/favicon.ico,/index.html,/js/**,/css/**
+  ignored: /,/health,/favicon.ico,/index.html,/js/**,/css/**
   sessions: ALWAYS
-  user:
-    name: user
-    password: user
----
-management:
-  address: localhost
-  port: 8090
-  security:
-    enabled: false
 ---
 logging:
     level:
       com.ft: DEBUG
       org.springframework.security: INFO
       com.netflix.discovery: 'OFF'
-
+---
 spring:
   oauth2:
     sso:
@@ -52,10 +40,46 @@ spring:
     resource:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
       preferTokenInfo: false
-  view:
-    prefix: /WEB-INF/jsp/
-    suffix: .jsp
+  thymeleaf.cache: false
 
 ---
 report:
   hostDomain: ft.com
+  desks:
+    Companies:
+      projectId: 5669522480945
+      premiumTags:
+        - Finserv
+        - TMT
+        - Industry
+        - Energy
+        - Consumer
+        - Comment
+    World:
+      projectId: 28687437659749
+      premiumTags: []
+    UK:
+      projectId: 33167799661044
+      premiumTags:
+        - Parly
+        - Business
+        - Economy
+        - Public Policy
+        - Legal & Regulation
+        - Scotland
+        - UK Regions
+        - Arts & Culture
+        - Sport
+        - London
+---
+management:
+  security:
+    enabled: false
+  health:
+    diskspace:
+      enabled: false
+---
+endpoints:
+  enabled: false
+  health:
+    enabled: true

@@ -4,9 +4,12 @@ import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.auth.NonAsanaUserException;
 import com.ft.asanaapi.model.*;
 import com.ft.config.Config;
+import com.ft.report.ReportTask;
+import com.ft.report.ReportTasksData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 
 import java.util.*;
 
@@ -71,6 +74,12 @@ public class AsanaClient {
         return teamsData.getData();
     }
 
+    public List<ReportTask> findTaskItems(String projectId, String completedSince) {
+        String optionalFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
+        ReportTasksData reportTasksData = asana.openProjectTasks(config.getWorkspace(), projectId, completedSince, optionalFields);
+        return reportTasksData.getData();
+    }
+
     private User findUserByEmail(String email) {
         UserData userData = asana.getUserByEmail(config.getWorkspace(), email);
         if (userData == null || userData.getData() == null || userData.getData().size() == 0) {
@@ -124,5 +133,9 @@ public class AsanaClient {
         if (logger.isDebugEnabled()) {
             logger.debug("Successfully added task {} to {} project.", task, projectId);
         }
+    }
+
+    public Response ping() {
+        return asana.ping(config.getWorkspace());
     }
 }

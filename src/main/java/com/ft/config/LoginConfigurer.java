@@ -2,8 +2,6 @@ package com.ft.config;
 
 import com.ft.asanaapi.auth.InvalidDomainException;
 import com.ft.asanaapi.auth.NonAsanaUserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cloud.security.oauth2.sso.OAuth2SsoConfigurerAdapter;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,8 +23,6 @@ import java.io.IOException;
 
 @Component
 public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
-
-    static Logger logger = LoggerFactory.getLogger(LoginConfigurer.class);
 
     @Override
     public void match(RequestMatchers matchers) {

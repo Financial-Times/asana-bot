@@ -87,3 +87,9 @@ ul li:before {
 .one-line-block {
     display: block;
 }
+
+@media print {
+    body * {visibility: hidden;}
+    .printable * {visibility: visible;}
+    .printable { position: absolute; top: 20px; left: 15px; }
+}

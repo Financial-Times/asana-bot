@@ -56,18 +56,6 @@ public class ReportsController {
         return (List) authDetails.get("teams");
     }
 
-    @ModelAttribute("reportDate")
-    public String populateReportDate(@ModelAttribute("preferredReportType") ReportType preferredReportType) {
-        LocalDate today = LocalDate.now(clock);
-
-        if (preferredReportType == ReportType.SUNDAY_FOR_MONDAY) {
-            LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-            LocalDate monday = sunday.plusDays(1);
-            return sunday.format(dateFormat) + " - " + monday.format(dateFormat);
-        }
-
-        return today.format(dateFormat);
-    }
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -83,14 +71,26 @@ public class ReportsController {
         model.put("criteria", criteria);
         return "reports/home";
     }
-
     @RequestMapping(method = RequestMethod.POST)
     public String create(@ModelAttribute Criteria criteria, ModelMap modelMap) {
         modelMap.addAttribute("criteria", criteria);
 
         Report report = reportGenerators.get(criteria.getReportType()).generate(criteria.getTeam());
         modelMap.addAttribute("report", report);
+        modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
         return "reports/home";
+    }
+
+    public String buildReportDate(ReportType preferredReportType) {
+        LocalDate today = LocalDate.now(clock);
+
+        if (preferredReportType == ReportType.SUNDAY_FOR_MONDAY) {
+            LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+            LocalDate monday = sunday.plusDays(1);
+            return sunday.format(dateFormat) + " - " + monday.format(dateFormat);
+        }
+
+        return today.format(dateFormat);
     }
 
 }

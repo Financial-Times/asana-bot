@@ -41,12 +41,12 @@ class ReportsControllerSpec extends Specification {
 
 
     @Unroll
-    void "populateReportDate for report type: #reportType"() {
+    void "buildReportDate for report type: #reportType"() {
         given:
             controller.clock = Clock.fixed(MONDAY_MORNING.atZone(zoneId).toInstant(), zoneId)
 
         when:
-            String result = controller.populateReportDate(preferredReportType)
+            String result = controller.buildReportDate(preferredReportType)
 
         then:
             result == expectedReportDate

@@ -52,7 +52,7 @@
 
     <div class="clearfix"></div>
 
-    <div th:if="${report}" class="container-fluid">
+    <div th:if="${report}" class="container-fluid printable">
         <header>
             <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px" />
             <span th:text="'Conference Report ' + ${reportDate}">today</span>
@@ -68,7 +68,6 @@
                             <td>
                                 <div>
                                     <b th:text="${task.name}"></b>
-                                    <span th:if="${task.completed}" class="complete">&#10003;</span>
                                     <span th:unless="${#lists.isEmpty(task.tags)}" th:text="${#strings.listJoin(task.tags,', ')}" class="tags_sm">Secondary tags</span>
                                 </div>
                                 <span th:if="${task.notes}" th:text="${task.notes}" class="notes"></span>

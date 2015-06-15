@@ -21,6 +21,14 @@ class ReportsControllerSpec extends Specification {
         controller = new ReportsController()
     }
 
+    void 'populate report types'() {
+        when:
+            ReportType[] result = controller.populateReportTypes()
+        then:
+            result.size() == 3
+            result == ReportType.values()
+    }
+
     @Unroll
     void "populatePreferredReportType - date: #date"() {
         given:
@@ -34,8 +42,8 @@ class ReportsControllerSpec extends Specification {
 
         where:
             date           | expectedResult
-            MONDAY_MORNING | ReportType.MORNING
-            MONDAY_EVENING | ReportType.EVENING
+            MONDAY_MORNING | ReportType.TODAY
+            MONDAY_EVENING | ReportType.TOMORROW
             FRIDAY_EVENING | ReportType.SUNDAY_FOR_MONDAY
     }
 
@@ -53,8 +61,8 @@ class ReportsControllerSpec extends Specification {
 
         where:
             preferredReportType          | expectedReportDate
-            ReportType.MORNING           | '01/06/2015'
-            ReportType.EVENING           | '01/06/2015'
+            ReportType.TODAY             | '01/06/2015'
+            ReportType.TOMORROW          | '02/06/2015'
             ReportType.SUNDAY_FOR_MONDAY | '07/06/2015 - 08/06/2015'
     }
 
@@ -81,8 +89,8 @@ class ReportsControllerSpec extends Specification {
     void "create Sunday for Monday report"() {
         given:
             String team = 'test team'
-            ReportGenerator mockSundayForMondayReportGenerator = Mock(SundayForMondayReportGenerator)
-            controller.reportGenerators = [(ReportType.SUNDAY_FOR_MONDAY): mockSundayForMondayReportGenerator]
+            ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
+            controller.reportGenerator = mockDefaultReportGenerator
         and:
             Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY)
             ModelMap modelMap = new ModelMap()
@@ -92,7 +100,7 @@ class ReportsControllerSpec extends Specification {
             String viewName = controller.create(criteria, modelMap)
 
         then:
-            1 * mockSundayForMondayReportGenerator.generate(team) >> expectedReport
+            1 * mockDefaultReportGenerator.generate(criteria.reportType, team) >> expectedReport
             0 * _
         and:
             viewName == 'reports/home'

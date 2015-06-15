@@ -18,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 
-class SundayForMondayReportGeneratorIntegrationSpec extends IntegrationSpec {
+class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static final String TEST_COMPANIES_PROJECT_ID = "12345"
     private static final String TEST_WORLD_PROJECT_ID = "23456"
@@ -30,14 +30,14 @@ class SundayForMondayReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static final String OTHER_TAG = 'Others'
     private static final String NOT_TAGGED = 'Not tagged'
 
-    @Autowired
-    SundayForMondayReportGenerator generator
+    @Autowired ReportGenerator generator
+    @Autowired DueDatePredicateFactory dueDatePredicateFactory
 
     void setup() {
-        generator.clock = Clock.fixed(FRIDAY_EVENING.atZone(zoneId).toInstant(), zoneId)
+        dueDatePredicateFactory.clock = Clock.fixed(FRIDAY_EVENING.atZone(zoneId).toInstant(), zoneId)
     }
 
-    void "generate companies report"() {
+    void "generate companies sunday for monday report"() {
         given:
             String team = 'Companies'
             stubGetTasks(team, TEST_COMPANIES_PROJECT_ID)
@@ -46,7 +46,7 @@ class SundayForMondayReportGeneratorIntegrationSpec extends IntegrationSpec {
             List<ReportTask> expectedOtherTasks = createOtherTask()
 
         when:
-            Report report = generator.generate(team)
+            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
 
         then:
             verifyGetTasks(TEST_COMPANIES_PROJECT_ID)
@@ -61,14 +61,14 @@ class SundayForMondayReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks[NOT_TAGGED] == expectedNotTaggedTasks
     }
 
-    void "generate World report"() {
+    void "generate world sunday for monday report"() {
         given:
             String team = 'World'
             stubGetTasks(team, TEST_WORLD_PROJECT_ID)
             List<ReportTask> expectedEuropeTasks = createEuropeTasks()
 
         when:
-            Report report = generator.generate(team)
+            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
 
         then:
             verifyGetTasks(TEST_WORLD_PROJECT_ID)

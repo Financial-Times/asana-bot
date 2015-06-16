@@ -93,3 +93,15 @@ ul li:before {
     .printable * {visibility: visible;}
     .printable { position: absolute; top: 20px; left: 15px; }
 }
+
+form {
+    padding-left: 20px;
+
+}
+
+body {
+    background: #fff1e0;
+}
+.panel {
+    background: white;
+}

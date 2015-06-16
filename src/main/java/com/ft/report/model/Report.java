@@ -1,4 +1,4 @@
-package com.ft.report;
+package com.ft.report.model;
 
 import lombok.Data;
 

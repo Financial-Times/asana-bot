@@ -1,7 +1,7 @@
 package com.ft.asanaapi;
 
 import com.ft.asanaapi.model.*;
-import com.ft.report.ReportTasksData;
+import com.ft.report.model.ReportTasksData;
 import retrofit.client.Response;
 import retrofit.http.*;
 

@@ -1,5 +1,7 @@
 package com.ft.report;
 
+import com.ft.report.model.ReportTask;
+import com.ft.report.model.ReportType;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 

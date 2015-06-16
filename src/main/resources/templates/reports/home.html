@@ -1,74 +1,115 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-    <link rel="stylesheet" th:href="@{/css/report.css}"  href="../../css/report.css"/>
+<link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+<link rel="stylesheet" th:href="@{/css/report.css}" href="../../css/report.css"/>
+
+<!-- Origami imports -->
+<link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-header@^3.0.6"/>
+<script src="//build.origami.ft.com/bundles/js?modules=o-header@^3.0.6"></script>
+
 <head>
     <title>Reports : Criteria</title>
 </head>
 <body>
-    <form id="reportCriteriaForm" class="form-horizontal" action="#" method="post"
-          th:action="@{/reports}"
-          th:object="${criteria}">
-
-        <!-- Form Name -->
-        <legend>FT Asana Report</legend>
-
-        <!-- Validation errors -->
-        <div th:if="${#fields.hasErrors('*')}"
-             class="alert alert-error">
-            <p th:each="error : ${#fields.errors('*')}"
-               th:text="${error}">
-                Validation error
-            </p>
-        </div>
-        <!-- Report select -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="reportTypeSelect">Report</label>
-            <div class="col-sm-4">
-                <select id="reportTypeSelect" name="reportType" class="form-control"
-                        th:field="*{reportType}">
-                    <option th:each="rt : ${reportTypes}" th:value="${rt}" th:text="${rt}">Report</option>
-                </select>
+<!-- FT Style Header - http://registry.origami.ft.com/components/o-header@3.0.6 -->
+<header data-o-component="o-header" class="o-header">
+    <div class="o-header__container">
+        <div class="o-header__inner">
+            <div class="o-header__primary">
+                <div class="o-header__primary__left">
+                    <div class="o-header__logo o-header__logo--ft">
+                        <a href="http://www.ft.com/">
+                            <abbr title="Financial Times">FT</abbr>
+                        </a>
+                        <a href="">
+                            <h1 class="o-header__title">Asana Reports</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="o-header__primary__center"><h2 class="o-header__tagline">
+                    <!-- could add a secondary title here --></h2></div>
             </div>
         </div>
-        <!-- Desk select -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="teamSelect">Desk</label>
-            <div class="col-sm-4">
-                <select id="teamSelect" name="team" class="form-control"
-                        th:field="*{team}">
-                    <option th:each="team : ${teams}" th:value="${team}" th:text="${team}">Team</option>
-                </select>
-            </div>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Select Report Type</h3>
         </div>
 
-        <!-- Submit -->
-        <div class="control-group">
-            <div class="col-sm-offset-2 col-sm-6">
+        <div class="panel-body">
+
+            <form id="reportCriteriaForm" class="form-inline" action="#" method="post"
+                  th:action="@{/reports}"
+                  th:object="${criteria}">
+
+                <!-- Validation errors -->
+                <div th:if="${#fields.hasErrors('*')}"
+                     class="alert alert-error">
+                    <p th:each="error : ${#fields.errors('*')}"
+                       th:text="${error}">
+                        Validation error
+                    </p>
+                </div>
+                <!-- Report select -->
+                <div class="form-group">
+                    <label class="control-label" for="reportTypeSelect">Report</label>
+
+                    <select id="reportTypeSelect" name="reportType" class="form-control"
+                            th:field="*{reportType}">
+                        <option th:each="rt : ${reportTypes}" th:value="${rt}" th:text="${rt}">Report</option>
+                    </select>
+
+                </div>
+                <!-- Desk select -->
+                <div class="form-group">
+                    <label class="control-label" for="teamSelect">Desk</label>
+                    <select id="teamSelect" name="team" class="form-control"
+                            th:field="*{team}">
+                        <option th:each="team : ${teams}" th:value="${team}" th:text="${team}">Team</option>
+                    </select>
+                </div>
+
+                <!-- Submit -->
                 <input type="submit" id="submitButton" name="submitButton" class="btn btn-primary" value="Submit"/>
-            </div>
+            </form>
+
         </div>
-    </form>
+    </div>
+</div>
 
-    <div class="clearfix"></div>
 
-    <div th:if="${report}" class="container-fluid printable">
-        <header>
-            <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px" />
-            <span th:text="'Conference Report ' + ${reportDate}">today</span>
-        </header>
+<div class="clearfix"></div>
 
-       <div>
-           <th:block th:each="tt: ${report.tagTasks}">
-                <span class="tags" th:text="${tt.key}">Tag</span>
-                <table class="table table-condensed">
-                    <p th:if="${#lists.isEmpty(tt.value)}" th:text="None"></p>
-                    <tbody th:unless="${#lists.isEmpty(tt.value)}">
+<div th:if="${report}" class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
+                                                     href="javascript:window.print()">Print this report</a></h3>
+        </div>
+        <div class="panel-body printable">
+
+            <header>
+                <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
+                <span th:text="'Conference Report ' + ${reportDate}">today</span>
+            </header>
+
+            <div>
+                <th:block th:each="tt: ${report.tagTasks}">
+                    <span class="tags" th:text="${tt.key}">Tag</span>
+                    <table class="table table-condensed">
+                        <p th:if="${#lists.isEmpty(tt.value)}" th:text="None"></p>
+                        <tbody th:unless="${#lists.isEmpty(tt.value)}">
                         <tr th:each="task: ${tt.value}">
                             <td>
                                 <div>
                                     <b th:text="${task.name}"></b>
-                                    <span th:unless="${#lists.isEmpty(task.tags)}" th:text="${#strings.listJoin(task.tags,', ')}" class="tags_sm">Secondary tags</span>
+                                    <span th:unless="${#lists.isEmpty(task.tags)}"
+                                          th:text="${#strings.listJoin(task.tags,', ')}"
+                                          class="tags_sm">Secondary tags</span>
                                 </div>
                                 <span th:if="${task.notes}" th:text="${task.notes}" class="notes"></span>
                                 <ul>
@@ -80,11 +121,14 @@
 
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-           </th:block>
+                        </tbody>
+                    </table>
+                </th:block>
+            </div>
         </div>
     </div>
+</div>
+
 
 </body>
 </html>

@@ -1,6 +1,9 @@
 package com.ft.report
 
 import com.ft.asanaapi.model.Tag
+import com.ft.report.model.Report
+import com.ft.report.model.ReportTask
+import com.ft.report.model.ReportType
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 

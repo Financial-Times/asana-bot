@@ -27,10 +27,10 @@ class AsanaHealthIndicatorIntegrationSpec extends IntegrationSpec {
             health.status == expectedStatus
 
         where:
-            scenario              | httpStatus | expectedStatus
-            'workspace found'     | 200        | Status.UP
-            'bad request '        | 400        | Status.DOWN
-            'inernal asana error' | 500        | Status.DOWN
+            scenario               | httpStatus | expectedStatus
+            'workspace found'      | 200        | Status.UP
+            'bad request'          | 400        | Status.DOWN
+            'internal Asana error' | 500        | Status.DOWN
 
     }
 

@@ -18,7 +18,7 @@ public class DueDatePredicateFactory {
     private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Setter
-    private Clock clock = Clock.systemDefaultZone();
+    private Clock clock = Clock.systemUTC();
 
     public Predicate<ReportTask> create(ReportType reportType) {
         LocalDate today = LocalDate.now(clock);

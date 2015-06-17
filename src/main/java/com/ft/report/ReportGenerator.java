@@ -32,7 +32,7 @@ public class ReportGenerator {
     @Setter
     @Getter
     private Map<String, Desk> desks;
-    @Setter private Clock clock = Clock.systemDefaultZone();
+    @Setter private Clock clock = Clock.systemUTC();
 
 
     public Report generate(ReportType reportType, String team) {

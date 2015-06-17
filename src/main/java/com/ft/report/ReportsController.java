@@ -5,6 +5,7 @@ import com.ft.report.model.Report;
 import com.ft.report.model.ReportType;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
@@ -21,12 +22,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+@Profile("web")
 @Controller
 @RequestMapping("/reports")
 public class ReportsController {
 
     private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    @Setter private Clock clock = Clock.systemDefaultZone();
+    @Setter private Clock clock = Clock.systemUTC();
 
     @Setter @Autowired private ReportGenerator reportGenerator;
 

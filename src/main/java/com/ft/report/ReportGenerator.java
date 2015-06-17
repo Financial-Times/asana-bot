@@ -13,22 +13,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ConfigurationProperties(prefix = "report")
 @Component
 public class ReportGenerator {
-    private static final String OTHERS_TAG = "Others";
-    private static final String NOT_TAGGED_TAG = "Not tagged";
+    public static final String OTHERS_TAG = "Others";
+    public static final String NOT_TAGGED_TAG = "Not tagged";
 
     private static final String COMPLETED_SINCE_NOW = "now"; //For Asana it means not completed
 
     @Autowired private AsanaService asanaService;
     @Autowired private DueDatePredicateFactory dueDatePredicateFactory;
+    @Autowired private ReportSorter reportSorter;
+
     @Setter
     @Getter
     private Map<String, Desk> desks;
@@ -46,8 +46,10 @@ public class ReportGenerator {
         Map<String, List<ReportTask>> result = reportTaskStream
                 .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())) );
 
+        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, result);
+
         Report report = new Report();
-        report.setTagTasks(result);
+        report.setTagTasks(sortedResult);
         return report;
     }
 

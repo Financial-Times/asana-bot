@@ -1,6 +1,7 @@
 package com.ft.asanaapi;
 
 import com.ft.asanaapi.model.*;
+import com.ft.report.model.ReportTasksData;
 import retrofit.client.Response;
 import retrofit.http.*;
 
@@ -10,6 +11,14 @@ public interface Asana {
     TasksData tasks(
             @Query("assignee") String assignee,
             @Query("workspace") String workspace,
+            @Query("completed_since") String completedSince,
+            @Query("opt_fields") String optionalFields
+    );
+
+    @GET("/tasks")
+    ReportTasksData openProjectTasks(
+            @Query("workspace") String workspace,
+            @Query("project") String project,
             @Query("completed_since") String completedSince,
             @Query("opt_fields") String optionalFields
     );
@@ -70,4 +79,7 @@ public interface Asana {
     UserData getUserByEmail(
             @Path("workspace-id") String workspaceId,
             @Query("query") String email);
+
+    @GET("/workspaces/{workspace-id}")
+    Response ping(@Path("workspace-id") String workspaceId);
 }

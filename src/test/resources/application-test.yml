@@ -6,3 +6,12 @@ asana:
 ---
 report:
   hostDomain: ftqa.com
+  desks:
+    Companies:
+      projectId: 12345
+      premiumTags:
+        - Finserv
+        - Comment
+    World:
+      projectId: 23456
+      premiumTags: []

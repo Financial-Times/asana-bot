@@ -8,25 +8,28 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class AuthorizationService {
 
-    public static final String HOSTED_DOMAIN = "hd";
-    public static final String EMAIL = "email";
+    private static final String HOSTED_DOMAIN = "hd";
+    private static final String EMAIL = "email";
 
-    public static final String FT_AUTHORIZED = "ftAuthorized";
-    public static final String TEAMS = "teams";
+    private static final String FT_AUTHORIZED = "ftAuthorized";
+    private static final String TEAMS = "teams";
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
     @Autowired private DomainValidator domainValidator;
     @Autowired private TeamValidator teamValidator;
 
-    public void authorize(Map<String, String> authenticationDetails) throws UsernameNotFoundException {
-        String email = authenticationDetails.get(EMAIL);
-        String domain = authenticationDetails.get(HOSTED_DOMAIN);
+    public void authorize(Map<String, Object> authenticationDetails) throws UsernameNotFoundException {
+        if (isAlreadyAuthorized(authenticationDetails)) {
+            return;
+        }
+
+        String email = (String) authenticationDetails.get(EMAIL);
+        String domain = (String) authenticationDetails.get(HOSTED_DOMAIN);
         logger.debug("Authorizing user: " + email);
 
         domainValidator.validate(email, domain);
@@ -36,13 +39,18 @@ public class AuthorizationService {
         }
     }
 
+    private boolean isAlreadyAuthorized(Map<String, Object> authenticationDetails) {
+        String authorizationFlag = (String) authenticationDetails.get(FT_AUTHORIZED);
+        return Boolean.TRUE.toString().equals(authorizationFlag);
+
+    }
+
     private boolean isUserAuthorized(List<String> teams) {
         return teams.size() > 0;
     }
 
-    private void grantAuthority(Map<String, String> authenticationDetails, List<String> teams) {
+    private void grantAuthority(Map<String, Object> authenticationDetails, List<String> teams) {
         authenticationDetails.put(FT_AUTHORIZED, Boolean.TRUE.toString());
-        String formattedTeams = teams.stream().collect(Collectors.joining(", "));
-        authenticationDetails.put(TEAMS, formattedTeams);
+        authenticationDetails.put(TEAMS, teams);
     }
 }

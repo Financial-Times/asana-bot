@@ -1,38 +1,20 @@
 package com.ft.asanaapi
 
-import com.ft.AsanaBot
 import com.ft.services.AsanaService
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import org.junit.Rule
+import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
+public class AsanaServiceIntegrationSpec extends IntegrationSpec {
 
-@IntegrationTest
-@ContextConfiguration(classes = AsanaBot.class, loader = SpringApplicationContextLoader.class)
-@ActiveProfiles("test")
-public class AsanaServiceIntegrationSpec extends Specification {
-
-    private static final String testWorkspaceId = "324300775153"
     private static final String encodedOptFields = "id%2Cname%2Cparent.id%2Cparent.name%2Cparent.projects.team.name%2Cprojects.team.name"
     private static final String decodedOptFields = "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name"
-
-    private static final String APPLICATION_JSON_CONTENT_TYPE = "application/json"
     private static final String APPLICATION_FORM_CONTENT_TYPE = "application/x-www-form-urlencoded"
-    private static final String BASIC_AUTH_HEADER = "Basic "
+
 
     @Autowired
     AsanaService asanaService
-
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().port(8888))
 
     public void "add graphics project to graphics bot assignedTasks"() {
         given:

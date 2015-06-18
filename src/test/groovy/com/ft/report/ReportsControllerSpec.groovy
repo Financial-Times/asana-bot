@@ -66,7 +66,7 @@ class ReportsControllerSpec extends Specification {
             preferredReportType          | expectedReportDate
             ReportType.TODAY             | '01/06/2015'
             ReportType.TOMORROW          | '02/06/2015'
-            ReportType.SUNDAY_FOR_MONDAY | '07/06/2015 - 08/06/2015'
+            ReportType.SUNDAY_FOR_MONDAY | '07/06/2015'
     }
 
     @Unroll

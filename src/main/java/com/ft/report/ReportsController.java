@@ -24,7 +24,7 @@ import java.util.*;
 
 @Profile("web")
 @Controller
-@RequestMapping("/reports")
+@RequestMapping("/")
 public class ReportsController {
 
     private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -64,7 +64,7 @@ public class ReportsController {
                        @ModelAttribute("preferredReportType") ReportType preferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
-        if (!teams.isEmpty()) {
+        if (teams != null && !teams.isEmpty()) {
             criteria.setTeam((String) teams.get(0));
         }
         criteria.setReportType(preferredReportType);
@@ -88,8 +88,7 @@ public class ReportsController {
 
         if (preferredReportType == ReportType.SUNDAY_FOR_MONDAY) {
             LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-            LocalDate monday = sunday.plusDays(1);
-            return sunday.format(dateFormat) + " - " + monday.format(dateFormat);
+            return sunday.format(dateFormat);
         }
         if (preferredReportType == ReportType.TOMORROW) {
             return today.plusDays(1).format(dateFormat);

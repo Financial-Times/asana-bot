@@ -42,15 +42,6 @@
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
 
-
-        <!-- Asana bot dependancies -->
-        <!-- See: https://github.com/jlinn/asana-api-java -->
-        <!--<dependency>
-            <groupId>net.joelinn</groupId>
-            <artifactId>asana</artifactId>
-            <version>0.5.11</version>
-        </dependency>-->
-
         <!-- retrofit http://square.github.io/retrofit/ -->
         <dependency>
             <groupId>com.squareup.retrofit</groupId>

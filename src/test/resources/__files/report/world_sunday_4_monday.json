@@ -5,7 +5,7 @@
       "name": "Europe task 1",
       "notes": "some notes",
       "completed": false,
-      "due_on": "2015-06-15",
+      "due_on": "2015-06-14",
       "subtasks": [],
       "tags": [
         {
@@ -23,7 +23,7 @@
       "name": "Europe task 2",
       "notes": "some notes",
       "completed": false,
-      "due_on": "2015-06-15",
+      "due_on": "2015-06-14",
       "subtasks": [],
       "tags": [
         {

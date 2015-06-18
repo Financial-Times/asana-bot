@@ -38,8 +38,7 @@ public class DueDatePredicateFactory {
 
     private Predicate<ReportTask> createSundayForMondayPredicate(LocalDate today) {
         String sunday = getNextDay(today, DayOfWeek.SUNDAY);
-        String monday = getNextDay(today, DayOfWeek.MONDAY);
-        return rt -> sunday.equals(rt.getDue_on()) || monday.equals(rt.getDue_on());
+        return rt -> sunday.equals(rt.getDue_on());
     }
 
     private Predicate<ReportTask> createTomorrowPredicate(LocalDate today) {

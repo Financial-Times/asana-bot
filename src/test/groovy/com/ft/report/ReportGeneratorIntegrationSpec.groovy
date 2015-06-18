@@ -87,7 +87,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask.name = "Finserv task 1"
         reportTask.notes = "some notes"
         reportTask.completed = false
-        reportTask.due_on = "2015-06-15"
+        reportTask.due_on = "2015-06-14"
         reportTask.subtasks = []
         reportTask.tags = [new Tag(id: 33751312101034, name: "Asia")]
         return reportTask
@@ -110,7 +110,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.name = "Europe task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
-        reportTask1.due_on = "2015-06-15"
+        reportTask1.due_on = "2015-06-14"
         reportTask1.tags = [new Tag(id: '33751312101034', name: 'Asia')]
         reportTask1.subtasks = []
 
@@ -118,7 +118,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.name = "Europe task 2"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
-        reportTask2.due_on = "2015-06-15"
+        reportTask2.due_on = "2015-06-14"
         reportTask2.tags = []
         reportTask2.subtasks = []
 
@@ -130,7 +130,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.name = "Other task 1"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
-        reportTask2.due_on = "2015-06-15"
+        reportTask2.due_on = "2015-06-14"
         reportTask2.tags = [new Tag(id: '32896507462011', name: 'Unmapped tag')]
         reportTask2.subtasks = []
 

@@ -5,7 +5,7 @@
 <link rel="shortcut icon" href="http://im.ft-static.com/m/icons/favicon.ico" type="image/x-icon" />
 
 <!-- Origami imports -->
-<link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-header@^3.0.6"/>
+<link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-header@^3.0.6,o-ft-icons@^2.3.7"/>
 <script src="//build.origami.ft.com/bundles/js?modules=o-header@^3.0.6"></script>
 
 <head>
@@ -43,7 +43,7 @@
         <div class="panel-body">
 
             <form id="reportCriteriaForm" class="form-inline" action="#" method="post"
-                  th:action="@{/reports}"
+                  th:action="@{/}"
                   th:object="${criteria}">
 
                 <!-- Validation errors -->
@@ -108,7 +108,8 @@
                         <tr th:each="task: ${tt.value}">
                             <td>
                                 <div>
-                                    <b th:text="${task.name}"></b>
+                                    <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
+                                    <b th:text="${task.name}" ></b>
                                     <span th:unless="${#lists.isEmpty(task.tags)}"
                                           th:text="${#strings.listJoin(task.tags,', ')}"
                                           class="tags_sm">Secondary tags</span>

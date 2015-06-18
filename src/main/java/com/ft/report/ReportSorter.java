@@ -46,6 +46,8 @@ public class ReportSorter {
     }
 
     private List<String> addAllTags(Map<String, List<ReportTask>> result) {
-        return result.keySet().stream().collect(Collectors.toList());
+        return result.keySet().stream()
+                .filter(key -> !key.equals(ReportGenerator.NOT_TAGGED_TAG))
+                .collect(Collectors.toList());
     }
 }

@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-parent</artifactId>
-        <version>1.0.3.BUILD-SNAPSHOT</version>
+        <version>1.0.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -41,15 +41,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
-
-
-        <!-- Asana bot dependancies -->
-        <!-- See: https://github.com/jlinn/asana-api-java -->
-        <!--<dependency>
-            <groupId>net.joelinn</groupId>
-            <artifactId>asana</artifactId>
-            <version>0.5.11</version>
-        </dependency>-->
 
         <!-- retrofit http://square.github.io/retrofit/ -->
         <dependency>
@@ -201,28 +192,9 @@
     <!-- (you don't need this if you are using a .RELEASE version) -->
     <repositories>
         <repository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
             <id>Sonatype-public</id>
             <name>SnakeYAML repository</name>
             <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
 </project>

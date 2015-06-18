@@ -64,7 +64,7 @@ public class ReportsController {
                        @ModelAttribute("preferredReportType") ReportType preferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
-        if (!teams.isEmpty()) {
+        if (teams != null && !teams.isEmpty()) {
             criteria.setTeam((String) teams.get(0));
         }
         criteria.setReportType(preferredReportType);

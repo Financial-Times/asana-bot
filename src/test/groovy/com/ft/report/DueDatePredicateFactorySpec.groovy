@@ -17,7 +17,6 @@ class DueDatePredicateFactorySpec extends Specification {
     private static final LocalDate TODAY = LocalDate.of(2015, Month.JUNE, 11)
     private static final LocalDate TOMORROW = TODAY.plusDays(1)
     private static final LocalDate NEXT_SUNDAY = LocalDate.of(2015, Month.JUNE, 14)
-    private static final LocalDate NEXT_MONDAY = LocalDate.of(2015, Month.JUNE, 15)
     private static final LocalDate NEXT_TUESDAY = LocalDate.of(2015, Month.JUNE, 16)
 
     private static final ZoneId zoneId = ZoneId.systemDefault()
@@ -41,7 +40,6 @@ class DueDatePredicateFactorySpec extends Specification {
         where:
             reportType                   | dueDate
             ReportType.SUNDAY_FOR_MONDAY | NEXT_SUNDAY
-            ReportType.SUNDAY_FOR_MONDAY | NEXT_MONDAY
             ReportType.TODAY             | TODAY
             ReportType.TOMORROW          | TOMORROW
             null                         | null

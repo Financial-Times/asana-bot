@@ -24,11 +24,11 @@ public class ReportSorter {
         Map<String, List<ReportTask>> sortedResult = new LinkedHashMap<>();
         List<String> tags = setupTags(team, reportTasksToSort);
 
-        tags.stream().forEach(premiumTag -> {
-                    List<ReportTask> reportTasks = reportTasksToSort.get(premiumTag);
+        tags.stream().forEach(tag -> {
+                    List<ReportTask> reportTasks = reportTasksToSort.get(tag);
                     if (reportTasks != null) {
                         List<ReportTask> sortedReportTasks = sortByImportance(reportTasks);
-                        sortedResult.put(premiumTag, sortedReportTasks);
+                        sortedResult.put(tag, sortedReportTasks);
                     }
                 }
         );

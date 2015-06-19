@@ -3,6 +3,7 @@ package com.ft.report.model;
 import com.ft.asanaapi.model.Tag;
 import lombok.Data;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -14,14 +15,17 @@ public class ReportTask {
     private boolean completed = false;
     private List<Tag> tags;
     private List<ReportTask> subtasks;
+    private boolean important = false;
 
     public ReportTask() {}
 
-    public boolean isImportant() {
+    public void assignImportant() {
         if (tags == null || tags.isEmpty()) {
-            return false;
+            important = false;
         }
-        return Stream.of(ImportantTag.values()).map(ImportantTag::getValue)
+        important =  Stream.of(ImportantTag.values()).map(ImportantTag::getValue)
                 .anyMatch(importantTag -> tags.stream().anyMatch(tag -> tag.getName().equals(importantTag)));
     }
+
+    public static final Comparator<ReportTask> byImportance = (rt1, rt2) -> Boolean.compare(rt2.isImportant(), rt1.isImportant());
 }

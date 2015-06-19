@@ -1,7 +1,9 @@
 package com.ft.asanaapi.auth
 
 import com.ft.test.IntegrationSpec
+import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.OutputCapture
 import spock.lang.Unroll
 import java.nio.charset.Charset
 
@@ -12,9 +14,16 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
     @Autowired
     AuthorizationService authorizationService
 
+    @Rule
+    OutputCapture capture = new OutputCapture()
+
     private static final String testWorkspaceId = "324300775153"
     private static final String TEST_USER_ID = "676767"
     private static final String BASIC_AUTH_HEADER = "Basic "
+
+    void cleanup() {
+        capture.flush()
+    }
 
     @Unroll
     void "authorize - success #scenario"() {
@@ -41,6 +50,11 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
         and:
             authenticationDetails['ftAuthorized'] == expectedFtAuthorized
             authenticationDetails['teams'] == expectedTeams
+        and:
+            String testOutput = capture.toString()
+            testOutput.contains("Authorizing user: ${TEST_EMAIL}")
+            testOutput.contains("Successfully authorized user: ${TEST_EMAIL}")
+
         where:
             scenario                      | userTeamsFile | expectedFtAuthorized | expectedTeams
             'fully authorized user'       | 'success'     | 'true'               | ['World', 'Companies']
@@ -71,6 +85,11 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
         and:
             !authenticationDetails['ftAuthorized']
             !authenticationDetails['teams']
+
+        and:
+            String testOutput = capture.toString()
+            testOutput.contains("Authorizing user: ${email}")
+            !testOutput.contains("Successfully authorized user: ${email}")
 
         where:
             scenario                              | email                | hostDomain    | getUserByEmailCalls | userFile    | expectedException      | expectedMessage

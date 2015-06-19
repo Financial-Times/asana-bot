@@ -12,4 +12,9 @@ public class LogoutController {
     public String logout() {
         return "login/logout";
     }
+
+    @RequestMapping("/logout/newSession")
+    public String restartSession() {
+        return "index";
+    }
 }

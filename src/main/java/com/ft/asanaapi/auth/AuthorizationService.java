@@ -37,6 +37,7 @@ public class AuthorizationService {
         if (isUserAuthorized(teamNames)) {
             grantAuthority(authenticationDetails, teamNames);
         }
+        logger.debug("Successfully authorized user: " + email);
     }
 
     private boolean isAlreadyAuthorized(Map<String, Object> authenticationDetails) {

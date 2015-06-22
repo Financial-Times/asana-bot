@@ -4,6 +4,8 @@ import com.ft.report.model.Criteria;
 import com.ft.report.model.Report;
 import com.ft.report.model.ReportType;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +29,9 @@ import java.util.*;
 @RequestMapping("/")
 public class ReportsController {
 
-    private static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
+
     @Setter private Clock clock = Clock.systemUTC();
 
     @Setter @Autowired private ReportGenerator reportGenerator;
@@ -80,6 +84,7 @@ public class ReportsController {
         Report report = reportGenerator.generate(criteria.getReportType(), criteria.getTeam());
         modelMap.addAttribute("report", report);
         modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
+        logger.debug(criteria.getReportType().format() + " report for " + criteria.getTeam() + " desk generated");
         return "reports/home";
     }
 

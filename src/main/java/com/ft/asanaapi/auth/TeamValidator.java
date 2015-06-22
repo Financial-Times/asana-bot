@@ -3,6 +3,7 @@ package com.ft.asanaapi.auth;
 import com.ft.asanaapi.AsanaClient;
 import com.ft.asanaapi.model.Team;
 import com.ft.config.Config;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,24 @@ import java.util.stream.Collectors;
 public class TeamValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(TeamValidator.class);
+    private static final List<String> NO_TEAMS = Collections.emptyList();
 
-    @Autowired private AsanaClient graphicsAsanaClient;
-    @Autowired private Config config;
+    @Autowired @Setter private AsanaClient graphicsAsanaClient;
+    @Autowired @Setter private Config config;
 
     public List<String> validate(String email) {
         List<Team> teams = graphicsAsanaClient.findTeams(email);
+
         if(teams == null || teams.size() == 0) {
-            logger.warn("Authorization failed due to user not assigned to editorial team - user: " + email);
-            return Collections.emptyList();
+            logger.debug("Authorization failed due to user not assigned to any team - user: " + email);
+            return NO_TEAMS;
         }
-        return filterAuthorizedTeams(teams);
+        List<String> authorizedTeams = filterAuthorizedTeams(teams);
+        if(authorizedTeams == null || authorizedTeams.size() == 0) {
+            logger.debug("Authorization failed due to user not assigned to any of authorized team - user: " + email);
+            return NO_TEAMS;
+        }
+        return authorizedTeams;
     }
 
     private List<String> filterAuthorizedTeams(List<Team> teams) {

@@ -20,25 +20,31 @@ public class ReportSorter {
     @Getter
     private Map<String, Desk> desks;
 
-    public Map<String, List<ReportTask>> sort(String team, Map<String, List<ReportTask>> result) {
+    public Map<String, List<ReportTask>> sort(String team, Map<String, List<ReportTask>> reportTasksToSort) {
         Map<String, List<ReportTask>> sortedResult = new LinkedHashMap<>();
-        List<String> tags = desks.get(team).getPremiumTags();
+        List<String> tags = setupTags(team, reportTasksToSort);
 
-        if (!arePremiumTagsConfigured(tags)) {
-            tags = addAllTags(result);
-        } else {
-            tags.add(ReportGenerator.OTHERS_TAG);
-        }
-        tags.add(ReportGenerator.NOT_TAGGED_TAG);
-
-        tags.stream().forEach(premiumTag -> {
-                    List<ReportTask> reportTasks = result.get(premiumTag);
+        tags.stream().forEach(tag -> {
+                    List<ReportTask> reportTasks = reportTasksToSort.get(tag);
                     if (reportTasks != null) {
-                        sortedResult.put(premiumTag, reportTasks);
+                        List<ReportTask> sortedReportTasks = sortByImportance(reportTasks);
+                        sortedResult.put(tag, sortedReportTasks);
                     }
                 }
         );
         return sortedResult;
+    }
+
+    private List<String> setupTags(String team, Map<String, List<ReportTask>> reportTasksToSort) {
+        List<String> tags = desks.get(team).getPremiumTags();
+
+        if (!arePremiumTagsConfigured(tags)) {
+            tags = addAllTags(reportTasksToSort);
+        } else {
+            tags.add(ReportGenerator.OTHERS_TAG);
+        }
+        tags.add(ReportGenerator.NOT_TAGGED_TAG);
+        return tags;
     }
 
     private boolean arePremiumTagsConfigured(List<String> premiumTags) {
@@ -48,6 +54,13 @@ public class ReportSorter {
     private List<String> addAllTags(Map<String, List<ReportTask>> result) {
         return result.keySet().stream()
                 .filter(key -> !key.equals(ReportGenerator.NOT_TAGGED_TAG))
+                .collect(Collectors.toList());
+    }
+
+    private List<ReportTask> sortByImportance(List<ReportTask> reportTasks) {
+        return reportTasks.stream()
+                .peek(ReportTask::assignImportant)
+                .sorted(ReportTask.byImportance)
                 .collect(Collectors.toList());
     }
 }

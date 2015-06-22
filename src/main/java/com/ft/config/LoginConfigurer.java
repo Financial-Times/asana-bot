@@ -46,7 +46,9 @@ public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests().anyRequest()
                 .authenticated().withObjectPostProcessor(objectPostProcessor())
-                .and().csrf()
+                .and().exceptionHandling().accessDeniedHandler(new InvalidCsrfTokenAccessDeniedHandler())
+                .and()
+                .csrf()
                 .csrfTokenRepository(csrfTokenRepository()).and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }
@@ -65,12 +67,10 @@ public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
                     response.addCookie(cookie);
                 }
                 try {
-
                     filterChain.doFilter(request, response);
                 } catch (InvalidDomainException | NonAsanaUserException ex) {
                     response.sendRedirect("/logout");
                 }
-
             }
         };
     }

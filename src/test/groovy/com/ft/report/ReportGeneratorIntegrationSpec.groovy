@@ -44,7 +44,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'Companies'
             stubGetTasks(team, TEST_COMPANIES_PROJECT_ID)
-            ReportTask expectedFinservTask = createFinservTask()
+            List<ReportTask> expectedFinservTasks = createFinservTasks()
             List<ReportTask> expectedNotTaggedTasks = createNotTaggedTask()
             List<ReportTask> expectedOtherTasks = createOtherTask()
 
@@ -56,8 +56,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         and:
             report
             report.tagTasks.size() == 3
-            report.tagTasks['Finserv'].size() == 1
-            report.tagTasks['Finserv'].first() == expectedFinservTask
+            report.tagTasks['Finserv'] == expectedFinservTasks
             report.tagTasks[OTHER_TAG].size() == 1
             report.tagTasks[OTHER_TAG] == expectedOtherTasks
             report.tagTasks[NOT_TAGGED].size() == 1
@@ -82,7 +81,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks['Europe'] == expectedEuropeTasks
     }
 
-    private static ReportTask createFinservTask() {
+    private static List<ReportTask> createFinservTasks() {
         ReportTask reportTask = new ReportTask()
         reportTask.name = "Finserv task 1"
         reportTask.notes = "some notes"
@@ -90,7 +89,16 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask.due_on = "2015-06-14"
         reportTask.subtasks = []
         reportTask.tags = [new Tag(id: 33751312101034, name: "Asia")]
-        return reportTask
+
+        ReportTask importantReportTask = new ReportTask()
+        importantReportTask.name = "Finserv task 2"
+        importantReportTask.notes = "some notes"
+        importantReportTask.completed = false
+        importantReportTask.due_on = "2015-06-14"
+        importantReportTask.subtasks = []
+        importantReportTask.important = true
+        importantReportTask.tags = [new Tag(id: 33751312101134, name: "Level 1")]
+        return [importantReportTask, reportTask]
     }
 
     private static List<ReportTask> createNotTaggedTask() {

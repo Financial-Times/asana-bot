@@ -1,6 +1,8 @@
 package com.ft.asanaapi.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -8,9 +10,8 @@ import java.util.List;
  * Basic info about a task.
  */
 @Data
-public class Task {
-    private String id;
-    private String name;
+@EqualsAndHashCode(callSuper = true)
+public class Task extends AsanaEntity {
     private Task parent;
     private List<ProjectInfo> projects;
 
@@ -20,6 +21,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "id: " + id + " , name: " + name + "\n";
+        return "id: " + getId() + " , name: " + getName() + "\n";
     }
 }

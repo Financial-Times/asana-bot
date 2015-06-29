@@ -7,6 +7,7 @@ machine:
   environment:
     ASANA_GRAPHICS_KEY: dummyGraphicsKey
     ASANA_PICTURES_KEY: dummyPicturesKey
+    ASANA_REPORT_KEY: dummyPicturesKey
 deployment:
   staging:
     branch: staging

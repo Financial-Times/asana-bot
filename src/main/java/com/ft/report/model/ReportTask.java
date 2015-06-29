@@ -1,15 +1,19 @@
 package com.ft.report.model;
 
+import com.ft.asanaapi.model.AsanaEntity;
 import com.ft.asanaapi.model.Tag;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Data
-public class ReportTask {
-    private String name;
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = false)
+public class ReportTask extends AsanaEntity {
     private String notes;
     private String due_on;
     private boolean completed = false;

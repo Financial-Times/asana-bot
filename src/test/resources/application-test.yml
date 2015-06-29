@@ -3,6 +3,8 @@ asana:
   picturesId: 25587620489018
   graphicsId: 25587620489018
   baseUrl: http://localhost:8888/api/1.0
+  tags:
+    Market: MKT
 ---
 report:
   hostDomain: ftqa.com
@@ -15,3 +17,10 @@ report:
     World:
       projectId: 23456
       premiumTags: []
+
+---
+backup:
+  google:
+    shareWithUsers:
+      - asana-bot-forward@ftqa.org
+      - lucas.gluchowski@ft.com

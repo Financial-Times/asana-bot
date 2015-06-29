@@ -3,6 +3,9 @@ package com.ft.asanaapi;
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.auth.NonAsanaUserException;
 import com.ft.asanaapi.model.*;
+import com.ft.backup.model.BackupTask;
+import com.ft.backup.model.BackupTasksData;
+import com.ft.backup.model.ProjectsData;
 import com.ft.config.Config;
 import com.ft.report.model.ReportTask;
 import com.ft.report.model.ReportTasksData;
@@ -16,28 +19,17 @@ import java.util.*;
 public class AsanaClient {
 
     private static final Logger logger = LoggerFactory.getLogger(AsanaClient.class);
-
-    private static final Map<String, String> tagToTeamMapping = new HashMap<String, String>() {
-        {
-            put("Companies", "COS");
-            put("World", "WN");
-            put("UK", "UKN");
-            put("Pictures", "PIC");
-        }
-    };
+    private static final String PROJECT_TASK_OPT_EXPAND = "(this|subtasks+)";
 
     private Config config;
     private Asana asana;
 
     public AsanaClient(String apiKey, Config config) {
-
         this.config = config;
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setRequestInterceptor((new BasicAuthRequestInterceptor()).setPassword(apiKey))
                 .setEndpoint(config.getBaseUrl())
                 .build();
-
         asana = restAdapter.create(Asana.class);
     }
 
@@ -111,18 +103,18 @@ public class AsanaClient {
         String tagName = mapTeamToTag(team);
         List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), tagName).getData();
         Optional<Tag> existingTag = existingTags.stream()
-                .filter(tag -> tag.getName().equals(team.getName()))
+                .filter(tag -> tag.getName().equals(tagName))
                 .findFirst();
 
         if (existingTag.isPresent()) {
             return existingTag.get();
         }
 
-        return asana.createTag(config.getWorkspace(), team.getName()).getData();
+        return asana.createTag(config.getWorkspace(), tagName).getData();
     }
 
     private String mapTeamToTag(Team team) {
-        return tagToTeamMapping.getOrDefault(team.getName(), team.getName());
+        return config.getTags().getOrDefault(team.getName(), team.getName());
     }
 
     private void unassignTask(Task task) {
@@ -137,5 +129,15 @@ public class AsanaClient {
 
     public Response ping() {
         return asana.ping(config.getWorkspace());
+    }
+
+    public List<ProjectInfo> getAllProjects() {
+        ProjectsData projectsData = asana.getMyProjects();
+        return projectsData.getData();
+    }
+
+    public List<BackupTask> getAllTasksByProject(ProjectInfo project) {
+        BackupTasksData data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND);
+        return data.getData();
     }
 }

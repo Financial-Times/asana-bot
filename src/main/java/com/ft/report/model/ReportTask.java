@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = false)
 public class ReportTask extends AsanaEntity {
     private String notes;
     private String due_on;

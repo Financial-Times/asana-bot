@@ -86,7 +86,7 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
 
     private stubPostTag() {
         wireMockRule.stubFor(post(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                .withRequestBody(containing("name=Market"))
+                .withRequestBody(containing("name=MKT"))
                 .willReturn(aResponse().withStatus(201).withBodyFile("create_tag.json")))
     }
 
@@ -143,7 +143,7 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
 
     private boolean verifyPostTag() {
         wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                .withRequestBody(containing("name=Market")))
+                .withRequestBody(containing("name=MKT")))
         return true
     }
 

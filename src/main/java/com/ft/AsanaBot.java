@@ -24,6 +24,11 @@ public class AsanaBot {
         return new AsanaClient(System.getenv("ASANA_PICTURES_KEY"), config);
     }
 
+    @Bean(name = "reportAsanaClient")
+    public AsanaClient getReportAsanaClient() {
+        return new AsanaClient(System.getenv("ASANA_REPORT_KEY"), config);
+    }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(AsanaBot.class, args);
     }

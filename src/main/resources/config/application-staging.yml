@@ -22,3 +22,10 @@ report:
       projectId: 36788370362611
     UK:
       projectId: 37532256694667
+---
+backup:
+  google:
+    shareWithUsers:
+      - lucas.gluchowski@ft.com
+      - stuart.turner@ft.com
+      - claire.powell@ft.com

@@ -96,5 +96,8 @@ backup:
     clientEmail: ${GOOGLE_API_CLIENT_EMAIL}
     clientId: ${GOOGLE_API_CLIENT_ID}
     type: service_account
-    shareWithUsers:
-      - prod@ft.com
+    rootFolder: asana_backup
+    sharedWith:
+      users: []
+      groups:
+        - prod@ft.com

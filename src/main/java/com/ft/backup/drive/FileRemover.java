@@ -1,8 +1,9 @@
 package com.ft.backup.drive;
 
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.ChildList;
+import com.google.api.services.drive.model.ChildReference;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +23,10 @@ public class FileRemover {
         this.drive = drive;
     }
 
-    public void removeFilesOlderThan(LocalDateTime dateTimeFrom) throws IOException {
+    public void removeFilesOlderThan(File root, LocalDateTime dateTimeFrom) throws IOException {
         String formattedDateTimeFrom = dateTimeFrom.format(DateTimeFormatter.ISO_DATE_TIME);
-        String query = "mimeType != '" + FOLDER_MIME_TYPE + "' and modifiedDate <= '" + formattedDateTimeFrom+"'";
-        FileList result = drive.files().list()
+        String query = buildQuery(formattedDateTimeFrom);
+        ChildList result = drive.children().list(root.getId())
                 .setQ(query)
                 .setMaxResults(200)
                 .execute();
@@ -33,11 +34,15 @@ public class FileRemover {
         result.getItems().parallelStream().forEach(this::deleteFile);
     }
 
-    private void deleteFile(File file)  {
+    private String buildQuery(String formattedDateTimeFrom) {
+        return "mimeType != '" + FOLDER_MIME_TYPE + "' and modifiedDate <= '" + formattedDateTimeFrom+"'";
+    }
+
+    private void deleteFile(ChildReference file)  {
         try {
             drive.files().delete(file.getId()).execute();
         } catch (IOException e) {
-            logger.error("Could not delete file" + file.getTitle(), e);
+            logger.error("Could not delete file" + file.getId(), e);
         }
     }
 }

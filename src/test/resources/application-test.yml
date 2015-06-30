@@ -21,6 +21,10 @@ report:
 ---
 backup:
   google:
-    shareWithUsers:
-      - asana-bot-forward@ftqa.org
-      - lucas.gluchowski@ft.com
+    rootFolder: test_asana_backup
+    sharedWith:
+      users:
+        - asana-bot-forward@ftqa.org
+        - lucas.gluchowski@ft.com
+      groups:
+        - editorial.technology@ft.com

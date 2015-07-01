@@ -27,6 +27,7 @@ report:
 ---
 backup:
   google:
+    rootFolder: asana_staging_backup
     sharedWith:
       users:
         - lucas.gluchowski@ft.com

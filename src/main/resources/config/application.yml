@@ -7,6 +7,7 @@ asana:
     - Companies
     - World
     - UK
+    - Markets
   tags:
     Companies: COS
     World: WN
@@ -76,6 +77,9 @@ report:
         - Arts & Culture
         - Sport
         - London
+    Markets:
+      projectId: 32052433501773
+      premiumTags: []
 ---
 management:
   security:

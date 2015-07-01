@@ -4,7 +4,7 @@ asana:
   graphicsId: 25587620489018
   baseUrl: http://localhost:8888/api/1.0
   tags:
-    Market: MKT
+    Markets: MKT
 ---
 report:
   hostDomain: ftqa.com

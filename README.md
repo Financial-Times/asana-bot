@@ -9,13 +9,15 @@ it has been added when done.
 
 * GraphicsBot -> when assigned adds tasks to the Graphics project
 * PicturesBot -> when assigned adds tasks to the Pictures project
+* ReportBot -> when assigned backs up the project
 
 ## Setup
 
-Two environment variables must be set in order for the bot to be able to communicate with:
+Below environment variables must be set in order for the bot to be able to communicate with:
 
 * ASANA_GRAPHICS_KEY
 * ASANA_PICTURES_KEY
+* ASANA_REPORT_KEY
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 
 This user needs to have access to projects where tasks are being assigned and also the projects where tasks are being added. 
@@ -23,6 +25,16 @@ This user needs to have access to projects where tasks are being assigned and al
 on linux/mac these can be set with the cmds:
 
 `export ASANA_GRAPHICS_KEY=[API KEY]`
+
+Below environment variables must be set in order for the app to authenticate user against Google OAuth2:
+* OAUTH_CLIENT_ID
+* OAUTH_CLIENT_SECRET
+
+Finally backup properties are driven by following variables:
+* GOOGLE_API_PRIVATE_KEY_ID
+* GOOGLE_API_PRIVATE_KEY
+* GOOGLE_API_PRIVATE_CLIENT_EMAIL
+* GOOGLE_API_PRIVATE_CLIENT_ID
 
 ## Running locally
 

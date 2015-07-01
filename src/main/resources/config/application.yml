@@ -103,5 +103,13 @@ backup:
     rootFolder: asana_backup
     sharedWith:
       users: []
-      groups:
-        - prod@ft.com
+      groups: []
+
+spring:
+  profiles:
+    production:
+      backup:
+        google:
+          sharedWith:
+            groups:
+              - prod@ft.com

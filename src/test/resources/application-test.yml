@@ -26,5 +26,4 @@ backup:
       users:
         - asana-bot-forward@ftqa.org
         - lucas.gluchowski@ft.com
-      groups:
-        - editorial.technology@ft.com
+      groups: []

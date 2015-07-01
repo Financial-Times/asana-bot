@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 public class FileSharer {
@@ -26,8 +27,12 @@ public class FileSharer {
     public FileSharer(Drive drive, File file, GoogleApiConfig.SharedWith sharedWith) {
         this.drive = drive;
         this.file = file;
-        this.users = sharedWith.getUsers();
-        this.groups = sharedWith.getGroups();
+        this.users = getOrDefault(sharedWith.getUsers());
+        this.groups = getOrDefault(sharedWith.getGroups());
+    }
+
+    private static List<String> getOrDefault(List<String> emails) {
+        return emails != null ? emails : Collections.emptyList();
     }
 
     public void share() throws IOException {

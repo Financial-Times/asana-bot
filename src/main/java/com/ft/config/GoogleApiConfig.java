@@ -30,7 +30,9 @@ public class GoogleApiConfig {
 
     private String type;
 
-    private List<String> shareWithUsers;
+    private SharedWith sharedWith;
+
+    private String rootFolder;
 
     @Autowired @JsonIgnore private ObjectMapper objectMapper;
 
@@ -46,5 +48,11 @@ public class GoogleApiConfig {
         if (privateKey.contains("\\n")) {
             privateKey = privateKey.replace("\\n", "\n") ;
         }
+    }
+
+    @Data
+    public static class SharedWith {
+        private List<String> users;
+        private List<String> groups;
     }
 }

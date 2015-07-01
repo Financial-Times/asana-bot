@@ -2,6 +2,7 @@ package com.ft.backup
 
 import com.ft.backup.drive.GoogleDriveService
 import com.ft.test.IntegrationSpec
+import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -43,15 +44,17 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
             verifyGetProjectTasks(TEST_UK_PROJECT_ID)
 
         and:
-            getFilesCount() >= 2
+            getTestFiles().size() >= 2
 
         when:
             asanaBackupService.removeOldBackupFiles()
-        then:
-            getFilesCount() == 0
+
+        then: 'only root folder remains'
+            List<File> files = getTestFiles()
+            files.size() >= 1
 
         cleanup:
-            listAndDeleteMyFiles()
+            listAndDeleteMyFiles(files)
     }
 
     private void stubGetProjects() {
@@ -87,19 +90,22 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
         return true
     }
 
-    private int getFilesCount() throws IOException {
+    private List<File> getTestFiles() throws IOException {
         FileList result = googleDriveService.drive.files().list()
                 .setQ("title contains 'Test'")
                 .setMaxResults(50)
                 .execute()
-        return result.getItems().size()
+        return result.getItems()
     }
 
-    private void listAndDeleteMyFiles() throws IOException {
-        FileList result = googleDriveService.drive.files().list().setMaxResults(50).execute()
-        result.getItems().each { file ->
+    private void listAndDeleteMyFiles(List<File> files) throws IOException {
+        files.each { file ->
             println file.title
-            googleDriveService.drive.files().delete(file.getId()).execute()
+            try {
+                googleDriveService.drive.files().delete(file.getId()).execute()
+            } catch (Exception ignore) {
+                println "Didn't delete the file due to ${ignore.message}"
+            }
         }
     }
 }

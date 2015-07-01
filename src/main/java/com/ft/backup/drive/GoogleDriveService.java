@@ -48,18 +48,19 @@ public class GoogleDriveService {
         CsvFileUploader csvFileUploader = new CsvFileUploader(drive, project.getName(), folder, body);
         File uploaded = csvFileUploader.upload();
 
-        FileSharer fileSharer = new FileSharer(uploaded, googleApiConfig.getShareWithUsers());
-        fileSharer.share(drive);
+        FileSharer fileSharer = new FileSharer(drive, uploaded, googleApiConfig.getSharedWith());
+        fileSharer.share();
     }
 
     public File findOrCreateRootFolder() throws IOException {
-        File folder = new FileFinder(drive).findOrCreateRootFolder();
-        FileSharer fileSharer = new FileSharer(folder, googleApiConfig.getShareWithUsers());
-        fileSharer.share(drive);
+        File folder = new FileFinder(drive).findOrCreateRootFolder(googleApiConfig.getRootFolder());
+        FileSharer fileSharer = new FileSharer(drive, folder, googleApiConfig.getSharedWith());
+        fileSharer.share();
         return folder;
     }
 
     public void removeFilesOlderThan(LocalDateTime dateTimeFrom) throws IOException{
-        new FileRemover(drive).removeFilesOlderThan(dateTimeFrom);
+        File root = new FileFinder(drive).findFolder(googleApiConfig.getRootFolder());
+        new FileRemover(drive).removeFilesOlderThan(root, dateTimeFrom);
     }
 }

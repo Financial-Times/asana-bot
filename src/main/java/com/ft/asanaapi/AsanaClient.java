@@ -20,6 +20,7 @@ public class AsanaClient {
 
     private static final Logger logger = LoggerFactory.getLogger(AsanaClient.class);
     private static final String PROJECT_TASK_OPT_EXPAND = "(this|subtasks+)";
+    public static final String TASK_FIELDS = "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name";
 
     private Config config;
     private Asana asana;
@@ -36,7 +37,7 @@ public class AsanaClient {
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId) {
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", TASK_FIELDS);
         logTaskProcessingStart(projectId, tasksData);
         List<Task> tasks = tasksData.getData();
 
@@ -45,14 +46,13 @@ public class AsanaClient {
         tasks.stream().forEach(task -> {
             asana.addProjectToTask(task.getId(), projectId);
 
-            if (task.isSubTask()) {
-                addCommentToParent(projectInfo, task);
-            }
-
             ProjectInfo originalProject = extractProjectFromTask(task);
             if (originalProject.isAssignedToTeam()) {
                 Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
+            }
+            if (task.isSubTask()) {
+                addCommentToParent(projectInfo, task);
             }
 
             unassignTask(task);
@@ -94,9 +94,22 @@ public class AsanaClient {
 
     private ProjectInfo extractProjectFromTask(Task task) {
         if (task.isSubTask()) {
-            return task.getParent().getProjects().get(0);
+            return extractProjectFromParentTask(task.getParent());
         }
-        return task.getProjects().get(0);
+        return extractProjectFromParentTask(task);
+    }
+
+    private ProjectInfo extractProjectFromParentTask(Task task) {
+        List<ProjectInfo> candidate = task.getProjects();
+        if (candidate != null && !candidate.isEmpty()) {
+            return candidate.get(0);
+        }
+        Task detailedTask = retrieveTask(task);
+        return extractProjectFromParentTask(detailedTask.getParent());
+    }
+
+    private Task retrieveTask(Task task) {
+        return asana.getTask(task.getId(), TASK_FIELDS).getData();
     }
 
     private Tag findOrCreateTagByName(Team team) {

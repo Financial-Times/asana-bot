@@ -37,6 +37,12 @@ public interface Asana {
             @Field("project") String projectId
     );
 
+    @GET("/tasks/{task-id}")
+    TaskData getTask(
+            @Path("task-id") String taskId,
+            @Query("opt_fields") String optionalFields
+    );
+
     @FormUrlEncoded
     @PUT("/tasks/{task-id}")
     Response updateTask(

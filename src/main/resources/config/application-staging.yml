@@ -22,3 +22,14 @@ report:
       projectId: 36788370362611
     UK:
       projectId: 37532256694667
+    Markets:
+      projectId: 39486514321993
+---
+backup:
+  google:
+    rootFolder: asana_staging_backup
+    sharedWith:
+      users:
+        - lucas.gluchowski@ft.com
+        - stuart.turner@ft.com
+        - claire.powell@ft.com

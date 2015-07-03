@@ -7,6 +7,12 @@ asana:
     - Companies
     - World
     - UK
+    - Markets
+  tags:
+    Companies: COS
+    World: WN
+    UK: UKN
+    Pictures: PIC
 ---
 server:
   port: 8080
@@ -71,6 +77,9 @@ report:
         - Arts & Culture
         - Sport
         - London
+    Markets:
+      projectId: 32052433501773
+      premiumTags: []
 ---
 management:
   security:
@@ -83,3 +92,24 @@ endpoints:
   enabled: false
   health:
     enabled: true
+---
+backup:
+  google:
+    privateKey: ${GOOGLE_API_PRIVATE_KEY}
+    privateKeyId: ${GOOGLE_API_PRIVATE_KEY_ID}
+    clientEmail: ${GOOGLE_API_CLIENT_EMAIL}
+    clientId: ${GOOGLE_API_CLIENT_ID}
+    type: service_account
+    rootFolder: asana_backup
+    sharedWith:
+      users: []
+      groups: []
+
+spring:
+  profiles:
+    production:
+      backup:
+        google:
+          sharedWith:
+            groups:
+              - prod@ft.com

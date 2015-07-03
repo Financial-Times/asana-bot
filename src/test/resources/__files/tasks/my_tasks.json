@@ -11,9 +11,20 @@
           {
             "id": 25587620489018,
             "name": "DevGraphicsRequests",
-            "team": { "name": "Market" }
+            "team": { "name": "Markets" }
           }
         ]
+      },
+      "projects": []
+    },
+    {
+      "id": 34761621630975,
+      "name": "test sub subtask",
+      "tags": [],
+      "parent": {
+        "id": 34761621630973,
+        "name": "test subtask",
+        "projects": []
       },
       "projects": []
     },
@@ -26,7 +37,7 @@
         {
           "id": 25587620489018,
           "name": "DevGraphicsRequests",
-          "team": { "name": "Market" }
+          "team": { "name": "Markets" }
         }
       ]
     },

@@ -18,11 +18,17 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
 
     public void "add graphics project to graphics bot assignedTasks"() {
         given:
+            String subTaskThatHasSubTaskId = '34761621630973'
+            String subTaskEncoded = 'test+subtask'
+            String subSubTaskEncoded = 'test+sub+subtask'
+        and:
             stubGetTasks()
             stubGetProjects()
             stubGetWorkspaceTags()
             stubPostAddProject()
-            stubPostStories()
+            stubPostStories(subTaskEncoded)
+            stubPostStories(subSubTaskEncoded)
+            stubGetTaskDetails(subTaskThatHasSubTaskId)
             stubPostTag()
             stubPostAddTag()
             stubPutTasks()
@@ -35,7 +41,9 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
             verifyGetProjects()
             verifyWorkspaceTags()
             verifyPostAddProject()
-            verifyPostStories()
+            verifyPostStories(subTaskEncoded)
+            verifyPostStories(subSubTaskEncoded)
+            verifyGetTaskDetails(subTaskThatHasSubTaskId)
             verifyPostTag()
             verifyPostAddTag()
             verifyPutTasks()
@@ -51,7 +59,7 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
-                .withBodyFile("my_tasks.json")))
+                .withBodyFile("tasks/my_tasks.json")))
     }
 
     private stubGetProjects() {
@@ -60,7 +68,7 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
-                .withBodyFile("project.json")))
+                .withBodyFile("tasks/project.json")))
     }
 
     private stubGetWorkspaceTags() {
@@ -71,23 +79,35 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
-                .withBodyFile("tags.json")))
+                .withBodyFile("tasks/tags.json")))
     }
 
     private stubPostAddProject() {
         wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/addProject")).willReturn(aResponse().withStatus(201)))
     }
 
-    private stubPostStories() {
+    private stubPostStories(String taskName) {
         wireMockRule.stubFor(post(urlMatching("/api/1.0/tasks/[0-9]+/stories"))
-                .withRequestBody(containing("text=I+have+added+the+task+test+subtask+to+DevGraphicsRequests"))
+                .withRequestBody(containing("text=I+have+added+the+task+${taskName}+to+DevGraphicsRequests"))
                 .willReturn(aResponse().withStatus(201)))
+    }
+
+    private stubGetTaskDetails(String taskId) {
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/tasks/${taskId}.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("opt_fields", equalTo(encodedOptFields))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBodyFile('tasks/subtask-details.json')))
     }
 
     private stubPostTag() {
         wireMockRule.stubFor(post(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                .withRequestBody(containing("name=Market"))
-                .willReturn(aResponse().withStatus(201).withBodyFile("create_tag.json")))
+                .withRequestBody(containing("name=MKT"))
+                .willReturn(aResponse()
+                .withStatus(201)
+                .withBodyFile("tasks/create_tag.json")))
     }
 
     private stubPostAddTag() {
@@ -115,7 +135,7 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private boolean verifyPostAddProject() {
-        wireMockRule.verify(4, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))
+        wireMockRule.verify(5, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addProject"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("project=[0-9]+")))
         return true
@@ -128,34 +148,43 @@ public class AsanaServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private boolean verifyWorkspaceTags() {
-        wireMockRule.verify(3, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
+        wireMockRule.verify(4, getRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/typeahead\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("type", equalTo("tag"))
                 .withQueryParam("query", matching(".*")))
         return true
     }
 
-    private boolean verifyPostStories() {
+    private boolean verifyPostStories(String taskName) {
         wireMockRule.verify(1, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/stories"))
-                .withRequestBody(containing("text=I+have+added+the+task+test+subtask+to+DevGraphicsRequests")))
+                .withRequestBody(containing("text=I+have+added+the+task+${taskName}+to+DevGraphicsRequests"))
+                )
+        return true
+    }
+
+    private verifyGetTaskDetails(String taskId) {
+        wireMockRule.verify(1, getRequestedFor(urlPathEqualTo("/api/1.0/tasks/${taskId}"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("opt_fields", equalTo(decodedOptFields))
+        )
         return true
     }
 
     private boolean verifyPostTag() {
-        wireMockRule.verify(2, postRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
-                .withRequestBody(containing("name=Market")))
+        wireMockRule.verify(3, postRequestedFor(urlMatching("/api/1.0/workspaces/"+testWorkspaceId+"/tags"))
+                .withRequestBody(containing("name=MKT")))
         return true
     }
 
     private boolean verifyPostAddTag() {
-        wireMockRule.verify(3, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
+        wireMockRule.verify(4, postRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+/addTag"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("tag=[0-9]+")))
         return true
     }
 
     private boolean verifyPutTasks() {
-        wireMockRule.verify(4, putRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+"))
+        wireMockRule.verify(5, putRequestedFor(urlMatching("/api/1.0/tasks/[0-9]+"))
                 .withHeader("Content-Type", containing(APPLICATION_FORM_CONTENT_TYPE))
                 .withRequestBody(matching("assignee=null")))
         return true

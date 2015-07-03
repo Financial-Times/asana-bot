@@ -1,5 +1,7 @@
 package com.ft.asanaapi;
 
+import com.ft.backup.model.BackupTasksData;
+import com.ft.backup.model.ProjectsData;
 import com.ft.asanaapi.model.*;
 import com.ft.report.model.ReportTasksData;
 import retrofit.client.Response;
@@ -33,6 +35,12 @@ public interface Asana {
     Response addProjectToTask(
             @Path("task-id") String taskId,
             @Field("project") String projectId
+    );
+
+    @GET("/tasks/{task-id}")
+    TaskData getTask(
+            @Path("task-id") String taskId,
+            @Query("opt_fields") String optionalFields
     );
 
     @FormUrlEncoded
@@ -82,4 +90,11 @@ public interface Asana {
 
     @GET("/workspaces/{workspace-id}")
     Response ping(@Path("workspace-id") String workspaceId);
+
+    @GET("/projects")
+    ProjectsData getMyProjects();
+
+    @GET("/projects/{project-id}/tasks")
+    BackupTasksData getAllTasksByProject(@Path("project-id") String projectId,
+                                 @Query("opt_expand") String optionalFields);
 }

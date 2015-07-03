@@ -57,7 +57,7 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
 
         where:
             scenario                      | userTeamsFile | expectedFtAuthorized | expectedTeams
-            'fully authorized user'       | 'success'     | 'true'               | ['World', 'Companies']
+            'fully authorized user'       | 'success'     | 'true'               | ['Markets', 'World', 'Companies']
             'user not in authorized team' | 'failure'     | null                 | null
 
     }

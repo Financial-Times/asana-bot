@@ -1,12 +1,10 @@
 machine:
   java:
     version: oraclejdk8
-  hosts:
-    asanareports.ft.com: 127.0.0.1
-    localhost: 127.0.0.1
   environment:
     ASANA_GRAPHICS_KEY: dummyGraphicsKey
     ASANA_PICTURES_KEY: dummyPicturesKey
+    ASANA_REPORT_KEY: dummyPicturesKey
 deployment:
   staging:
     branch: staging

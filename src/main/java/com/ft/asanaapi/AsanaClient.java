@@ -3,6 +3,9 @@ package com.ft.asanaapi;
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.auth.NonAsanaUserException;
 import com.ft.asanaapi.model.*;
+import com.ft.backup.model.BackupTask;
+import com.ft.backup.model.BackupTasksData;
+import com.ft.backup.model.ProjectsData;
 import com.ft.config.Config;
 import com.ft.report.model.ReportTask;
 import com.ft.report.model.ReportTasksData;
@@ -16,35 +19,25 @@ import java.util.*;
 public class AsanaClient {
 
     private static final Logger logger = LoggerFactory.getLogger(AsanaClient.class);
-
-    private static final Map<String, String> tagToTeamMapping = new HashMap<String, String>() {
-        {
-            put("Companies", "COS");
-            put("World", "WN");
-            put("UK", "UKN");
-            put("Pictures", "PIC");
-        }
-    };
+    private static final String PROJECT_TASK_OPT_EXPAND = "(this|subtasks+)";
+    public static final String TASK_FIELDS = "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name";
 
     private Config config;
     private Asana asana;
 
     public AsanaClient(String apiKey, Config config) {
-
         this.config = config;
-
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setRequestInterceptor((new BasicAuthRequestInterceptor()).setPassword(apiKey))
                 .setEndpoint(config.getBaseUrl())
                 .build();
-
         asana = restAdapter.create(Asana.class);
     }
 
     public void addProjectToCurrentlyAssignedIncompleteTasks(String projectId) {
 
         //get list of assigned tasks
-        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name");
+        TasksData tasksData = asana.tasks("me", config.getWorkspace(), "now", TASK_FIELDS);
         logTaskProcessingStart(projectId, tasksData);
         List<Task> tasks = tasksData.getData();
 
@@ -53,14 +46,13 @@ public class AsanaClient {
         tasks.stream().forEach(task -> {
             asana.addProjectToTask(task.getId(), projectId);
 
-            if (task.isSubTask()) {
-                addCommentToParent(projectInfo, task);
-            }
-
             ProjectInfo originalProject = extractProjectFromTask(task);
             if (originalProject.isAssignedToTeam()) {
                 Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
+            }
+            if (task.isSubTask()) {
+                addCommentToParent(projectInfo, task);
             }
 
             unassignTask(task);
@@ -102,27 +94,40 @@ public class AsanaClient {
 
     private ProjectInfo extractProjectFromTask(Task task) {
         if (task.isSubTask()) {
-            return task.getParent().getProjects().get(0);
+            return extractProjectFromParentTask(task.getParent());
         }
-        return task.getProjects().get(0);
+        return extractProjectFromParentTask(task);
+    }
+
+    private ProjectInfo extractProjectFromParentTask(Task task) {
+        List<ProjectInfo> candidate = task.getProjects();
+        if (candidate != null && !candidate.isEmpty()) {
+            return candidate.get(0);
+        }
+        Task detailedTask = retrieveTask(task);
+        return extractProjectFromParentTask(detailedTask.getParent());
+    }
+
+    private Task retrieveTask(Task task) {
+        return asana.getTask(task.getId(), TASK_FIELDS).getData();
     }
 
     private Tag findOrCreateTagByName(Team team) {
         String tagName = mapTeamToTag(team);
         List<Tag> existingTags = asana.queryForTag(config.getWorkspace(), tagName).getData();
         Optional<Tag> existingTag = existingTags.stream()
-                .filter(tag -> tag.getName().equals(team.getName()))
+                .filter(tag -> tag.getName().equals(tagName))
                 .findFirst();
 
         if (existingTag.isPresent()) {
             return existingTag.get();
         }
 
-        return asana.createTag(config.getWorkspace(), team.getName()).getData();
+        return asana.createTag(config.getWorkspace(), tagName).getData();
     }
 
     private String mapTeamToTag(Team team) {
-        return tagToTeamMapping.getOrDefault(team.getName(), team.getName());
+        return config.getTags().getOrDefault(team.getName(), team.getName());
     }
 
     private void unassignTask(Task task) {
@@ -137,5 +142,15 @@ public class AsanaClient {
 
     public Response ping() {
         return asana.ping(config.getWorkspace());
+    }
+
+    public List<ProjectInfo> getAllProjects() {
+        ProjectsData projectsData = asana.getMyProjects();
+        return projectsData.getData();
+    }
+
+    public List<BackupTask> getAllTasksByProject(ProjectInfo project) {
+        BackupTasksData data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND);
+        return data.getData();
     }
 }

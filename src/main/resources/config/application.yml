@@ -113,3 +113,4 @@ spring:
           sharedWith:
             groups:
               - prod@ft.com
+              - digitalnewsroomprogramme@ft.com

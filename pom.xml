@@ -102,6 +102,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.9.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>1.0-groovy-2.4</version>
@@ -173,6 +180,30 @@
             <artifactId>google-http-client-jackson2</artifactId>
             <version>1.20.0</version>
         </dependency>
+        <!-- END -->
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.46.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-server</artifactId>
+            <version>2.46.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gebish</groupId>
+            <artifactId>geb-core</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gebish</groupId>
+            <artifactId>geb-spock</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+        <!-- END -->
 
     </dependencies>
 

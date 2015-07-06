@@ -104,13 +104,3 @@ backup:
     sharedWith:
       users: []
       groups: []
-
-spring:
-  profiles:
-    production:
-      backup:
-        google:
-          sharedWith:
-            groups:
-              - prod@ft.com
-              - digitalnewsroomprogramme@ft.com

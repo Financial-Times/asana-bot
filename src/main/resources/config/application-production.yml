@@ -1,0 +1,8 @@
+backup:
+  google:
+    rootFolder: asana_backup
+    sharedWith:
+      users: []
+      groups:
+        - prod@ft.com
+        - digitalnewsroomprogramme@ft.com

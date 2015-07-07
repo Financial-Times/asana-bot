@@ -9,9 +9,11 @@ import com.ft.backup.model.ProjectsData;
 import com.ft.config.Config;
 import com.ft.report.model.ReportTask;
 import com.ft.report.model.ReportTasksData;
+import com.squareup.okhttp.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 import java.util.*;
@@ -25,11 +27,12 @@ public class AsanaClient {
     private Config config;
     private Asana asana;
 
-    public AsanaClient(String apiKey, Config config) {
+    public AsanaClient(String apiKey, Config config, OkHttpClient okHttpClient) {
         this.config = config;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setRequestInterceptor((new BasicAuthRequestInterceptor()).setPassword(apiKey))
                 .setEndpoint(config.getBaseUrl())
+                .setClient(new OkClient(okHttpClient))
                 .build();
         asana = restAdapter.create(Asana.class);
     }

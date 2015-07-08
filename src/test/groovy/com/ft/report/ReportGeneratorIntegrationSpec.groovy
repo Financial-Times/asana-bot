@@ -77,8 +77,8 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         and:
             report
             report.tagTasks.size() == 1
-            report.tagTasks['Europe'].size() == 2
-            report.tagTasks['Europe'] == expectedEuropeTasks
+            report.tagTasks[NOT_TAGGED].size() == 3
+            report.tagTasks[NOT_TAGGED] == expectedEuropeTasks
     }
 
     private static List<ReportTask> createFinservTasks() {
@@ -114,23 +114,36 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     }
 
     private static List<ReportTask> createEuropeTasks() {
+        Tag europeTag = new Tag(id: '32896507462027', name: 'Europe')
         ReportTask reportTask1 = new ReportTask()
+        reportTask1.id = '37354116382321'
         reportTask1.name = "Europe task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
         reportTask1.due_on = "2015-06-14"
-        reportTask1.tags = [new Tag(id: '33751312101034', name: 'Asia')]
+        reportTask1.tags = [europeTag, new Tag(id: '33751312101034', name: 'Asia')]
         reportTask1.subtasks = []
 
         ReportTask reportTask2 = new ReportTask()
+        reportTask2.id = '37354116382322'
         reportTask2.name = "Europe task 2"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
         reportTask2.due_on = "2015-06-14"
-        reportTask2.tags = []
+        reportTask2.tags = [europeTag]
         reportTask2.subtasks = []
 
-        return [reportTask1, reportTask2] as List<ReportTask>
+        ReportTask reportTask3 = new ReportTask()
+        reportTask3.id = '37354116382323'
+        reportTask3.name = "Important Europe task 3"
+        reportTask3.important = true
+        reportTask3.notes = "some important notes"
+        reportTask3.completed = false
+        reportTask3.due_on = "2015-06-14"
+        reportTask3.tags = [europeTag, new Tag(id: '33751312101134', name: 'Level 1')]
+        reportTask3.subtasks = []
+
+        return [reportTask3, reportTask1, reportTask2] as List<ReportTask>
     }
 
     private static List<ReportTask> createOtherTask() {

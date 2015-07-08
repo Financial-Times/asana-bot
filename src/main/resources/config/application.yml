@@ -8,6 +8,7 @@ asana:
     - World
     - UK
     - Markets
+    - Lex
   tags:
     Companies: COS
     World: WN
@@ -79,6 +80,9 @@ report:
         - London
     Markets:
       projectId: 32052433501773
+      premiumTags: []
+    Lex:
+      projectId: 38342535680181
       premiumTags: []
 ---
 management:

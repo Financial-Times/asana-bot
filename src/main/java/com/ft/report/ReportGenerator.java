@@ -43,24 +43,14 @@ public class ReportGenerator {
         Stream<ReportTask> reportTaskStream = reportTasks.stream()
                 .filter(dueDatePredicateFactory.create(reportType));
 
-        Report report = new Report();
-        report.setGroupByTags(shouldGroupByTags(team));
+        Map<String, List<ReportTask>> result = reportTaskStream
+                .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())) );
 
-        Map<String, List<ReportTask>> result = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);
         Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, result);
 
+        Report report = new Report();
         report.setTagTasks(sortedResult);
         return report;
-    }
-
-    private Map<String, List<ReportTask>> toTagsMap(String team, Stream<ReportTask> reportTaskStream) {
-        return reportTaskStream
-                .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())) );
-    }
-
-    private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {
-        return reportTaskStream
-                .collect(Collectors.groupingBy(rt -> NOT_TAGGED_TAG) );
     }
 
     private String extractTagName(String team, List<Tag> tags) {
@@ -81,11 +71,5 @@ public class ReportGenerator {
         }
 
         return OTHERS_TAG;
-    }
-
-    private boolean shouldGroupByTags(String team) {
-        desks.get(team).getPremiumTags();
-        List<String> premiumTags = desks.get(team).getPremiumTags();
-        return premiumTags != null && !premiumTags.isEmpty();
     }
 }

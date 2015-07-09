@@ -8,5 +8,6 @@ import java.util.Map;
 @Data
 public class Report {
 
+    private boolean groupByTags = false;
     private Map<String, List<ReportTask>> tagTasks;
 }

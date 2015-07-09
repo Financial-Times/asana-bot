@@ -27,8 +27,26 @@
       "subtasks": [],
       "tags": [
         {
-          "id": 32896507462011,
+          "id": 32896507462027,
           "name": "Europe"
+        }
+      ]
+    },
+    {
+      "id": 37354116382323,
+      "name": "Important Europe task 3",
+      "notes": "some important notes",
+      "completed": false,
+      "due_on": "2015-06-14",
+      "subtasks": [],
+      "tags": [
+        {
+          "id": 32896507462027,
+          "name": "Europe"
+        },
+        {
+          "id": 33751312101134,
+          "name": "Level 1"
         }
       ]
     }

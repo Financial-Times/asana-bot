@@ -2,10 +2,6 @@ asana:
   workspace: 36628479813449
   picturesId: 36788370362617
   graphicsId: 36788370362615
-  authorizedTeams:
-    - Companies
-    - Desk Name
-    - UK
 ---
 logging:
     level:
@@ -24,6 +20,8 @@ report:
       projectId: 37532256694667
     Markets:
       projectId: 39486514321993
+    Lex:
+      projectId: 40652275263716
 ---
 backup:
   google:

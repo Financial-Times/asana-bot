@@ -101,7 +101,7 @@
 
             <div>
                 <th:block th:each="tt: ${report.tagTasks}">
-                    <span th:if="${report.groupByTags}" class="tags" th:text="${tt.key}">Tag</span>
+                    <span class="tags" th:text="${tt.key}">Tag</span>
                     <table class="table table-condensed">
                         <tbody th:if="${#lists.isEmpty(tt.value)}" th:text="None"></tbody>
                         <tbody th:unless="${#lists.isEmpty(tt.value)}">

@@ -55,6 +55,7 @@ report:
   desks:
     Companies:
       projectId: 32896507461944
+      groupTags: true
       premiumTags:
         - Finserv
         - TMT
@@ -64,25 +65,19 @@ report:
         - Comment
     World:
       projectId: 28687437659749
+      groupTags: true
       premiumTags: []
     UK:
       projectId: 33167799661044
-      premiumTags:
-        - Parly
-        - Business
-        - Economy
-        - Public Policy
-        - Legal & Regulation
-        - Scotland
-        - UK Regions
-        - Arts & Culture
-        - Sport
-        - London
+      groupTags: false
+      premiumTags: []
     Markets:
       projectId: 32052433501773
+      groupTags: false
       premiumTags: []
     Lex:
       projectId: 38342535680181
+      groupTags: false
       premiumTags: []
 ---
 management:

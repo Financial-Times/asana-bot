@@ -25,6 +25,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static final String TEST_COMPANIES_PROJECT_ID = "12345"
     private static final String TEST_WORLD_PROJECT_ID = "23456"
+    private static final String TEST_LEX_PROJECT_ID = "9876"
     private static final String encodedOptFields = "name%2Ctags.name%2Cdue_on%2Cnotes%2Ccompleted%2Csubtasks.name%2Csubtasks.completed"
     private static final String decodedOptFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
 
@@ -40,7 +41,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         dueDatePredicateFactory.clock = Clock.fixed(FRIDAY_EVENING.atZone(zoneId).toInstant(), zoneId)
     }
 
-    void "generate companies sunday for monday report"() {
+    void "generate report with premium tags and grouping, e.g. companies sunday for monday report"() {
         given:
             String team = 'Companies'
             stubGetTasks(team, TEST_COMPANIES_PROJECT_ID)
@@ -63,7 +64,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks[NOT_TAGGED] == expectedNotTaggedTasks
     }
 
-    void "generate world sunday for monday report"() {
+    void "generate report without premium tags but with grouping, e.g. world sunday for monday report"() {
         given:
             String team = 'World'
             stubGetTasks(team, TEST_WORLD_PROJECT_ID)
@@ -77,8 +78,26 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         and:
             report
             report.tagTasks.size() == 1
-            report.tagTasks[NOT_TAGGED].size() == 3
-            report.tagTasks[NOT_TAGGED] == expectedEuropeTasks
+            report.tagTasks['Europe'].size() == 3
+            report.tagTasks['Europe'] == expectedEuropeTasks
+    }
+
+    void "generate report without premium tags neither with grouping, e.g. Lex sunday for monday report"() {
+        given:
+            String team = 'Lex'
+            stubGetTasks(team, TEST_LEX_PROJECT_ID)
+            List<ReportTask> expectedLexTasks = createLexTasks()
+
+        when:
+            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
+
+        then:
+            verifyGetTasks(TEST_LEX_PROJECT_ID)
+        and:
+            report
+            report.tagTasks.size() == 1
+            report.tagTasks[NOT_TAGGED].size() == 2
+            report.tagTasks[NOT_TAGGED] == expectedLexTasks
     }
 
     private static List<ReportTask> createFinservTasks() {
@@ -114,14 +133,13 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     }
 
     private static List<ReportTask> createEuropeTasks() {
-        Tag europeTag = new Tag(id: '32896507462027', name: 'Europe')
         ReportTask reportTask1 = new ReportTask()
         reportTask1.id = '37354116382321'
         reportTask1.name = "Europe task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
         reportTask1.due_on = "2015-06-14"
-        reportTask1.tags = [europeTag, new Tag(id: '33751312101034', name: 'Asia')]
+        reportTask1.tags = [new Tag(id: '33751312101034', name: 'Asia')]
         reportTask1.subtasks = []
 
         ReportTask reportTask2 = new ReportTask()
@@ -130,7 +148,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.notes = "some notes"
         reportTask2.completed = false
         reportTask2.due_on = "2015-06-14"
-        reportTask2.tags = [europeTag]
+        reportTask2.tags = []
         reportTask2.subtasks = []
 
         ReportTask reportTask3 = new ReportTask()
@@ -140,10 +158,34 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask3.notes = "some important notes"
         reportTask3.completed = false
         reportTask3.due_on = "2015-06-14"
-        reportTask3.tags = [europeTag, new Tag(id: '33751312101134', name: 'Level 1')]
+        reportTask3.tags = [new Tag(id: '33751312101134', name: 'Level 1')]
         reportTask3.subtasks = []
 
         return [reportTask3, reportTask1, reportTask2] as List<ReportTask>
+    }
+
+    private static List<ReportTask> createLexTasks() {
+        Tag lawTag = new Tag(id: '32896507462027', name: 'Law')
+        ReportTask reportTask1 = new ReportTask()
+        reportTask1.id = '37354116382321'
+        reportTask1.name = "Lex task 1"
+        reportTask1.notes = "some notes"
+        reportTask1.completed = false
+        reportTask1.due_on = "2015-06-14"
+        reportTask1.tags = [lawTag, new Tag(id: '33751312101034', name: 'Justice')]
+        reportTask1.subtasks = []
+
+        ReportTask reportTask2 = new ReportTask()
+        reportTask2.id = '37354116382323'
+        reportTask2.name = "Important Lex task 2"
+        reportTask2.important = true
+        reportTask2.notes = "some important notes"
+        reportTask2.completed = false
+        reportTask2.due_on = "2015-06-14"
+        reportTask2.tags = [lawTag, new Tag(id: '33751312101134', name: 'Level 1')]
+        reportTask2.subtasks = []
+
+        return [reportTask2, reportTask1] as List<ReportTask>
     }
 
     private static List<ReportTask> createOtherTask() {

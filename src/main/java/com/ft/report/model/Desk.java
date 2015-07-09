@@ -7,5 +7,6 @@ import java.util.List;
 @Data
 public class Desk {
     private String projectId;
+    private boolean groupTags = false;
     private List<String> premiumTags;
 }

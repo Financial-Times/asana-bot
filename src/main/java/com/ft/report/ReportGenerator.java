@@ -85,7 +85,6 @@ public class ReportGenerator {
 
     private boolean shouldGroupByTags(String team) {
         desks.get(team).getPremiumTags();
-        List<String> premiumTags = desks.get(team).getPremiumTags();
-        return premiumTags != null && !premiumTags.isEmpty();
+        return desks.get(team).isGroupTags();
     }
 }

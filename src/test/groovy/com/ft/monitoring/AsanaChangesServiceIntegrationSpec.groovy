@@ -46,13 +46,15 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
             projectChanges.size() == 4
         and:
             projectChanges[0].getProject().getId() == '37532256694653'
-            projectChanges[0].getChangeTypes() == [ChangeType.NAME]
+            projectChanges[0].getChanges() == [new Change('Project 1', 'Project 1 was renamed', ChangeType.NAME)]
             projectChanges[1].getProject().getId() == '39486514321993'
-            projectChanges[1].getChangeTypes() == [ChangeType.ARCHIVED]
+            projectChanges[1].getChanges() == [new Change('false', 'true', ChangeType.ARCHIVED)]
             projectChanges[2].getProject().getId() == '37532256694667'
-            projectChanges[2].getChangeTypes() == [ChangeType.TEAM]
+            projectChanges[2].getChanges() == [new Change('Team 3', 'Team 1', ChangeType.TEAM)]
             projectChanges[3].getProject().getId() == '37532256694668'
-            projectChanges[3].getChangeTypes() == [ChangeType.NAME, ChangeType.ARCHIVED, ChangeType.TEAM]
+            projectChanges[3].getChanges() == [new Change('Project 4', 'Project 4 was renamed', ChangeType.NAME),
+                                               new Change('false', 'true', ChangeType.ARCHIVED),
+                                               new Change('Team 4', 'Team 1', ChangeType.TEAM)]
 
     }
 

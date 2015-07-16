@@ -2,8 +2,6 @@ package com.ft.monitoring;
 
 import com.ft.asanaapi.AsanaClient;
 import com.ft.asanaapi.model.ProjectInfo;
-import com.ft.backup.model.ProjectsData;
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,34 +21,30 @@ public class AsanaChangesService {
         }
 
         currentProjects = reportAsanaClient.getAllProjects();
-
         List<ProjectChange> projectChanges = new ArrayList<>();
 
         previousProjects.stream().forEach( previousProject -> {
-            Optional<ProjectInfo> currentOptionalProject = currentProjects.stream()
-                    .filter(matchingProject -> matchingProject.getId().equals(previousProject.getId()))
-                    .findFirst();
-
-            if (currentOptionalProject.isPresent()) {
-                ProjectInfo currentProject = currentOptionalProject.get();
-                ProjectChange projectChange = new ProjectChange();
-                projectChange.setProject(currentProject);
-                if (!currentProject.getName().equals(previousProject.getName())) {
-                    projectChange.addChangeType(ChangeType.NAME);
-                }
-                if (!currentProject.isArchived() == previousProject.isArchived()) {
-                    projectChange.addChangeType(ChangeType.ARCHIVED);
-                }
-                if (!currentProject.getTeam().equals(previousProject.getTeam())) {
-                    projectChange.addChangeType(ChangeType.TEAM);
-                }
-
-                if (!projectChange.getChangeTypes().isEmpty()) {
-                    projectChanges.add(projectChange);
-                }
+            Optional<ProjectInfo> currentProject = findMatchingProject(previousProject);
+            if (currentProject.isPresent()) {
+                checkForChanges(projectChanges, previousProject, currentProject.get());
             }
         });
         return projectChanges;
+    }
+
+    private Optional<ProjectInfo> findMatchingProject(ProjectInfo previousProject) {
+        return currentProjects.stream()
+                .filter(matchingProject -> matchingProject.getId().equals(previousProject.getId()))
+                .findFirst();
+    }
+
+    private void checkForChanges(List<ProjectChange> projectChanges, ProjectInfo previousProject, ProjectInfo currentProject) {
+        ProjectChange projectChange = new ProjectChange(currentProject);
+        projectChange.build(previousProject);
+
+        if (!projectChange.getChanges().isEmpty()) {
+            projectChanges.add(projectChange);
+        }
     }
 
 }

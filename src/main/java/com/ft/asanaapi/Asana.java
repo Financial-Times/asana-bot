@@ -92,7 +92,9 @@ public interface Asana {
     Response ping(@Path("workspace-id") String workspaceId);
 
     @GET("/projects")
-    ProjectsData getMyProjects();
+    ProjectsData getMyProjects(
+            @Query("workspace") String workspace,
+            @Query("opt_expand") String optionalFields);
 
     @GET("/projects/{project-id}/tasks")
     BackupTasksData getAllTasksByProject(@Path("project-id") String projectId,

@@ -148,7 +148,7 @@ public class AsanaClient {
     }
 
     public List<ProjectInfo> getAllProjects() {
-        ProjectsData projectsData = asana.getMyProjects();
+        ProjectsData projectsData = asana.getMyProjects(config.getWorkspace(), "this");
         return projectsData.getData();
     }
 

@@ -10,6 +10,7 @@ import lombok.ToString;
 public class ProjectInfo extends AsanaEntity {
     private String notes;
     private Team team;
+    private boolean archived = false;
 
     public boolean isAssignedToTeam() {
         return team != null;

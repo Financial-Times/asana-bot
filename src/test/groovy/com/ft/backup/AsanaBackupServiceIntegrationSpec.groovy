@@ -58,8 +58,10 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private void stubGetProjects() {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects"))
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("workspace", equalTo('324300775153'))
+                .withQueryParam("opt_expand", equalTo('this'))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -77,8 +79,10 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private boolean verifyGetProjects() {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects"))
-                .withHeader("Authorization", containing(BASIC_AUTH_HEADER)))
+        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects\\?.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("workspace", equalTo('324300775153'))
+                .withQueryParam("opt_expand", equalTo('this')))
         return true
     }
 

@@ -6,3 +6,6 @@ backup:
       groups:
         - prod@ft.com
         - digitalnewsroomprogramme@ft.com
+
+management:
+  add-application-context-header: false

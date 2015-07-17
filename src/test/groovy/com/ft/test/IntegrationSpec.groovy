@@ -12,7 +12,7 @@ import spock.lang.Specification
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 @IntegrationTest
-@ContextConfiguration(classes = AsanaBot.class, loader = SpringApplicationContextLoader.class)
+//@ContextConfiguration(classes = AsanaBot.class, loader = SpringApplicationContextLoader.class)
 @ActiveProfiles("test")
 class IntegrationSpec extends Specification {
 

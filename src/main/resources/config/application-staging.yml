@@ -14,14 +14,25 @@ report:
   desks:
     Companies:
       projectId: 37532256694653
+      projectName: Companies Topics
+      groupTags: true
+      premiumTags:
+        - Finserv
+        - Comment
     World:
       projectId: 38323966333074
+      projectName: World Topics
+      groupTags: true
+      premiumTags: []
     UK:
       projectId: 37532256694667
     Markets:
       projectId: 39486514321993
     Lex:
       projectId: 40652275263716
+      projectName: Lex Topicsss
+      groupTags: true
+      premiumTags: []
 ---
 backup:
   google:

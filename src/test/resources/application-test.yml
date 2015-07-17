@@ -11,16 +11,24 @@ report:
   desks:
     Companies:
       projectId: 12345
+      projectName: Companies Topics
       groupTags: true
       premiumTags:
         - Finserv
         - Comment
     World:
       projectId: 23456
+      projectName: World Topics
       groupTags: true
       premiumTags: []
     Lex:
       projectId: 9876
+      projectName: Lex Topics
+      groupTags: false
+      premiumTags: []
+    Team 4:
+      projectId: 379876
+      projectName: Project 4
       groupTags: false
       premiumTags: []
 

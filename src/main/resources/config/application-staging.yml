@@ -34,6 +34,9 @@ report:
       premiumTags: []
     Markets:
       projectId: 39486514321993
+      projectName: Markets Topics
+      groupTags: true
+      premiumTags: []
     Lex:
       projectId: 40652275263716
       projectName: Lex Topics

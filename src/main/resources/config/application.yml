@@ -21,7 +21,7 @@ server:
 security:
   basic:
     enabled: false
-  ignored: /health,/logout,/logout/**,/favicon.ico,/js/**,/css/**
+  ignored: /health,/logout,/logout/**,/favicon.ico,/js/**,/css/**,/changes/projects
   sessions: ALWAYS
 ---
 logging:

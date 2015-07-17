@@ -1,14 +1,17 @@
 package com.ft.monitoring;
 
 import com.ft.asanaapi.model.ProjectInfo;
-import com.ft.asanaapi.model.Team;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
+@ToString
+@EqualsAndHashCode
 public class ProjectChange {
 
     private final ProjectInfo project;
@@ -46,10 +49,10 @@ public class ProjectChange {
     }
 
     private void checkTeam(ProjectInfo referenceProject) {
-        Team oldTeam = referenceProject.getTeam();
-        Team newTeam = project.getTeam();
+        String oldTeam = referenceProject.getTeam().getName();
+        String newTeam = project.getTeam().getName();
         if (!newTeam.equals(oldTeam)) {
-            addChangeType(oldTeam.getName(), newTeam.getName(), ChangeType.TEAM);
+            addChangeType(oldTeam, newTeam, ChangeType.TEAM);
         }
     }
 

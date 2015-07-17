@@ -2,8 +2,6 @@ package com.ft.monitoring
 
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.Stepwise
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.containing
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -11,16 +9,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching
 
-@Stepwise
 class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
 
     @Autowired private AsanaChangesService asanaEventsService
 
     private static final String ENCODED_OPT_EXPAND = "this"
 
-    void 'initial request populates previous state and returns returns no changes'() {
+    void 'no changes'() {
         given:
-            stubGetEventsFirstRequest('initial_request.json')
+            stubGetEventsFirstRequest('no_changes.json')
 
         when:
             List<ProjectChange> projectChanges = asanaEventsService.getChanges()
@@ -31,10 +28,10 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
             !projectChanges
     }
 
-    void 'subsequent request compares previous with current state of projects'() {
+    void 'all possible changes'() {
         given:
             wireMockRule.resetMappings()
-            stubGetEventsFirstRequest('subsequent_request.json')
+            stubGetEventsFirstRequest('all_changes.json')
 
         when:
             List<ProjectChange> projectChanges = asanaEventsService.getChanges()
@@ -45,13 +42,13 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
             projectChanges
             projectChanges.size() == 4
         and:
-            projectChanges[0].getProject().getId() == '37532256694653'
-            projectChanges[0].getChanges() == [new Change('Project 1', 'Project 1 was renamed', ChangeType.NAME)]
-            projectChanges[1].getProject().getId() == '39486514321993'
+            projectChanges[0].getProject().getId() == '12345'
+            projectChanges[0].getChanges() == [new Change('Companies Topics', 'Project 1 was renamed', ChangeType.NAME)]
+            projectChanges[1].getProject().getId() == '23456'
             projectChanges[1].getChanges() == [new Change('false', 'true', ChangeType.ARCHIVED)]
-            projectChanges[2].getProject().getId() == '37532256694667'
-            projectChanges[2].getChanges() == [new Change('Team 3', 'Team 1', ChangeType.TEAM)]
-            projectChanges[3].getProject().getId() == '37532256694668'
+            projectChanges[2].getProject().getId() == '9876'
+            projectChanges[2].getChanges() == [new Change('Lex', 'Companies', ChangeType.TEAM)]
+            projectChanges[3].getProject().getId() == '379876'
             projectChanges[3].getChanges() == [new Change('Project 4', 'Project 4 was renamed', ChangeType.NAME),
                                                new Change('false', 'true', ChangeType.ARCHIVED),
                                                new Change('Team 4', 'Team 1', ChangeType.TEAM)]

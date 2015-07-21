@@ -55,8 +55,11 @@ public class SlackService {
         List<Map<String, Object> > attachments = Lists.newArrayList();
 
         List<Change> changes = projectChange.getChanges();
-
+        if(changes == null || changes.isEmpty()){
+            throw new RuntimeException("There are no changes to notify");
+        }
         for(Change change : changes) {
+
             Map<String, Object> attachmentsContent = Maps.newHashMap();
             Map<String, Object> fieldsContent1 = Maps.newHashMap();
             Map<String, Object> fieldsContent2 = Maps.newHashMap();
@@ -65,29 +68,32 @@ public class SlackService {
             String projectId = projectChange.getProject().getId();
             String projectLink = "https://app.asana.com/0/" + projectId + "/" + projectId;
 
-            if(ChangeType.ARCHIVED.equals(change.getType())){
+            if(ChangeType.NAME.equals(change.getType()) || ChangeType.TEAM.equals(change.getType()) ){
+                if(ChangeType.NAME.equals(change.getType())){
+                    attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has changed name");
+                    fieldsContent1.put("title", "new name");
+                    fieldsContent2.put("title", "old name");
+
+                }
+                else if(ChangeType.TEAM.equals(change.getType())) {
+                    attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" +  " has been moved into another team");
+                    fieldsContent1.put("title", "new team");
+                    fieldsContent2.put("title", "old team");
+
+                }
+                fieldsContent1.put("value", change.getOldValue());
+                fieldsContent2.put("value", change.getNewValue());
+                fieldsContent1.put("color", "36a64f");
+                fieldsContent2.put("color", "36a64f");
+                fieldsContent1.put("short", "false");
+                fieldsContent2.put("short", "false");
+                fields.add(fieldsContent1);
+                fields.add(fieldsContent2);
+
+            }
+            else if(ChangeType.ARCHIVED.equals(change.getType())){
                 attachmentsContent.put("text",  "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
             }
-            else if(ChangeType.NAME.equals(change.getType())){
-                attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has changed name");
-                fieldsContent1.put("title", "new name");
-                fieldsContent2.put("title", "old name");
-
-            }
-            else if(ChangeType.TEAM.equals(change.getType())) {
-                attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" +  " has been moved into another team");
-                fieldsContent1.put("title", "new team");
-                fieldsContent2.put("title", "old team");
-
-            }
-            fieldsContent1.put("value", change.getNewValue());
-            fieldsContent2.put("value", change.getOldValue());
-            fieldsContent1.put("color", "36a64f");
-            fieldsContent2.put("color", "36a64f");
-            fieldsContent1.put("short", "false");
-            fieldsContent2.put("short", "false");
-            fields.add(fieldsContent1);
-            fields.add(fieldsContent2);
             attachmentsContent.put("fallback", "<http://asana.co.uk/>");
             attachmentsContent.put("color", "#D00000");
             attachmentsContent.put("fields", fields);

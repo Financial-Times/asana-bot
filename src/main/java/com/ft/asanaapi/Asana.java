@@ -98,5 +98,7 @@ public interface Asana {
 
     @GET("/projects/{project-id}/tasks")
     BackupTasksData getAllTasksByProject(@Path("project-id") String projectId,
-                                 @Query("opt_expand") String optionalFields);
+                                 @Query("opt_expand") String optionalFields,
+                                 @Query("limit") String limit,
+                                 @Query("offset") String nextPage);
 }

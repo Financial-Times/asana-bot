@@ -2,7 +2,6 @@ package com.ft.services;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class SlackService {
         this.slackWebHookUrl = slackWebHookUrl;
     }
 
-    private void notifySlack(HashMap payloadContent) throws IOException {
+    private void notifySlack(Map<String, Object> payloadContent) throws IOException {
         URI uri = URI.create(slackWebHookUrl);
         restTemplate.postForLocation(uri, payloadContent);
     }
@@ -43,7 +42,7 @@ public class SlackService {
         if(projectChanges == null || projectChanges.isEmpty()){
             throw new RuntimeException("There are no changes to notify");
         }
-        HashMap<String, Object> payloadContent = Maps.newHashMap();
+        Map<String, Object> payloadContent = Maps.newHashMap();
         List<Map<String, Object>> attachments = Lists.newArrayList();
         projectChanges.stream().forEach(projectChange -> attachments.addAll(createSlackMessage(projectChange)));
 
@@ -56,45 +55,32 @@ public class SlackService {
     private List<Map<String, Object>> createSlackMessage(ProjectChange projectChange){
         List<Map<String, Object> > attachments = Lists.newArrayList();
 
-        List<Change> changes = projectChange.getChanges();
-        if(changes == null || changes.isEmpty()){
+        if(!projectChange.isProjectChanged()){
             throw new RuntimeException("There are no changes to notify");
         }
+        List<Change> changes = projectChange.getChanges();
         for(Change change : changes) {
 
             Map<String, Object> attachmentsContent = Maps.newHashMap();
-            Map<String, Object> fieldsContent1 = Maps.newHashMap();
-            Map<String, Object> fieldsContent2 = Maps.newHashMap();
+
             List<Map<String, Object>> fields = Lists.newArrayList();
             String projectName = projectChange.getProject().getName();
             String projectId = projectChange.getProject().getId();
             String projectLink = "https://app.asana.com/0/" + projectId + "/" + projectId;
 
-            if(ChangeType.NAME.equals(change.getType()) || ChangeType.TEAM.equals(change.getType()) ){
-                if(ChangeType.NAME.equals(change.getType())){
+            ChangeType changeType = change.getType();
+
+            switch (changeType) {
+                case NAME:
                     attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has changed name");
-                    fieldsContent1.put("title", "new name");
-                    fieldsContent2.put("title", "old name");
-
-                }
-                else if(ChangeType.TEAM.equals(change.getType())) {
-                    attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" +  " has been moved into another team");
-                    fieldsContent1.put("title", "new team");
-                    fieldsContent2.put("title", "old team");
-
-                }
-                fieldsContent1.put("value", change.getOldValue());
-                fieldsContent2.put("value", change.getNewValue());
-                fieldsContent1.put("color", "36a64f");
-                fieldsContent2.put("color", "36a64f");
-                fieldsContent1.put("short", "false");
-                fieldsContent2.put("short", "false");
-                fields.add(fieldsContent1);
-                fields.add(fieldsContent2);
-
-            }
-            else if(ChangeType.ARCHIVED.equals(change.getType())){
-                attachmentsContent.put("text",  "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
+                    populateFieldsContent(fields, "new name", "old name", change);
+                    break;
+                case TEAM:
+                    attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has been moved into another team");
+                    populateFieldsContent(fields, "new team", "old team", change);
+                    break;
+                case ARCHIVED:
+                    attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
             }
             attachmentsContent.put("fallback", "<http://asana.co.uk/>");
             attachmentsContent.put("color", "#D00000");
@@ -103,6 +89,22 @@ public class SlackService {
         }
 
         return attachments;
+    }
+
+    private void populateFieldsContent(List<Map<String, Object>> fields,String title1, String title2,
+                                       Change change){
+        Map<String, Object> fieldsContent1 = Maps.newHashMap();
+        Map<String, Object> fieldsContent2 = Maps.newHashMap();
+        fieldsContent1.put("title", title1);
+        fieldsContent2.put("title", title2);
+        fieldsContent1.put("value", change.getOldValue());
+        fieldsContent2.put("value", change.getNewValue());
+        fieldsContent1.put("color", "36a64f");
+        fieldsContent2.put("color", "36a64f");
+        fieldsContent1.put("short", "false");
+        fieldsContent2.put("short", "false");
+        fields.add(fieldsContent1);
+        fields.add(fieldsContent2);
     }
 
 }

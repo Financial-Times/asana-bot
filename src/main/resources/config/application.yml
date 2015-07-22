@@ -111,3 +111,6 @@ backup:
     sharedWith:
       users: []
       groups: []
+---
+notify:
+  slackWebHookUrl: ${SLACK_WEBHOOK}

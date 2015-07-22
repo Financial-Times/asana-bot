@@ -11,28 +11,30 @@ import com.ft.monitoring.ChangeType;
 import com.ft.monitoring.ProjectChange;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-
+@ConfigurationProperties(prefix = "notify")
 @Component
+@Setter
 public class SlackService {
 
     private RestTemplate restTemplate;
-    private String slackUrl;
+    private String slackWebHookUrl;
 
     public SlackService() {
         restTemplate = new RestTemplate();
-        slackUrl = "https://hooks.slack.com/services/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";
     }
 
-    protected SlackService(RestTemplate restTemplate, String slackUrl){
+    protected SlackService(RestTemplate restTemplate, String slackWebHookUrl){
         this.restTemplate = restTemplate;
-        this.slackUrl = slackUrl;
+        this.slackWebHookUrl = slackWebHookUrl;
     }
 
     private void notifySlack(HashMap payloadContent) throws IOException {
-        URI uri = URI.create(slackUrl);
+        URI uri = URI.create(slackWebHookUrl);
         restTemplate.postForLocation(uri, payloadContent);
     }
 

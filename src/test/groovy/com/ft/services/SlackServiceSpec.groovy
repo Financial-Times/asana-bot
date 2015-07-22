@@ -25,18 +25,19 @@ class SlackServiceSpec extends Specification {
         slackService = new SlackService(mockRestTemplate, slackUrl)
 
         worldTeam = new Team()
-        worldTeam.setId("1")
-        worldTeam.setName("World")
-        worldTopicsInfo = new ProjectInfo();
-        worldTopicsInfo.setId("12345");
-        worldTopicsInfo.setName("World Topics")
-        worldTopicsInfo.setTeam(worldTeam)
-        worldTopicsInfo.setArchived(false)
+        worldTeam.id = "1"
+        worldTeam.name = "World"
+
+        worldTopicsInfo = new ProjectInfo()
+        worldTopicsInfo.id = "12345"
+        worldTopicsInfo.name = "World Topics"
+        worldTopicsInfo.team = worldTeam
+        worldTopicsInfo.archived = false
         worldTopics = new ProjectChange(worldTopicsInfo)
 
         marketsTeam = new Team()
-        marketsTeam.setId("2")
-        marketsTeam.setName("Markets")
+        marketsTeam.id = "2"
+        marketsTeam.name = "Markets"
 
     }
 
@@ -50,7 +51,7 @@ class SlackServiceSpec extends Specification {
 
     void "no changes to notify"(){
         when:
-            slackService.notifyProjectChange(worldTopics)
+            slackService.notifyProjectChange([worldTopics])
         then:
             0 * mockRestTemplate.postForLocation(_)
             thrown RuntimeException;
@@ -60,14 +61,14 @@ class SlackServiceSpec extends Specification {
         String postedUrl = null
         HashMap payload = null
         given:
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo();
-            changedWorldTopicsInfo.setId("12345");
-            changedWorldTopicsInfo.setName("World Topicsssss changed")
-            changedWorldTopicsInfo.setTeam(worldTeam)
-            changedWorldTopicsInfo.setArchived(false)
-            worldTopics.build(changedWorldTopicsInfo);
+            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            changedWorldTopicsInfo.id = "12345"
+            changedWorldTopicsInfo.name = "World Topicsssss changed"
+            changedWorldTopicsInfo.team = worldTeam
+            changedWorldTopicsInfo.archived = false
+            worldTopics.build(changedWorldTopicsInfo)
 
-            List<ProjectChange> projectChanges = Lists.newArrayList();
+            List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
 
         when:
@@ -83,7 +84,7 @@ class SlackServiceSpec extends Specification {
 
             postedUrl.toString().equals(slackUrl)
             payload.get("text").contains("Project Changed Alert <!channel>")
-            payload.get("attachments").each{ attachment -> assertNameChanges(attachment);}
+            payload.get("attachments").each{ attachment -> assertNameChanges(attachment)}
 
     }
 
@@ -91,15 +92,14 @@ class SlackServiceSpec extends Specification {
         String postedUrl = null
         HashMap payload = null
         given:
+            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            changedWorldTopicsInfo.id = "12345"
+            changedWorldTopicsInfo.name = "World Topics"
+            changedWorldTopicsInfo.team = marketsTeam
+            changedWorldTopicsInfo.archived = false
+            worldTopics.build(changedWorldTopicsInfo)
 
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo();
-            changedWorldTopicsInfo.setId("12345");
-            changedWorldTopicsInfo.setName("World Topics")
-            changedWorldTopicsInfo.setTeam(marketsTeam)
-            changedWorldTopicsInfo.setArchived(false)
-            worldTopics.build(changedWorldTopicsInfo);
-
-            List<ProjectChange> projectChanges = Lists.newArrayList();
+            List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
 
         when:
@@ -123,14 +123,14 @@ class SlackServiceSpec extends Specification {
         HashMap payload = null
         given:
 
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo();
-            changedWorldTopicsInfo.setId("12345");
-            changedWorldTopicsInfo.setName("World Topics")
-            changedWorldTopicsInfo.setTeam(worldTeam)
-            changedWorldTopicsInfo.setArchived(true)
-            worldTopics.build(changedWorldTopicsInfo);
+            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            changedWorldTopicsInfo.id = "12345"
+            changedWorldTopicsInfo.name = "World Topics"
+            changedWorldTopicsInfo.team = worldTeam
+            changedWorldTopicsInfo.archived = true
+            worldTopics.build(changedWorldTopicsInfo)
 
-            List<ProjectChange> projectChanges = Lists.newArrayList();
+            List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
 
         when:
@@ -146,7 +146,7 @@ class SlackServiceSpec extends Specification {
 
             postedUrl.toString().equals(slackUrl)
             payload.get("text").contains("Project Changed Alert <!channel>")
-            payload.get("attachments").each{ attachment -> assertArchiveChanges(attachment);}
+            payload.get("attachments").each{ attachment -> assertArchiveChanges(attachment)}
     }
 
     void "notify when project has multiple changes"(){
@@ -154,14 +154,14 @@ class SlackServiceSpec extends Specification {
         HashMap payload = null
         given:
 
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo();
-            changedWorldTopicsInfo.setId("12345");
-            changedWorldTopicsInfo.setName("World Topics")
-            changedWorldTopicsInfo.setTeam(marketsTeam)
-            changedWorldTopicsInfo.setArchived(true)
-            worldTopics.build(changedWorldTopicsInfo);
+            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            changedWorldTopicsInfo.id = "12345"
+            changedWorldTopicsInfo.name = "World Topics"
+            changedWorldTopicsInfo.team = marketsTeam
+            changedWorldTopicsInfo.archived = true
+            worldTopics.build(changedWorldTopicsInfo)
 
-            List<ProjectChange> projectChanges = Lists.newArrayList();
+            List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
 
         when:
@@ -177,39 +177,39 @@ class SlackServiceSpec extends Specification {
 
             postedUrl.toString().equals(slackUrl)
             payload.get("text").contains("Project Changed Alert <!channel>")
-            payload.get("attachments").each{ attachment -> assignToChangeAssert(attachment);}
+            payload.get("attachments").each{ attachment -> assignToChangeAssert(attachment)}
     }
 
 
     private void assertNameChanges(HashMap<String, Object> attachment){
-        String title = attachment.get("text")
+        String title = attachment["text"]
         assert title.contains(worldTopicsInfo.getId())
-        List<HashMap> fields = attachment.get("fields")
-        assert ("World Topicsssss changed").equals(fields.get(0).get("value"))
-        assert ("new name").equals(fields.get(0).get("title"))
-        assert ("World Topics").equals(fields.get(1).get("value"))
-        assert ("old name").equals(fields.get(1).get("title"))
+        List<Map> fields = attachment.get("fields")
+        assert fields[0]['value'] == 'World Topicsssss changed'
+        assert fields[0]['title'] == 'new name'
+        assert fields[1]['value'] == 'World Topics'
+        assert fields[1]['title'] == 'old name'
     }
 
     private void assertTeamChanges(HashMap<String, Object> attachment){
-        String title = attachment.get("text")
+        String title = attachment["text"]
         assert title.contains(worldTopicsInfo.getId())
-        List<HashMap> fields = attachment.get("fields")
-        assert ("Markets").equals(fields.get(0).get("value"))
-        assert ("new team").equals(fields.get(0).get("title"))
-        assert ("World").equals(fields.get(1).get("value"))
-        assert ("old team").equals(fields.get(1).get("title"))
+        List<Map> fields = attachment["fields"]
+        assert fields[0]['value'] == 'Markets'
+        assert fields[0]['title'] == 'new team'
+        assert fields[1]['value'] == 'World'
+        assert fields[1]['title'] == 'old team'
     }
 
     private void assertArchiveChanges(HashMap<String, Object> attachment){
-        String title = attachment.get("text")
+        String title = attachment["text"]
         assert title.contains(worldTopicsInfo.getId())
         assert title.contains("archived")
-        assert attachment.get("fields").size() == 0
+        assert attachment["fields"].size() == 0
     }
 
     private void assignToChangeAssert(HashMap<String, Object> attachment){
-        String title = attachment.get("text")
+        String title = attachment["text"]
         if (title.contains("team")){
             assertTeamChanges(attachment)
         }

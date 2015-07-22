@@ -80,6 +80,13 @@ public class BotScheduler {
     @Scheduled(fixedRate = FIVE_MINUTES)
     public void checkForChanges() {
         List<ProjectChange> projectChanges = asanaChangesService.getChanges();
+        if (projectChanges == null || projectChanges.isEmpty()) {
+            return;
+        }
+        tryToNotifyProjectChanges(projectChanges);
+    }
+
+    private void tryToNotifyProjectChanges(List<ProjectChange> projectChanges) {
         try{
             slackService.notifyProjectChange(projectChanges);
         } catch (Exception ex) {

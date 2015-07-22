@@ -81,6 +81,7 @@ public class SlackService {
                     break;
                 case ARCHIVED:
                     attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
+                    break;
             }
             attachmentsContent.put("fallback", "<http://asana.co.uk/>");
             attachmentsContent.put("color", "#D00000");

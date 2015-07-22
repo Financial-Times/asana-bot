@@ -16,14 +16,13 @@ import spock.lang.Stepwise
 @ActiveProfiles(["staging","web"])
 @WebAppConfiguration
 @Stepwise
-class BypassAuthenticationSpec extends GebReportingSpec {
+class LoginFunctCase extends GebReportingSpec {
 
-    def env = System.getenv()
-    String user = env['FUNCTIONAL_ASANA_LOGIN']
-    String pass = env['FUNCTIONAL_ASANA_PASSWORD']
+    String user = System.getenv('FUNCTIONAL_ASANA_LOGIN')
+    String pass = System.getenv('FUNCTIONAL_ASANA_PASSWORD')
     def page
 
-    void "Google Login"() {
+    public void googleLogin() {
         when: "At google signin"
         page = to GoogleSignin
 
@@ -46,7 +45,7 @@ class BypassAuthenticationSpec extends GebReportingSpec {
         page.welcomeText.text() == "Control, protect and secure your account, all in one place"
     }
 
-    void "Asana Checks"() {
+    public void asanaSmokeCheck() {
         when: "At asana reports page"
         page = to ConferenceReport
 

@@ -2,7 +2,6 @@ import com.ft.asanaapi.model.ProjectInfo
 import com.ft.asanaapi.model.Team
 import com.ft.monitoring.ProjectChange
 import com.ft.services.SlackService
-import com.google.api.client.util.Lists
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
@@ -14,8 +13,6 @@ class SlackServiceSpec extends Specification {
     private Team worldTeam;
     private Team marketsTeam;
     private ProjectInfo worldTopicsInfo;
-
-    private ProjectChange worldTopics;
 
     private String slackUrl = "http://dummy.slack.co.uk";
 
@@ -33,7 +30,7 @@ class SlackServiceSpec extends Specification {
         worldTopicsInfo.name = "World Topics"
         worldTopicsInfo.team = worldTeam
         worldTopicsInfo.archived = false
-        worldTopics = new ProjectChange(worldTopicsInfo)
+        ProjectChange worldTopics = new ProjectChange(worldTopicsInfo)
 
         marketsTeam = new Team()
         marketsTeam.id = "2"
@@ -61,12 +58,15 @@ class SlackServiceSpec extends Specification {
         String postedUrl = null
         HashMap payload = null
         given:
+
+
             ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
             changedWorldTopicsInfo.id = "12345"
             changedWorldTopicsInfo.name = "World Topicsssss changed"
             changedWorldTopicsInfo.team = worldTeam
             changedWorldTopicsInfo.archived = false
-            worldTopics.build(changedWorldTopicsInfo)
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo);
+            worldTopics.build(worldTopicsInfo);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -97,7 +97,8 @@ class SlackServiceSpec extends Specification {
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = marketsTeam
             changedWorldTopicsInfo.archived = false
-            worldTopics.build(changedWorldTopicsInfo)
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo);
+            worldTopics.build(worldTopicsInfo);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -128,7 +129,8 @@ class SlackServiceSpec extends Specification {
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = worldTeam
             changedWorldTopicsInfo.archived = true
-            worldTopics.build(changedWorldTopicsInfo)
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo);
+            worldTopics.build(worldTopicsInfo);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -159,7 +161,8 @@ class SlackServiceSpec extends Specification {
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = marketsTeam
             changedWorldTopicsInfo.archived = true
-            worldTopics.build(changedWorldTopicsInfo)
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo);
+            worldTopics.build(worldTopicsInfo);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)

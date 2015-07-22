@@ -98,8 +98,8 @@ public class SlackService {
         Map<String, Object> fieldsContent2 = Maps.newHashMap();
         fieldsContent1.put("title", title1);
         fieldsContent2.put("title", title2);
-        fieldsContent1.put("value", change.getOldValue());
-        fieldsContent2.put("value", change.getNewValue());
+        fieldsContent1.put("value", change.getNewValue());
+        fieldsContent2.put("value", change.getOldValue());
         fieldsContent1.put("color", "36a64f");
         fieldsContent2.put("color", "36a64f");
         fieldsContent1.put("short", "false");

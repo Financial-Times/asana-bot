@@ -16,7 +16,7 @@ import spock.lang.Stepwise
 @ActiveProfiles(["staging","web"])
 @WebAppConfiguration
 @Stepwise
-class LoginTest extends GebReportingSpec {
+class LoginFunctCase extends GebReportingSpec {
 
     String user = System.getenv('FUNCTIONAL_ASANA_LOGIN')
     String pass = System.getenv('FUNCTIONAL_ASANA_PASSWORD')

@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import com.ft.asanaapi.model.ProjectInfo;
 import com.ft.monitoring.Change;
 import com.ft.monitoring.ChangeType;
 import com.ft.monitoring.ProjectChange;
@@ -64,8 +65,9 @@ public class SlackService {
             Map<String, Object> attachmentsContent = Maps.newHashMap();
 
             List<Map<String, Object>> fields = Lists.newArrayList();
-            String projectName = projectChange.getReferenceProject().getName();
-            String projectId = projectChange.getReferenceProject().getId();
+            ProjectInfo project = projectChange.getProject() != null ? projectChange.getProject() : projectChange.getReferenceProject();
+            String projectName = project.getName();
+            String projectId = project.getId();
             String projectLink = "https://app.asana.com/0/" + projectId + "/" + projectId;
 
             ChangeType changeType = change.getType();

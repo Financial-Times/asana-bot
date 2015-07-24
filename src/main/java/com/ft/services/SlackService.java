@@ -64,8 +64,8 @@ public class SlackService {
             Map<String, Object> attachmentsContent = Maps.newHashMap();
 
             List<Map<String, Object>> fields = Lists.newArrayList();
-            String projectName = projectChange.getProject().getName();
-            String projectId = projectChange.getProject().getId();
+            String projectName = projectChange.getReferenceProject().getName();
+            String projectId = projectChange.getReferenceProject().getId();
             String projectLink = "https://app.asana.com/0/" + projectId + "/" + projectId;
 
             ChangeType changeType = change.getType();
@@ -83,7 +83,6 @@ public class SlackService {
                     attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
                     break;
                 case NOT_FOUND:
-                    projectName = projectChange.getReferenceProject().getName();
                     attachmentsContent.put("text", "Project " + "<" + projectName + ">" + " could not be found.");
                     break;
             }

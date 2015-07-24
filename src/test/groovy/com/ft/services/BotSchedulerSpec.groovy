@@ -87,8 +87,8 @@ class BotSchedulerSpec extends Specification {
 
     void "checkForChanges passes changes to slack notifier"() {
         given:
-            ProjectChange change1 = new ProjectChange(null)
-            ProjectChange change2 = new ProjectChange(null)
+            ProjectChange change1 = Mock(ProjectChange)
+            ProjectChange change2 = Mock(ProjectChange)
             List<ProjectChange> changes = [change1, change2]
         when:
             botScheduler.checkForChanges()

@@ -21,10 +21,9 @@ public class AsanaChangesService {
         List<ProjectInfo> currentProjects = reportAsanaClient.getAllProjects();
         deskConfig.getDesks().forEach((teamName, desk) -> {
             Optional<ProjectInfo> currentProject = findMatchingProject(currentProjects, desk.getProjectId());
-            if (currentProject.isPresent()) {
-                ProjectInfo previousProject = createReferenceProject(teamName, desk);
-                checkForChanges(projectChanges, previousProject, currentProject.get());
-            }
+            ProjectInfo projectInfo = currentProject.isPresent() ? currentProject.get() : null;
+            ProjectInfo previousProject = createReferenceProject(teamName, desk);
+            checkForChanges(projectChanges, previousProject, projectInfo);
         });
         return projectChanges;
     }
@@ -48,8 +47,8 @@ public class AsanaChangesService {
     }
 
     private void checkForChanges(List<ProjectChange> projectChanges, ProjectInfo previousProject, ProjectInfo currentProject) {
-        ProjectChange projectChange = new ProjectChange(currentProject);
-        projectChange.build(previousProject);
+        ProjectChange projectChange = new ProjectChange(currentProject, previousProject);
+        //projectChange.build(previousProject);
 
         if (!projectChange.getChanges().isEmpty()) {
             projectChanges.add(projectChange);

@@ -55,38 +55,7 @@ spring:
 ---
 report:
   hostDomain: ft.com
-  desks:
-    Companies:
-      projectId: 32896507461944
-      projectName: Companies Topics
-      groupTags: true
-      premiumTags:
-        - Finserv
-        - TMT
-        - Industry
-        - Energy
-        - Consumer
-        - Comment
-    World:
-      projectId: 28687437659749
-      projectName: World Topics
-      groupTags: true
-      premiumTags: []
-    UK:
-      projectId: 33167799661044
-      projectName: UK Topics
-      groupTags: false
-      premiumTags: []
-    Markets:
-      projectId: 32052433501773
-      projectName: Markets Topics
-      groupTags: false
-      premiumTags: []
-    Lex:
-      projectId: 38342535680181
-      projectName: Lex Topics
-      groupTags: false
-      premiumTags: []
+  desks: []
 ---
 management:
   security:

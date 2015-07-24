@@ -1,5 +1,5 @@
 package com.ft.monitoring;
 
 public enum ChangeType {
-    NAME, TEAM, ARCHIVED
+    NOT_FOUND, NAME, TEAM, ARCHIVED
 }

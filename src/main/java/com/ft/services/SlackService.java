@@ -82,6 +82,10 @@ public class SlackService {
                 case ARCHIVED:
                     attachmentsContent.put("text", "Project " + "<" + projectLink + "|" + projectName + ">" + " has been archived");
                     break;
+                case NOT_FOUND:
+                    projectName = projectChange.getReferenceProject().getName();
+                    attachmentsContent.put("text", "Project " + "<" + projectName + ">" + " could not be found.");
+                    break;
             }
             attachmentsContent.put("fallback", "<http://asana.co.uk/>");
             attachmentsContent.put("color", "#D00000");

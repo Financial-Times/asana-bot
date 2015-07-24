@@ -2,6 +2,8 @@ package com.ft.monitoring
 
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
+import spock.lang.IgnoreRest
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.containing
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -17,13 +19,13 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
 
     void 'no changes'() {
         given:
-            stubGetEventsFirstRequest('no_changes.json')
+            stubGetProjectsRequest('no_changes.json')
 
         when:
             List<ProjectChange> projectChanges = asanaEventsService.getChanges()
 
         then:
-            verifyGetEventsFirstRequest()
+            verifyGetProjectsRequest()
         and:
             !projectChanges
     }
@@ -31,13 +33,13 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
     void 'all possible changes'() {
         given:
             wireMockRule.resetMappings()
-            stubGetEventsFirstRequest('all_changes.json')
+            stubGetProjectsRequest('all_changes.json')
 
         when:
             List<ProjectChange> projectChanges = asanaEventsService.getChanges()
 
         then:
-            verifyGetEventsFirstRequest()
+            verifyGetProjectsRequest()
         and:
             projectChanges
             projectChanges.size() == 4
@@ -55,7 +57,31 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
 
     }
 
-    private void stubGetEventsFirstRequest(String fileName) {
+    void 'project not found'() {
+        given:
+            wireMockRule.resetMappings()
+            stubGetProjectsRequest('not_found.json')
+
+        when:
+            List<ProjectChange> projectChanges = asanaEventsService.getChanges()
+
+        then:
+            verifyGetProjectsRequest()
+        and:
+            projectChanges
+            projectChanges.size() == 4
+        and:
+            projectChanges[0].getReferenceProject().getName() == 'Companies Topics'
+            projectChanges[0].getChanges() == [new Change('Companies Topics', null, ChangeType.NOT_FOUND)]
+            projectChanges[1].getReferenceProject().getName() == 'World Topics'
+            projectChanges[1].getChanges() == [new Change('World Topics', null, ChangeType.NOT_FOUND)]
+            projectChanges[2].getReferenceProject().getName() == 'Lex Topics'
+            projectChanges[2].getChanges() == [new Change('Lex Topics', null, ChangeType.NOT_FOUND)]
+            projectChanges[3].getReferenceProject().getName() == 'Project 4'
+            projectChanges[3].getChanges() == [new Change('Project 4', null, ChangeType.NOT_FOUND)]
+    }
+
+    private void stubGetProjectsRequest(String fileName) {
         wireMockRule.stubFor(get(urlMatching("/api/1.0/projects\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("workspace", equalTo('324300775153'))
@@ -67,7 +93,7 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
                     .withBodyFile("monitoring/${fileName}")))
     }
 
-    private  boolean verifyGetEventsFirstRequest() {
+    private  boolean verifyGetProjectsRequest() {
         wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects\\?.*"))
                 .withQueryParam("workspace", equalTo('324300775153'))
                 .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND)))

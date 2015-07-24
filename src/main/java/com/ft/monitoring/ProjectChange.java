@@ -15,6 +15,7 @@ import java.util.List;
 public class ProjectChange {
 
     private final ProjectInfo project;
+    private ProjectInfo referenceProject;
     private final List<Change> changes;
 
     public ProjectChange(ProjectInfo project) {
@@ -22,11 +23,22 @@ public class ProjectChange {
         this.changes = new ArrayList<>();
     }
 
+    public ProjectChange(ProjectInfo project, ProjectInfo referenceProject) {
+        this.project = project;
+        this.referenceProject = referenceProject;
+        this.changes = new ArrayList<>();
+        build(this.referenceProject);
+    }
+
     public boolean isProjectChanged() {
         return !changes.isEmpty();
     }
 
     public void build(ProjectInfo referenceProject) {
+        if (project == null) {
+            addChangeType(referenceProject.getName(), null, ChangeType.NOT_FOUND);
+            return;
+        }
         checkName(referenceProject);
         checkArchived(referenceProject);
         checkTeam(referenceProject);

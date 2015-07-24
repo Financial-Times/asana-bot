@@ -2,7 +2,6 @@ package com.ft.monitoring
 
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.IgnoreRest
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.containing

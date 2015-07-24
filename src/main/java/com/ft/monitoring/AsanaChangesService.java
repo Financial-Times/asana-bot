@@ -48,7 +48,6 @@ public class AsanaChangesService {
 
     private void checkForChanges(List<ProjectChange> projectChanges, ProjectInfo previousProject, ProjectInfo currentProject) {
         ProjectChange projectChange = new ProjectChange(currentProject, previousProject);
-        //projectChange.build(previousProject);
 
         if (!projectChange.getChanges().isEmpty()) {
             projectChanges.add(projectChange);

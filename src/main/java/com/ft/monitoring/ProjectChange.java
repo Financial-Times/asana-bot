@@ -18,11 +18,6 @@ public class ProjectChange {
     private ProjectInfo referenceProject;
     private final List<Change> changes;
 
-    public ProjectChange(ProjectInfo project) {
-        this.project = project;
-        this.changes = new ArrayList<>();
-    }
-
     public ProjectChange(ProjectInfo project, ProjectInfo referenceProject) {
         this.project = project;
         this.referenceProject = referenceProject;
@@ -34,7 +29,7 @@ public class ProjectChange {
         return !changes.isEmpty();
     }
 
-    public void build(ProjectInfo referenceProject) {
+    private void build(ProjectInfo referenceProject) {
         if (project == null) {
             addChangeType(referenceProject.getName(), null, ChangeType.NOT_FOUND);
             return;

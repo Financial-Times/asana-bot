@@ -23,6 +23,7 @@ public class AsanaClient {
     private static final Logger logger = LoggerFactory.getLogger(AsanaClient.class);
     private static final String PROJECT_TASK_OPT_EXPAND = "(this|subtasks+)";
     public static final String TASK_FIELDS = "id,name,parent.id,parent.name,parent.projects.team.name,projects.team.name";
+    public static final String ASANA_TASKS_LIMIT = "100";
 
     private Config config;
     private Asana asana;
@@ -148,12 +149,18 @@ public class AsanaClient {
     }
 
     public List<ProjectInfo> getAllProjects() {
-        ProjectsData projectsData = asana.getMyProjects();
+        ProjectsData projectsData = asana.getMyProjects(config.getWorkspace(), "this");
         return projectsData.getData();
     }
 
     public List<BackupTask> getAllTasksByProject(ProjectInfo project) {
-        BackupTasksData data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND);
-        return data.getData();
+        List<BackupTask> tasks = new ArrayList<>();
+        BackupTasksData data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND, ASANA_TASKS_LIMIT, null);
+        tasks.addAll(data.getData());
+        while (data.getNextPage() != null) {
+            data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND, "100", data.getNextPage().getOffset());
+            tasks.addAll(data.getData());
+        }
+        return tasks;
     }
 }

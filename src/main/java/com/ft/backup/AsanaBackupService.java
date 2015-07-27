@@ -37,7 +37,7 @@ public class AsanaBackupService {
     public void backupAllProjects() throws IOException {
         File folder = googleDriveService.findOrCreateRootFolder();
         List<ProjectInfo> projectsToBackup = reportAsanaClient.getAllProjects();
-        projectsToBackup.parallelStream().forEach(project -> this.backupProject(project, folder));
+        projectsToBackup.stream().forEach(project -> this.backupProject(project, folder));
     }
 
     private void backupProject(ProjectInfo project, File folder) {

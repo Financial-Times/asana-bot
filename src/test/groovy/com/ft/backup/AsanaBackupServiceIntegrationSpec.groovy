@@ -33,15 +33,15 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
         given:
             stubGetProjects()
             stubGetProjectTasks(TEST_PICTURES_PROJECT_ID)
-            stubGetProjectTasks(TEST_UK_PROJECT_ID)
+            stubGetProjectTasks(TEST_UK_PROJECT_ID, 2)
 
         when:
             asanaBackupService.backupAllProjects()
 
         then:
             verifyGetProjects()
-            verifyGetProjectTasks(TEST_PICTURES_PROJECT_ID)
-            verifyGetProjectTasks(TEST_UK_PROJECT_ID)
+            verifyGetProjectTasks(TEST_PICTURES_PROJECT_ID, 1)
+            verifyGetProjectTasks(TEST_UK_PROJECT_ID, 2)
 
         and:
             getTestFiles().size() >= 2
@@ -58,8 +58,10 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private void stubGetProjects() {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects"))
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("workspace", equalTo('324300775153'))
+                .withQueryParam("opt_expand", equalTo('this'))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -76,14 +78,37 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
                 .withBodyFile("backup/tasks-${projectId}.json")))
     }
 
+    private void stubGetProjectTasks(String projectId, int numberOfPages) {
+
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/${projectId}/tasks\\?.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBodyFile("backup/tasks-${projectId}-1.json")))
+
+        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/${projectId}/tasks\\?.*offset.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND))
+                .withQueryParam("offset", matching(".*"))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBodyFile("backup/tasks-${projectId}-2.json")))
+
+    }
+
     private boolean verifyGetProjects() {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects"))
-                .withHeader("Authorization", containing(BASIC_AUTH_HEADER)))
+        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects\\?.*"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("workspace", equalTo('324300775153'))
+                .withQueryParam("opt_expand", equalTo('this')))
         return true
     }
 
-    private boolean verifyGetProjectTasks(String projectId) {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects/" + projectId + "/tasks\\?.*"))
+    private boolean verifyGetProjectTasks(String projectId, int count) {
+        wireMockRule.verify(count, getRequestedFor(urlMatching("/api/1.0/projects/" + projectId + "/tasks\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("opt_expand", equalTo(DECODED_OPT_EXPAND))
                 )

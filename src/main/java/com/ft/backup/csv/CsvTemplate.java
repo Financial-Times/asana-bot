@@ -27,12 +27,12 @@ public class CsvTemplate {
         mapping.put("name", OPTIONAL_CELL_PROCESSOR);
         mapping.put("parent", NAME_CELL_FORMATTER);
         mapping.put("notes", OPTIONAL_CELL_PROCESSOR);
-        mapping.put("created_at", DATE_TIME_CELL_FORMATTER);
-        mapping.put("modified_at", DATE_TIME_CELL_FORMATTER);
+        mapping.put("createdAt", DATE_TIME_CELL_FORMATTER);
+        mapping.put("modifiedAt", DATE_TIME_CELL_FORMATTER);
         mapping.put("completed", new Optional(BOOLEAN_CELL_FORMATTER));
-        mapping.put("completed_at", DATE_TIME_CELL_FORMATTER);
+        mapping.put("completedAt", DATE_TIME_CELL_FORMATTER);
         mapping.put("assignee", NAME_CELL_FORMATTER);
-        mapping.put("due_date", OPTIONAL_CELL_PROCESSOR);
+        mapping.put("dueOn", OPTIONAL_CELL_PROCESSOR);
         mapping.put("tags", NAMES_CELL_FORMATTER);
         mapping.put("notes", OPTIONAL_CELL_PROCESSOR);
         return mapping;

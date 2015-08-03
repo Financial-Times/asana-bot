@@ -1,13 +1,13 @@
 package com.ft.config;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * A class to hold configuration properties for various projects and static
@@ -22,6 +22,9 @@ public class Config {
     private String workspace;
     private String graphicsId;
     private String picturesId;
+    private String socialId;
+    private String videoId;
+    private String interactivesId;
     private String baseUrl;
 
     private List<String> authorizedTeams;

@@ -1,5 +1,7 @@
 package com.ft;
 
+import java.util.concurrent.TimeUnit;
+
 import com.ft.asanaapi.AsanaClient;
 import com.ft.config.Config;
 import com.squareup.okhttp.OkHttpClient;
@@ -7,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 public class AsanaBot {
@@ -38,6 +38,21 @@ public class AsanaBot {
     @Bean(name = "reportAsanaClient")
     public AsanaClient getReportAsanaClient() {
         return new AsanaClient(System.getenv("ASANA_REPORT_KEY"), config, getHttpClient());
+    }
+
+    @Bean(name = "socialAsanaClient")
+    public AsanaClient getSocialAsanaClient() {
+        return new AsanaClient(System.getenv("ASANA_SOCIAL_KEY"), config, getHttpClient());
+    }
+
+    @Bean(name = "videoAsanaClient")
+    public AsanaClient getVideoAsanaClient() {
+        return new AsanaClient(System.getenv("ASANA_VIDEO_KEY"), config, getHttpClient());
+    }
+
+    @Bean(name = "interactivesAsanaClient")
+    public AsanaClient getInteractivesAsanaClient() {
+        return new AsanaClient(System.getenv("ASANA_INTERACTIVES_KEY"), config, getHttpClient());
     }
 
     public static void main(String[] args) throws Exception {

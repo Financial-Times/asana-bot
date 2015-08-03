@@ -10,6 +10,9 @@ it has been added when done.
 * GraphicsBot -> when assigned adds tasks to the Graphics project
 * PicturesBot -> when assigned adds tasks to the Pictures project
 * ReportBot -> when assigned backs up the project
+* SocialBot -> when assigned adds tasks to the Social Promotion Requests project
+* InteractivesBot -> when assigned adds tasks to the Interactive Requests project
+* VideoBot -> when assigned adds tasks to the Video Request project
 
 ## Setup
 
@@ -18,6 +21,9 @@ Below environment variables must be set in order for the bot to be able to commu
 * ASANA_GRAPHICS_KEY
 * ASANA_PICTURES_KEY
 * ASANA_REPORT_KEY
+* ASANA_SOCIAL_KEY
+* ASANA_INTERACTIVES_KEY
+* ASANA_VIDEO_KEY
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 
 This user needs to have access to projects where tasks are being assigned and also the projects where tasks are being added. 

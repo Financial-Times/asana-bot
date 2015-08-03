@@ -1,5 +1,7 @@
 package com.ft.services;
 
+import java.io.IOException;
+
 import com.ft.backup.AsanaBackupService;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -7,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class BotScheduler {
@@ -32,6 +32,22 @@ public class BotScheduler {
     public void picturesBot(){
         asanaService.addPicturesProjectToPicturesBotAssignedTasks();
     }
+
+    @Scheduled(fixedRate = 20000)
+    public void socialBot(){
+        asanaService.addSocialProjectToSocialBotAssignedTasks();
+    }
+
+    @Scheduled(fixedRate = 20000)
+    public void interactivesBot(){
+        asanaService.addInteractivesProjectToInteractivesBotAssignedTasks();
+    }
+
+    @Scheduled(fixedRate = 20000)
+    public void videoBot(){
+        asanaService.addVideoProjectToVideoBotAssignedTasks();
+    }
+
 
     @Scheduled(fixedRate = HALF_HOUR)
     public void backupAllProjects(){

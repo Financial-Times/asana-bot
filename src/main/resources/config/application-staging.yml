@@ -18,6 +18,10 @@ report:
       groupTags: true
       premiumTags:
         - Finserv
+        - TMT
+        - Industry
+        - Energy
+        - Consumer
         - Comment
     World:
       projectId: 42589704501506
@@ -27,17 +31,17 @@ report:
     UK:
       projectId: 37532256694667
       projectName: UK Topics
-      groupTags: true
+      groupTags: false
       premiumTags: []
     Markets:
       projectId: 39486514321993
       projectName: Markets Topics
-      groupTags: true
+      groupTags: false
       premiumTags: []
     Lex:
       projectId: 40652275263716
       projectName: Lex Topics
-      groupTags: true
+      groupTags: false
       premiumTags: []
 ---
 backup:

@@ -1,8 +1,19 @@
 package com.ft.asanaapi;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.ft.asanaapi.auth.BasicAuthRequestInterceptor;
 import com.ft.asanaapi.auth.NonAsanaUserException;
-import com.ft.asanaapi.model.*;
+import com.ft.asanaapi.model.ProjectInfo;
+import com.ft.asanaapi.model.Tag;
+import com.ft.asanaapi.model.Task;
+import com.ft.asanaapi.model.TasksData;
+import com.ft.asanaapi.model.Team;
+import com.ft.asanaapi.model.TeamsData;
+import com.ft.asanaapi.model.User;
+import com.ft.asanaapi.model.UserData;
 import com.ft.backup.model.BackupTask;
 import com.ft.backup.model.BackupTasksData;
 import com.ft.backup.model.ProjectsData;
@@ -15,8 +26,6 @@ import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
-
-import java.util.*;
 
 public class AsanaClient {
 
@@ -48,13 +57,13 @@ public class AsanaClient {
         ProjectInfo projectInfo = asana.project(projectId).getData();
 
         tasks.stream().forEach(task -> {
-            asana.addProjectToTask(task.getId(), projectId);
-
             ProjectInfo originalProject = extractProjectFromTask(task);
+            asana.addProjectToTask(task.getId(), projectId);
             if (originalProject.isAssignedToTeam()) {
                 Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
             }
+            System.out.print("task.isSubTask()=" + task.isSubTask());
             if (task.isSubTask()) {
                 addCommentToParent(projectInfo, task);
             }
@@ -104,6 +113,9 @@ public class AsanaClient {
     }
 
     private ProjectInfo extractProjectFromParentTask(Task task) {
+        System.out.println(task.getId());
+        System.out.println(task.getName());
+        System.out.println("projects?" +  " " + task.getProjects());
         List<ProjectInfo> candidate = task.getProjects();
         if (candidate != null && !candidate.isEmpty()) {
             return candidate.get(0);

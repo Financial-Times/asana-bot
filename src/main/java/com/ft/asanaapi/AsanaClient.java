@@ -63,7 +63,6 @@ public class AsanaClient {
                 Tag tag = findOrCreateTagByName(originalProject.getTeam());
                 asana.addTagToTask(task.getId(), tag.getId());
             }
-            System.out.print("task.isSubTask()=" + task.isSubTask());
             if (task.isSubTask()) {
                 addCommentToParent(projectInfo, task);
             }
@@ -113,9 +112,6 @@ public class AsanaClient {
     }
 
     private ProjectInfo extractProjectFromParentTask(Task task) {
-        System.out.println(task.getId());
-        System.out.println(task.getName());
-        System.out.println("projects?" +  " " + task.getProjects());
         List<ProjectInfo> candidate = task.getProjects();
         if (candidate != null && !candidate.isEmpty()) {
             return candidate.get(0);

@@ -2,6 +2,9 @@ asana:
   workspace: 36628479813449
   picturesId: 36788370362617
   graphicsId: 36788370362615
+  socialId: 43400279162108
+  interactivesId: 43400279162111
+  videoId: 43400279162114
 ---
 logging:
     level:

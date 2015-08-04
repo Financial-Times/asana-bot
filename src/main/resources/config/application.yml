@@ -2,6 +2,9 @@ asana:
   workspace: 5669522480945
   picturesId: 29414423499815
   graphicsId: 28686036279645
+  socialId: 43400279162108
+  interactivesId: 43400279162111
+  videoId: 43400279162114
   baseUrl: https://app.asana.com/api/1.0
   authorizedTeams:
     - Companies

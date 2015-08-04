@@ -45,6 +45,33 @@ class BotSchedulerSpec extends Specification {
             0 * _
     }
 
+    void "SocialBot"() {
+        when:
+            botScheduler.socialBot()
+
+        then:
+            1 * mockAsanaService.addSocialProjectToSocialBotAssignedTasks()
+            0 * _
+    }
+
+    void "InteractivesBot"() {
+        when:
+            botScheduler.interactivesBot()
+
+        then:
+            1 * mockAsanaService.addInteractivesProjectToInteractivesBotAssignedTasks()
+            0 * _
+    }
+
+    void "VideoBot"() {
+        when:
+            botScheduler.videoBot()
+
+        then:
+            1 * mockAsanaService.addVideoProjectToVideoBotAssignedTasks()
+            0 * _
+    }
+
     void "backupAllProjects"() {
         when:
             botScheduler.backupAllProjects()

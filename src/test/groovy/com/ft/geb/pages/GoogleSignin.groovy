@@ -13,6 +13,6 @@ class GoogleSignin extends Page{
         passwordForm { $("#Passwd") }
         signInButton { $("#signIn") }
 
-        welcomeText { $('#view_container div[class="NP"]') }
+        welcomeText { $('#view_container') }
     }
 }

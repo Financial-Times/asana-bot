@@ -42,7 +42,7 @@ class LoginFunctCase extends GebReportingSpec {
 
         then:
         assert waitFor { page.welcomeText.isDisplayed() }
-        page.welcomeText.text() != null
+        page.welcomeText.text()
     }
 
     public void asanaSmokeCheck() {

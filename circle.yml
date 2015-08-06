@@ -5,7 +5,7 @@ deployment:
   staging:
     branch: staging
     heroku:
-      appname: asana-bot-staging
+      appname: asana-bot-staging2
   production:
     branch: master
     heroku:

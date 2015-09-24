@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.16-SNAPSHOT</version>
+            <version>1.16</version>
         </dependency>
         <!-- END -->
 
@@ -262,6 +262,11 @@
     <!-- (you don't need this if you are using a .RELEASE version) -->
     <repositories>
         <repository>
+            <id>Sonatype-public</id>
+            <name>SnakeYAML repository</name>
+            <url>http://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>spring-snapshots</id>
             <url>http://repo.spring.io/snapshot</url>
             <snapshots><enabled>true</enabled></snapshots>
@@ -269,11 +274,6 @@
         <repository>
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
-            <id>Sonatype-public</id>
-            <name>SnakeYAML repository</name>
-            <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>

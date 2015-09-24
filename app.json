@@ -1,0 +1,48 @@
+{
+  "name":"asana-bot",
+  "scripts":{
+
+  },
+  "env":{
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "OAUTH_CLIENT_ID": {
+      "required": true
+    },
+    "OAUTH_CLIENT_SECRET": {
+      "required": true
+    },
+    "ASANA_GRAPHICS_KEY": {
+      "required": true
+    },
+    "ASANA_PICTURES_KEY": {
+      "required": true
+    },
+    "ASANA_REPORT_KEY": {
+      "required": true
+    },
+    "GOOGLE_API_CLIENT_EMAIL": {
+      "required":true
+    },
+    "GOOGLE_API_CLIENT_ID": {
+      "required":true
+    },
+    "GOOGLE_API_PRIVATE_KEY": {
+      "required":true
+    },
+    "GOOGLE_API_PRIVATE_KEY_ID": {
+      "required":true
+    },
+    "JAVA_OPTS": {
+      "required":true
+    },
+    "SLACK_WEBHOOK": {
+      "required":true
+    },
+    "SPRING_PROFILE": {
+      "required":true
+    }
+  },
+  "addons":[]
+}

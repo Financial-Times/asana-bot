@@ -4,8 +4,6 @@
 
   },
   "env":{
-    "NODE_ENV": "production",
-    "USE_MEMORY_STORE": true,
     "HEROKU_APP_NAME": {
       "required": true
     },

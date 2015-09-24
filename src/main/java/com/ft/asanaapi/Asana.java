@@ -71,11 +71,24 @@ public interface Asana {
     );
 
     @FormUrlEncoded
+    @POST("/tasks/{task-id}/removeTag")
+    Response removeTagFromTask(
+            @Path("task-id") String taskId,
+            @Field("tag") String tagId
+    );
+
+    @FormUrlEncoded
     @POST("/workspaces/{workspace-id}/tags")
     TagData createTag(
             @Path("workspace-id") String workspaceId,
             @Field("name")String tagName
     );
+
+    @GET("/workspaces/{workspace-id}/tags")
+    TagsData getAllWorkspaceTags(@Path("workspace-id") String workspaceId);
+
+    @GET("/tags/{tag-id}/tasks?opt_expand=this")
+    TasksData getTasksByTag(@Path("tag-id") String tagId);
 
     @GET("/users/{user-id}/teams")
     TeamsData getUserTeams(

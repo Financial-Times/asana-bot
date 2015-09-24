@@ -163,4 +163,20 @@ public class AsanaClient {
         }
         return tasks;
     }
+
+    public List<Tag> getAllTags() {
+        return asana.getAllWorkspaceTags(config.getWorkspace()).getData();
+    }
+
+    public List<Task> getTasksByTag(Tag tag) {
+        return asana.getTasksByTag(tag.getId()).getData();
+    }
+
+    public void removeTagFromTask(Task task, Tag tag) {
+        asana.removeTagFromTask(task.getId(), tag.getId());
+    }
+
+    public void addTagToTask(Task task, Tag tag) {
+        asana.addTagToTask(task.getId(), tag.getId());
+    }
 }

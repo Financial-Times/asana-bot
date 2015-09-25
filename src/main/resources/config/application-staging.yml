@@ -43,6 +43,36 @@ report:
       projectName: Lex Topics
       groupTags: false
       premiumTags: []
+    FT Money:
+      projectId: 42553710401200
+      projectName: FT Money Topics
+      groupTags: false
+      premiumTags: []
+    FTfm:
+      projectId: 50849038952169
+      projectName: FTfm Topics
+      groupTags: false
+      premiumTags: []
+    Comment and Leaders:
+      projectId: 52532565717889
+      projectName: Comment and Leaders Daily
+      groupTags: false
+      premiumTags: []
+    Business Life:
+      projectId: 52535481220644
+      projectName: Business Life Daily
+      groupTags: false
+      premiumTags: []
+    Big Read:
+      projectId: 52535481220647
+      projectName: Big Read Daily
+      groupTags: false
+      premiumTags: []
+    Features Production:
+      projectId: 52535481220650
+      projectName: Features Production Daily Plan
+      groupTags: false
+      premiumTags: []
 ---
 backup:
   google:

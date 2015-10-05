@@ -13,8 +13,10 @@ report:
   hostDomain: ft.com
   desks:
     Companies:
-      projectId: 37532256694653
-      projectName: Companies Topics
+      projects:
+        -
+          id: 37532256694653
+          name: Companies Topics
       groupTags: true
       premiumTags:
         - Finserv
@@ -24,53 +26,87 @@ report:
         - Consumer
         - Comment
     World:
-      projectId: 42589704501506
-      projectName: World Topics
+      projects:
+        -
+          id: 42589704501506
+          name: World Topics
       groupTags: true
       premiumTags: []
     UK:
-      projectId: 37532256694667
-      projectName: UK Topics
+      projects:
+        -
+          id: 37532256694667
+          name: UK Topics
       groupTags: false
       premiumTags: []
     Markets:
-      projectId: 39486514321993
-      projectName: Markets Topics
+      projects:
+        -
+          id: 39486514321993
+          name: Markets Topics
       groupTags: false
       premiumTags: []
     Lex:
+      projects:
+        -
+          id: 40652275263716
+          name: Lex Topics
       projectId: 40652275263716
       projectName: Lex Topics
       groupTags: false
       premiumTags: []
     FT Money:
-      projectId: 42553710401200
-      projectName: FT Money Topics
+      projects:
+        -
+          id: 42553710401200
+          name: FT Money Topics
       groupTags: false
       premiumTags: []
     FTfm:
-      projectId: 50849038952169
-      projectName: FTfm Topics
+      projects:
+        -
+          id: 50849038952169
+          name: FTfm Topics
       groupTags: false
       premiumTags: []
     Comment and Leaders:
-      projectId: 52532565717889
-      projectName: Comment and Leaders Daily
+      projects:
+        -
+          id: 52532565717889
+          name: Comment and Leaders Daily
+        -
+          id: 55126358623999
+          name: Comment and Leaders Forward Plan
       groupTags: false
       premiumTags: []
     Business Life:
-      projectId: 52535481220644
-      projectName: Business Life Daily
+      projects:
+        -
+          id: 52535481220644
+          name: Business Life Daily
+        -
+          id: 55126358624001
+          name: Business Life Forward Plan
       groupTags: false
       premiumTags: []
     Big Read:
-      projectId: 52535481220647
-      projectName: Big Read Daily
+      projects:
+        -
+          id: 52535481220647
+          name: Big Read Daily
+        -
+          id: 55126358623997
+          name: Big Read Forward Plan
       groupTags: false
       premiumTags: []
     Features Production:
-      projectId: 52535481220650
-      projectName: Features Production Daily Plan
+      projects:
+        -
+          id: 52535481220650
+          name: Features Production Daily Plan
+        -
+          id: 55126358624003
+          name: Features Production Forward Plan
       groupTags: false
       premiumTags: []
 ---

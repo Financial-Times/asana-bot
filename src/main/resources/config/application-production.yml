@@ -55,22 +55,42 @@ report:
       groupTags: false
       premiumTags: []
     Comment and Leaders:
-      projectId: 48131968026045
-      projectName: Comment and Leaders Daily
+      projects:
+        -
+          id: 48131968026045
+          name: Comment and Leaders Daily
+        -
+          id: 48119832269549
+          name: Comment and Leaders Forward Plan
       groupTags: false
       premiumTags: []
     Business Life:
-      projectId: 50514423082937
-      projectName: Business Life Daily
+      projects:
+        -
+          id: 50514423082937
+          name: Business Life Daily
+        -
+          id: 50514423082939
+          name: Business Life Forward Plan
       groupTags: false
       premiumTags: []
     Big Read:
-      projectId: 50514423082943
-      projectName: Big Read Daily
+      projects:
+        -
+          id: 50514423082943
+          name: Big Read Daily
+        -
+          id: 50514423082945
+          name: Big Read Forward Plan
       groupTags: false
       premiumTags: []
     Features Production:
-      projectId: 50514423082949
-      projectName: Features Production Daily Plan
+      projects:
+        -
+          id: 50514423082949
+          name: Features Production Daily Plan
+        -
+          id: 50514423082952
+          name: Features Production Forward Plan
       groupTags: false
       premiumTags: []

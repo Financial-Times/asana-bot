@@ -20,7 +20,7 @@ public interface Asana {
     @GET("/tasks")
     ReportTasksData openProjectTasks(
             @Query("workspace") String workspace,
-            @Query("project") String project,
+            @Query("project") Long projectId,
             @Query("completed_since") String completedSince,
             @Query("opt_fields") String optionalFields
     );

@@ -4,6 +4,7 @@ import com.ft.asanaapi.AsanaClient;
 import com.ft.asanaapi.model.ProjectInfo;
 import com.ft.asanaapi.model.Team;
 import com.ft.report.model.Desk;
+import com.ft.report.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,12 @@ public class AsanaChangesService {
         List<ProjectChange> projectChanges = new ArrayList<>();
         List<ProjectInfo> currentProjects = reportAsanaClient.getAllProjects();
         deskConfig.getDesks().forEach((teamName, desk) -> {
-            Optional<ProjectInfo> currentProject = findMatchingProject(currentProjects, desk.getProjectId());
-            ProjectInfo projectInfo = currentProject.isPresent() ? currentProject.get() : null;
-            ProjectInfo previousProject = createReferenceProject(teamName, desk);
-            checkForChanges(projectChanges, previousProject, projectInfo);
+            desk.getProjects().forEach((project) -> {
+                Optional<ProjectInfo> currentProject = findMatchingProject(currentProjects, project.getId().toString());
+                ProjectInfo projectInfo = currentProject.isPresent() ? currentProject.get() : null;
+                ProjectInfo previousProject = createReferenceProject(teamName, project);
+                checkForChanges(projectChanges, previousProject, projectInfo);
+            });
         });
         return projectChanges;
     }
@@ -35,11 +38,11 @@ public class AsanaChangesService {
                 .findFirst();
     }
 
-    private ProjectInfo createReferenceProject(String teamName, Desk desk) {
+    private ProjectInfo createReferenceProject(String teamName, Project project) {
         ProjectInfo previousProject = new ProjectInfo();
-        previousProject.setId(desk.getProjectId());
+        previousProject.setId(project.getId().toString());
         previousProject.setArchived(Boolean.FALSE);
-        previousProject.setName(desk.getProjectName());
+        previousProject.setName(project.getName());
         Team previousTeam = new Team();
         previousTeam.setName(teamName);
         previousProject.setTeam(previousTeam);

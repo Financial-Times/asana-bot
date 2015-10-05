@@ -1,10 +1,7 @@
 package com.ft.report;
 
 import com.ft.asanaapi.model.Tag;
-import com.ft.report.model.Desk;
-import com.ft.report.model.Report;
-import com.ft.report.model.ReportTask;
-import com.ft.report.model.ReportType;
+import com.ft.report.model.*;
 import com.ft.services.AsanaService;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,19 +34,23 @@ public class ReportGenerator {
 
     public Report generate(ReportType reportType, String team) {
 
-        String projectId = desks.get(team).getProjectId();
-        List<ReportTask> reportTasks = asanaService.findTasks(projectId, COMPLETED_SINCE_NOW);
-
-        Stream<ReportTask> reportTaskStream = reportTasks.stream()
-                .filter(dueDatePredicateFactory.create(reportType));
-
         Report report = new Report();
         report.setGroupByTags(shouldGroupByTags(team));
 
-        Map<String, List<ReportTask>> result = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);
-        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, result);
+        List<Project> projects = desks.get(team).getProjects();
+        List<ReportTask> allTasks = new ArrayList<>();
+        for (Project project : projects) {
+            List<ReportTask> reportTasks = asanaService.findTasks(project.getId(), COMPLETED_SINCE_NOW);
+            allTasks.addAll(reportTasks);
+        }
 
+        Stream<ReportTask> reportTaskStream = allTasks.stream()
+                .filter(dueDatePredicateFactory.create(reportType));
+
+        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);
+        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, unsortedTasks);
         report.setTagTasks(sortedResult);
+
         return report;
     }
 

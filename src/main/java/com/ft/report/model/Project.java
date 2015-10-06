@@ -6,4 +6,5 @@ import lombok.Data;
 public class Project {
     private Long id;
     private String name;
+    private Boolean primary = false;
 }

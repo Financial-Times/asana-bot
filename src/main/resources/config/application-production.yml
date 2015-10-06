@@ -59,9 +59,11 @@ report:
         -
           id: 48131968026045
           name: Comment and Leaders Daily
+          primary: false
         -
           id: 48119832269549
           name: Comment and Leaders Forward Plan
+          primary: true
       groupTags: false
       premiumTags: []
     Business Life:
@@ -69,9 +71,11 @@ report:
         -
           id: 50514423082937
           name: Business Life Daily
+          primary: false
         -
           id: 50514423082939
           name: Business Life Forward Plan
+          primary: true
       groupTags: false
       premiumTags: []
     Big Read:
@@ -79,9 +83,11 @@ report:
         -
           id: 50514423082943
           name: Big Read Daily
+          primary: false
         -
           id: 50514423082945
           name: Big Read Forward Plan
+          primary: true
       groupTags: false
       premiumTags: []
     Features Production:
@@ -89,8 +95,10 @@ report:
         -
           id: 50514423082949
           name: Features Production Daily Plan
+          primary: false
         -
           id: 50514423082952
           name: Features Production Forward Plan
+          primary: true
       groupTags: false
       premiumTags: []

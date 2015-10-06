@@ -32,20 +32,15 @@ public class ReportGenerator {
     @Setter private Clock clock = Clock.systemUTC();
 
 
-    public Report generate(ReportType reportType, String team) {
+    public Report generate(Criteria criteria) {
 
         Report report = new Report();
+        String team = criteria.getTeam();
         report.setGroupByTags(shouldGroupByTags(team));
 
-        List<Project> projects = desks.get(team).getProjects();
-        List<ReportTask> allTasks = new ArrayList<>();
-        for (Project project : projects) {
-            List<ReportTask> reportTasks = asanaService.findTasks(project.getId(), COMPLETED_SINCE_NOW);
-            allTasks.addAll(reportTasks);
-        }
-
-        Stream<ReportTask> reportTaskStream = allTasks.stream()
-                .filter(dueDatePredicateFactory.create(reportType));
+        List<ReportTask> reportTasks = asanaService.findTasks(criteria.getProject().getId(), COMPLETED_SINCE_NOW);
+        Stream<ReportTask> reportTaskStream = reportTasks.stream()
+                .filter(dueDatePredicateFactory.create(criteria.getReportType()));
 
         Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);
         Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, unsortedTasks);

@@ -1,12 +1,13 @@
 package com.ft.report
 
 import com.ft.asanaapi.model.Tag
+import com.ft.report.model.Criteria
+import com.ft.report.model.Project
 import com.ft.report.model.Report
 import com.ft.report.model.ReportTask
 import com.ft.report.model.ReportType
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
-import spock.lang.IgnoreRest
 
 import java.time.Clock
 import java.time.LocalDateTime
@@ -24,11 +25,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 
 class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
-    private static final String TEST_COMPANIES_PROJECT_ID = "12345"
-    private static final String TEST_WORLD_PROJECT_ID = "23456"
-    private static final String TEST_LEX_PROJECT_ID = "9876"
-    private static final String TEST_BIG_READ_PROJECT_1_ID = "100048121"
-    private static final String TEST_BIG_READ_PROJECT_2_ID = "100048122"
+    private static final Long TEST_COMPANIES_PROJECT_ID = 12345L
+    private static final Long TEST_WORLD_PROJECT_ID = 23456L
+    private static final Long TEST_LEX_PROJECT_ID = 9876L
+    private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
+    private static final Long TEST_BIG_READ_PROJECT_2_ID = 100048122L
     private static final String encodedOptFields = "name%2Ctags.name%2Cdue_on%2Cnotes%2Ccompleted%2Csubtasks.name%2Csubtasks.completed"
     private static final String decodedOptFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
 
@@ -51,9 +52,10 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             List<ReportTask> expectedFinservTasks = createFinservTasks()
             List<ReportTask> expectedNotTaggedTasks = createNotTaggedTask()
             List<ReportTask> expectedOtherTasks = createOtherTask()
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_COMPANIES_PROJECT_ID))
 
         when:
-            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
+            Report report = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_COMPANIES_PROJECT_ID)
@@ -72,9 +74,10 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             String team = 'World'
             stubGetTasks(team, TEST_WORLD_PROJECT_ID)
             List<ReportTask> expectedEuropeTasks = createEuropeTasks()
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_WORLD_PROJECT_ID))
 
         when:
-            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
+            Report report = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_WORLD_PROJECT_ID)
@@ -90,9 +93,10 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             String team = 'Lex'
             stubGetTasks(team, TEST_LEX_PROJECT_ID)
             List<ReportTask> expectedLexTasks = createLexTasks()
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_LEX_PROJECT_ID))
 
         when:
-            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
+            Report report = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_LEX_PROJECT_ID)
@@ -103,23 +107,22 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks[NOT_TAGGED] == expectedLexTasks
     }
 
-    void "generate multi project report without premium tags neither with grouping, e.g. Big Read sunday for monday report"() {
+    void "generate project report for a multi project team without premium tags neither with grouping, e.g. Big Read sunday for monday report"() {
         given:
             String team = 'Big Read'
             stubGetTasks(team, TEST_BIG_READ_PROJECT_1_ID)
-            stubGetTasks(team, TEST_BIG_READ_PROJECT_2_ID)
             List<ReportTask> expectedBigReadTasks = createBigReadTasks()
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_BIG_READ_PROJECT_1_ID))
 
         when:
-            Report report = generator.generate(ReportType.SUNDAY_FOR_MONDAY, team)
+            Report report = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_BIG_READ_PROJECT_1_ID)
-            verifyGetTasks(TEST_BIG_READ_PROJECT_2_ID)
         and:
             report
             report.tagTasks.size() == 1
-            report.tagTasks[NOT_TAGGED].size() == 4
+            report.tagTasks[NOT_TAGGED].size() == 2
             report.tagTasks[NOT_TAGGED] == expectedBigReadTasks
     }
 
@@ -216,45 +219,26 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         Tag readTag = new Tag(id: '33751312101038', name: 'Read')
         Tag level1Tag = new Tag(id: '33751312101134', name: 'Level 1')
 
-        ReportTask reportProject1Task1 = new ReportTask()
-        reportProject1Task1.id = '37354116382321'
-        reportProject1Task1.name = "Big read project 1 task 1"
-        reportProject1Task1.notes = "some notes"
-        reportProject1Task1.completed = false
-        reportProject1Task1.due_on = "2015-06-14"
-        reportProject1Task1.tags = [bigTag, readTag]
-        reportProject1Task1.subtasks = []
+        ReportTask reportTask1 = new ReportTask()
+        reportTask1.id = '37354116382321'
+        reportTask1.name = "Big read project 1 task 1"
+        reportTask1.notes = "some notes"
+        reportTask1.completed = false
+        reportTask1.due_on = "2015-06-14"
+        reportTask1.tags = [bigTag, readTag]
+        reportTask1.subtasks = []
 
-        ReportTask reportProject1Task2 = new ReportTask()
-        reportProject1Task2.id = '37354116382323'
-        reportProject1Task2.name = "Important Big Read project 1 task 2"
-        reportProject1Task2.important = true
-        reportProject1Task2.notes = "some important notes"
-        reportProject1Task2.completed = false
-        reportProject1Task2.due_on = "2015-06-14"
-        reportProject1Task2.tags = [bigTag, level1Tag]
-        reportProject1Task2.subtasks = []
+        ReportTask reportTask2 = new ReportTask()
+        reportTask2.id = '37354116382323'
+        reportTask2.name = "Important Big Read project 1 task 2"
+        reportTask2.important = true
+        reportTask2.notes = "some important notes"
+        reportTask2.completed = false
+        reportTask2.due_on = "2015-06-14"
+        reportTask2.tags = [bigTag, level1Tag]
+        reportTask2.subtasks = []
 
-        ReportTask reportProject2Task1 = new ReportTask()
-        reportProject2Task1.id = '37354116382321'
-        reportProject2Task1.name = "Big read project 2 task 1"
-        reportProject2Task1.notes = "some notes"
-        reportProject2Task1.completed = false
-        reportProject2Task1.due_on = "2015-06-14"
-        reportProject2Task1.tags = [bigTag, readTag]
-        reportProject2Task1.subtasks = []
-
-        ReportTask reportProject2Task2 = new ReportTask()
-        reportProject2Task2.id = '37354116382323'
-        reportProject2Task2.name = "Important Big Read project 2 task 2"
-        reportProject2Task2.important = true
-        reportProject2Task2.notes = "some important notes"
-        reportProject2Task2.completed = false
-        reportProject2Task2.due_on = "2015-06-14"
-        reportProject2Task2.tags = [bigTag, level1Tag]
-        reportProject2Task2.subtasks = []
-
-        return [reportProject1Task2, reportProject2Task2, reportProject1Task1, reportProject2Task1] as List<ReportTask>
+        return [reportTask2, reportTask1] as List<ReportTask>
     }
 
     private static List<ReportTask> createOtherTask() {
@@ -269,11 +253,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         return [reportTask2] as List<ReportTask>
     }
 
-    private stubGetTasks(String desk, String projectId) {
+    private stubGetTasks(String desk, Long projectId) {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("workspace", equalTo(testWorkspaceId))
-                .withQueryParam("project", equalTo(projectId))
+                .withQueryParam("project", equalTo(projectId.toString()))
                 .withQueryParam("completed_since", equalTo("now"))
                 .withQueryParam("opt_fields", equalTo(encodedOptFields))
                 .willReturn(aResponse()
@@ -282,11 +266,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
                 .withBodyFile("report/${desk.toLowerCase()}-${projectId}_sunday_4_monday.json")))
     }
 
-    private boolean verifyGetTasks(String projectId) {
+    private boolean verifyGetTasks(Long projectId) {
         wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/tasks\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("workspace", equalTo(testWorkspaceId))
-                .withQueryParam("project", equalTo(projectId))
+                .withQueryParam("project", equalTo(projectId.toString()))
                 .withQueryParam("completed_since", equalTo("now"))
                 .withQueryParam("opt_fields", matching(decodedOptFields)))
         return true

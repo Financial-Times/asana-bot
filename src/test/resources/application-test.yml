@@ -10,25 +10,43 @@ report:
   hostDomain: ftqa.com
   desks:
     Companies:
-      projectId: 12345
-      projectName: Companies Topics
+      projects:
+        -
+          id: 12345
+          name: Companies Topics
       groupTags: true
       premiumTags:
         - Finserv
         - Comment
     World:
-      projectId: 23456
-      projectName: World Topics
+      projects:
+        -
+          id: 23456
+          name: World Topics
       groupTags: true
       premiumTags: []
     Lex:
-      projectId: 9876
-      projectName: Lex Topics
+      projects:
+        -
+          id: 9876
+          name: Lex Topics
+      groupTags: false
+      premiumTags: []
+    Big Read:
+      projects:
+        -
+          id: 100048121
+          name: Big Read Daily
+        -
+          id: 100048122
+          name: Big Read Forward Plan
       groupTags: false
       premiumTags: []
     Team 4:
-      projectId: 379876
-      projectName: Project 4
+      projects:
+        -
+          id: 379876
+          name: Project 4
       groupTags: false
       premiumTags: []
 

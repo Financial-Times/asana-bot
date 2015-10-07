@@ -68,7 +68,7 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
             verifyGetProjectsRequest()
         and:
             projectChanges
-            projectChanges.size() == 4
+            projectChanges.size() == 6
         and:
             projectChanges[0].getReferenceProject().getName() == 'Companies Topics'
             projectChanges[0].getChanges() == [new Change('Companies Topics', null, ChangeType.NOT_FOUND)]
@@ -76,8 +76,12 @@ class AsanaChangesServiceIntegrationSpec extends IntegrationSpec {
             projectChanges[1].getChanges() == [new Change('World Topics', null, ChangeType.NOT_FOUND)]
             projectChanges[2].getReferenceProject().getName() == 'Lex Topics'
             projectChanges[2].getChanges() == [new Change('Lex Topics', null, ChangeType.NOT_FOUND)]
-            projectChanges[3].getReferenceProject().getName() == 'Project 4'
-            projectChanges[3].getChanges() == [new Change('Project 4', null, ChangeType.NOT_FOUND)]
+            projectChanges[3].getReferenceProject().getName() == 'Big Read Daily'
+            projectChanges[3].getChanges() == [new Change('Big Read Daily', null, ChangeType.NOT_FOUND)]
+            projectChanges[4].getReferenceProject().getName() == 'Big Read Forward Plan'
+            projectChanges[4].getChanges() == [new Change('Big Read Forward Plan', null, ChangeType.NOT_FOUND)]
+            projectChanges[5].getReferenceProject().getName() == 'Project 4'
+            projectChanges[5].getChanges() == [new Change('Project 4', null, ChangeType.NOT_FOUND)]
     }
 
     private void stubGetProjectsRequest(String fileName) {

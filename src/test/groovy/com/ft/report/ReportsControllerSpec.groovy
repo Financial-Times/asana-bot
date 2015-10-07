@@ -1,11 +1,14 @@
 package com.ft.report
 
 import com.ft.report.model.Criteria
+import com.ft.report.model.Desk
+import com.ft.report.model.Project
 import com.ft.report.model.Report
 import com.ft.report.model.ReportType
 import org.springframework.ui.ModelMap
 import spock.lang.Specification
 import spock.lang.Unroll
+import sun.security.krb5.internal.crypto.Des
 
 import java.time.Clock
 import java.time.LocalDateTime
@@ -22,6 +25,12 @@ class ReportsControllerSpec extends Specification {
 
     void setup() {
         controller = new ReportsController()
+
+        Project project1 = new Project(id: 1, name: 'project 1')
+        Project project2 = new Project(id: 2, name: 'project 2')
+        Desk desk1 = new Desk(projects: [project1])
+        Desk desk2 = new Desk(projects: [project2])
+        controller.desks = ['one': desk1, 'two': desk2]
     }
 
     void 'populate report types'() {
@@ -74,7 +83,7 @@ class ReportsControllerSpec extends Specification {
         given:
             ReportType preferredReportType = ReportType.SUNDAY_FOR_MONDAY
             Map<String, Object> model = [:]
-            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam)
+            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam, project: expectedProject)
 
         when:
             String viewName = controller.home(teams, preferredReportType, model)
@@ -84,18 +93,18 @@ class ReportsControllerSpec extends Specification {
             model['criteria'] == expectedCriteria
 
         where:
-            scenario              | teams          | expectedTeam
-            'user with no teams'  | []             | null
-            'user with two teams' | ['one', 'two'] | 'one'
+            scenario              | teams                  | expectedTeam | expectedProject
+            'user with no teams'  | [:]                    | null         | null
+            'user with two teams' | ['one': [], 'two': []] | 'one'        | new Project(id: 1, name: 'project 1')
     }
 
     void "create Sunday for Monday report"() {
         given:
-            String team = 'test team'
+            String team = 'one'
             ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
             controller.reportGenerator = mockDefaultReportGenerator
         and:
-            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY)
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
             ModelMap modelMap = new ModelMap()
             Report expectedReport = new Report()
 
@@ -103,7 +112,7 @@ class ReportsControllerSpec extends Specification {
             String viewName = controller.create(criteria, modelMap)
 
         then:
-            1 * mockDefaultReportGenerator.generate(criteria.reportType, team) >> expectedReport
+            1 * mockDefaultReportGenerator.generate(criteria) >> expectedReport
             0 * _
         and:
             viewName == 'reports/home'

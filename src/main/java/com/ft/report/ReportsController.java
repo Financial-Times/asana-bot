@@ -1,12 +1,14 @@
 package com.ft.report;
 
-import com.ft.report.model.Criteria;
-import com.ft.report.model.Report;
-import com.ft.report.model.ReportType;
+import com.ft.report.model.*;
+import java.util.function.Function;
+
+import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -23,7 +25,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
+import java.util.stream.Collectors;
 
+@ConfigurationProperties(prefix = "report")
 @Profile("web")
 @Controller
 @RequestMapping("/")
@@ -35,6 +39,8 @@ public class ReportsController {
     @Setter private Clock clock = Clock.systemUTC();
 
     @Setter @Autowired private ReportGenerator reportGenerator;
+
+    @Setter @Getter private Map<String, Desk> desks;
 
     @ModelAttribute("reportTypes")
     public ReportType[] populateReportTypes() {
@@ -54,22 +60,30 @@ public class ReportsController {
         return ReportType.TOMORROW;
     }
 
+    @SuppressWarnings("unchecked")
     @ModelAttribute("teams")
-    public List populateUserTeams() {
+    public Map populateUserTeams() {
         OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
         Map authDetails = (Map) oAuth2Authentication.getUserAuthentication().getDetails();
-        return (List) authDetails.get("teams");
+        List<String> userDesks = (List<String>) authDetails.get("teams");
+        Map<String, List<Project>> deskProjects =  userDesks.stream()
+                .collect(Collectors.toMap(Function.identity(), this::findDeskProjects));
+        return deskProjects;
+    }
+
+    public List<Project> findDeskProjects(String desk) {
+        return desks.get(desk).getProjects();
     }
 
 
-
     @RequestMapping(method = RequestMethod.GET)
-    public String home(@ModelAttribute("teams") List teams,
+    public String home(@ModelAttribute("teams") Map teams,
                        @ModelAttribute("preferredReportType") ReportType preferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
         if (teams != null && !teams.isEmpty()) {
-            criteria.setTeam((String) teams.get(0));
+            criteria.setTeam((String) teams.keySet().toArray()[0]);
+            criteria.assignProject(desks.get(criteria.getTeam()).getProjects());
         }
         criteria.setReportType(preferredReportType);
 
@@ -81,7 +95,8 @@ public class ReportsController {
     public String create(@ModelAttribute Criteria criteria, ModelMap modelMap) {
         modelMap.addAttribute("criteria", criteria);
 
-        Report report = reportGenerator.generate(criteria.getReportType(), criteria.getTeam());
+        criteria.lookupProject(desks.get(criteria.getTeam()).getProjects());
+        Report report = reportGenerator.generate(criteria);
         modelMap.addAttribute("report", report);
         modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
         logger.debug(criteria.getReportType().format() + " report for " + criteria.getTeam() + " desk generated");

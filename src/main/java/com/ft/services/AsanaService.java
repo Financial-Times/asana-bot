@@ -27,7 +27,7 @@ public class AsanaService {
         picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getPicturesId());
     }
 
-    public List<ReportTask> findTasks(String projectId, String completedSince) {
+    public List<ReportTask> findTasks(Long projectId, String completedSince) {
         return graphicsAsanaClient.findTaskItems(projectId, completedSince);
     }
 

@@ -70,7 +70,7 @@ public class AsanaClient {
         return teamsData.getData();
     }
 
-    public List<ReportTask> findTaskItems(String projectId, String completedSince) {
+    public List<ReportTask> findTaskItems(Long projectId, String completedSince) {
         String optionalFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
         ReportTasksData reportTasksData = asana.openProjectTasks(config.getWorkspace(), projectId, completedSince, optionalFields);
         return reportTasksData.getData();

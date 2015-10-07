@@ -14,8 +14,10 @@ report:
   hostDomain: ft.com
   desks:
     Companies:
-      projectId: 32896507461944
-      projectName: Companies Topics
+      projects:
+        -
+          id: 32896507461944
+          name: Companies Topics
       groupTags: true
       premiumTags:
         - Finserv
@@ -25,33 +27,45 @@ report:
         - Consumer
         - Comment
     World:
-      projectId: 28687437659749
-      projectName: World Topics
+      projects:
+        -
+          id: 28687437659749
+          name: World Topics
       groupTags: true
       premiumTags: []
     UK:
-      projectId: 33167799661044
-      projectName: UK Topics
+      projects:
+        -
+          id: 33167799661044
+          name: UK Topics
       groupTags: false
       premiumTags: []
     Markets:
-      projectId: 32052433501773
-      projectName: Markets Topics
+      projects:
+        -
+          id: 32052433501773
+          name: Markets Topics
       groupTags: false
       premiumTags: []
     Lex:
-      projectId: 38342535680181
-      projectName: Lex Topics
+      projects:
+        -
+          id: 38342535680181
+          name: Lex Topics
       groupTags: false
       premiumTags: []
     FT Money:
-      projectId: 42850013094580
-      projectName: FT Money Topics
+      projects:
+        -
+          id: 42850013094580
+          name: FT Money Topics
       groupTags: false
       premiumTags: []
     FTfm:
-      projectId: 48184142077370
-      projectName: FTfm Topics
+      projects:
+        -
+          id: 48184142077370
+          name: FTfm Topics
       groupTags: false
       premiumTags: []
     Comment and Leaders:

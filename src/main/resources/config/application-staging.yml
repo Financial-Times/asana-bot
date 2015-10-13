@@ -72,10 +72,6 @@ report:
     Comment and Leaders:
       projects:
         -
-          id: 52532565717889
-          name: Comment and Leaders Daily
-          primary: false
-        -
           id: 55126358623999
           name: Comment and Leaders Forward Plan
           primary: true

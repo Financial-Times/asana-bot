@@ -19,7 +19,7 @@ public class BotScheduler {
     Logger logger = LoggerFactory.getLogger(BotScheduler.class);
 
     private static final int ONE_DAY = 24 * 60 * 60_000;
-    private static final int HALF_HOUR = 30 * 60_000;
+    private static final int ONE_HOUR = 60 * 60_000;
     private static final int FIVE_MINUTES = 5 * 60_000;
 
     @Autowired @Setter
@@ -41,7 +41,7 @@ public class BotScheduler {
         asanaService.addPicturesProjectToPicturesBotAssignedTasks();
     }
 
-    @Scheduled(fixedRate = HALF_HOUR)
+    @Scheduled(fixedRate = ONE_HOUR)
     public void backupAllProjects(){
         try {
             asanaBackupService.backupAllProjects();

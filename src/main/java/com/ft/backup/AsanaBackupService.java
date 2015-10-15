@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanWriter;
@@ -34,6 +35,7 @@ public class AsanaBackupService {
 
     @Setter private Clock clock = Clock.systemUTC();
 
+    @Async
     public void backupAllProjects() throws IOException {
         File folder = googleDriveService.findOrCreateRootFolder();
         List<ProjectInfo> projectsToBackup = reportAsanaClient.getAllProjects();
@@ -66,6 +68,7 @@ public class AsanaBackupService {
         return writer.toString();
     }
 
+    @Async
     public void removeOldBackupFiles() throws IOException{
         LocalDateTime weekAgo = LocalDateTime.now(clock).minusDays(7);
         googleDriveService.removeFilesOlderThan(weekAgo);

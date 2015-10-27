@@ -113,6 +113,13 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+    Video:
+      projects:
+        -
+          id: 59466798455336
+          name: Videos in production
+      groupTags: false
+      premiumTags: []
 ---
 backup:
   google:
@@ -122,5 +129,5 @@ backup:
         - lucas.gluchowski@ft.com
         - stuart.turner@ft.com
         - claire.powell@ft.com
-        - yolande.leung@ft.com
+        - ola.okejimi@ft.com
         - mo.shawwa@ft.com

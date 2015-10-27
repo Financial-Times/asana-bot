@@ -112,3 +112,10 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+    Video:
+      projects:
+        -
+          id: 56381527297830
+          name: Videos in production
+      groupTags: false
+      premiumTags: []

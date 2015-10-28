@@ -90,8 +90,8 @@
     </div>
 </div>
 
-<div th:unless="${criteria.team}" criteriaclass="container-fluid">
-    <span>You need to belong to a team to use this application</span>
+<div th:unless="${criteria.team}">
+    <span class="centre-align">In order to view Asana reports you need to be part of a team within Asana. Please log in to <a href="https://app.asana.com">Asana</a> with your FT account and request to join the appropriate team(s).</span>
 </div>
 <div class="clearfix"></div>
 

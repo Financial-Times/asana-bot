@@ -109,3 +109,7 @@ body {
     font-size: 18px;
     border-style: solid;
 }
+.centre-align {
+    margin: 0 auto;
+    display: table
+}

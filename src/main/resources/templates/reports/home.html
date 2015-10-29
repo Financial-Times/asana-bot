@@ -35,7 +35,7 @@
     </div>
 </header>
 
-<div class="container-fluid">
+<div th:if="${criteria.team}" criteriaclass="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Select Report Type</h3>
@@ -90,7 +90,10 @@
     </div>
 </div>
 
-
+<div th:unless="${criteria.team}">
+    <span class="centre-align">In order to view Asana reports you need to be part of a team within Asana.
+        Please log in to <a href="https://asana.com">Asana</a> with your FT account and request to join the appropriate team(s).</span>
+</div>
 <div class="clearfix"></div>
 
 <div th:if="${report}" class="container-fluid">
@@ -124,7 +127,7 @@
                                           th:text="${#strings.listJoin(task.tags,', ')}"
                                           class="tags_sm">Secondary tags</span>
                                 </div>
-                                <span th:if="${task.notes}" th:text="${task.notes}" class="notes"></span>
+                                <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
                                 <ul>
                                     <li th:each="subtask : ${task.subtasks}">
                                         <span th:text="${subtask.name}">Subtask name</span>

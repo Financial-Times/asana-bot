@@ -124,7 +124,7 @@
                                           th:text="${#strings.listJoin(task.tags,', ')}"
                                           class="tags_sm">Secondary tags</span>
                                 </div>
-                                <span th:if="${task.notes}" th:text="${task.notes}" class="notes"></span>
+                                <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
                                 <ul>
                                     <li th:each="subtask : ${task.subtasks}">
                                         <span th:text="${subtask.name}">Subtask name</span>

@@ -59,4 +59,17 @@ class ReportTaskSpec extends Specification {
         then:
             result == expectedSortedReportTasks
     }
+
+    void "newline in notes becomes line break"() {
+        given:
+            ReportTask reportTask = new ReportTask(notes: "note\n" +
+                    "with\n" +
+                    "newline")
+
+        when:
+            String result = reportTask.getNotes()
+
+        then:
+            result.contains("note<br/>with<br/>newline")
+    }
 }

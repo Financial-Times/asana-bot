@@ -66,10 +66,7 @@ class ReportTaskSpec extends Specification {
                     "with\n" +
                     "newline")
 
-        when:
-            String result = reportTask.getNotes()
-
-        then:
-            result.contains("note<br/>with<br/>newline")
+        expect:
+            reportTask.notes == "note<br/>with<br/>newline"
     }
 }

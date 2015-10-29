@@ -59,4 +59,14 @@ class ReportTaskSpec extends Specification {
         then:
             result == expectedSortedReportTasks
     }
+
+    void "newline in notes becomes line break"() {
+        given:
+            ReportTask reportTask = new ReportTask(notes: "note\n" +
+                    "with\n" +
+                    "newline")
+
+        expect:
+            reportTask.notes == "note<br/>with<br/>newline"
+    }
 }

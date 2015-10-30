@@ -65,7 +65,8 @@ public class ReportsController {
     public Map populateUserTeams() {
         OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
         Map authDetails = (Map) oAuth2Authentication.getUserAuthentication().getDetails();
-        List<String> userDesks = (List<String>) authDetails.get("teams");
+        List<String> userDesks = Optional.ofNullable((List<String>) authDetails.get("teams"))
+                .orElse(Collections.emptyList());
         Map<String, List<Project>> deskProjects =  userDesks.stream()
                 .collect(Collectors.toMap(Function.identity(), this::findDeskProjects));
         return deskProjects;

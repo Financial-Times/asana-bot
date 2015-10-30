@@ -5,6 +5,10 @@ import com.ft.report.model.Desk
 import com.ft.report.model.Project
 import com.ft.report.model.Report
 import com.ft.report.model.ReportType
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.ui.ModelMap
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -118,5 +122,29 @@ class ReportsControllerSpec extends Specification {
             viewName == 'reports/home'
             modelMap['criteria'] == criteria
             modelMap['report'] == expectedReport
+    }
+
+    void "user teams are populated"() {
+        given:
+            SecurityContextHolder mockSecurityContextHolder = Spy(SecurityContextHolder)
+            SecurityContext mockSecurityContext = Mock(SecurityContext)
+            mockSecurityContextHolder.context = mockSecurityContext
+        and:
+            OAuth2Authentication mockOAuth2Authentication = Mock(OAuth2Authentication)
+            Authentication mockAuthentication = Mock(Authentication)
+            def userDetails = [:]
+
+        when:
+            def teams = controller.populateUserTeams()
+
+        then:
+            1 * mockSecurityContext.getAuthentication() >> mockOAuth2Authentication
+            1 * mockOAuth2Authentication.getUserAuthentication() >> mockAuthentication
+            1 * mockAuthentication.getDetails() >> userDetails
+            0 * _
+
+        and:
+            notThrown(NullPointerException)
+            teams == [:]
     }
 }

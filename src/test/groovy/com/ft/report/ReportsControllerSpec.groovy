@@ -123,14 +123,15 @@ class ReportsControllerSpec extends Specification {
             modelMap['criteria'] == criteria
             modelMap['report'] == expectedReport
     }
-    void "user teams are populated"(){
+
+    void "user teams are populated"() {
         given:
-            def mockSecurityContextHolder = Spy(SecurityContextHolder)
-            def mockSecurityContext = Mock(SecurityContext)
+            SecurityContextHolder mockSecurityContextHolder = Spy(SecurityContextHolder)
+            SecurityContext mockSecurityContext = Mock(SecurityContext)
             mockSecurityContextHolder.context = mockSecurityContext
         and:
-            def mockOAuth2Authentication = Mock(OAuth2Authentication)
-            def mockAuthentication = Mock(Authentication)
+            OAuth2Authentication mockOAuth2Authentication = Mock(OAuth2Authentication)
+            Authentication mockAuthentication = Mock(Authentication)
             def userDetails = [:]
 
         when:
@@ -140,9 +141,10 @@ class ReportsControllerSpec extends Specification {
             1 * mockSecurityContext.getAuthentication() >> mockOAuth2Authentication
             1 * mockOAuth2Authentication.getUserAuthentication() >> mockAuthentication
             1 * mockAuthentication.getDetails() >> userDetails
+            0 * _
 
         and:
             notThrown(NullPointerException)
-            teams == Collections.emptyMap()
+            teams == [:]
     }
 }

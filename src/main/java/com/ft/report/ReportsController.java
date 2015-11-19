@@ -106,7 +106,7 @@ public class ReportsController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String create(@ModelAttribute Criteria criteria,
-                         @RequestParam(value ="emailAddresses", required = false) final String emailAddresses, ModelMap modelMap) {
+                         @RequestParam(value = "sendEmail", defaultValue = "false") final Boolean sendEmail, ModelMap modelMap) {
 
         modelMap.addAttribute("criteria", criteria);
         final String team = criteria.getTeam();
@@ -115,10 +115,10 @@ public class ReportsController {
         Report report = reportGenerator.generate(criteria);
         modelMap.addAttribute("report", report);
         modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
-        logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team );
-        if(emailAddresses != null && !emailAddresses.isEmpty()) {
-            if (sendEmail(emailAddresses, report, team))
-                modelMap.addAttribute("emailSent", true);
+        logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team);
+
+        if (sendEmail && sendEmail(report, team)) {
+            modelMap.addAttribute("emailSent", true);
         }
         return "reports/home";
     }
@@ -137,8 +137,8 @@ public class ReportsController {
         return today.format(dateFormat);
     }
 
-    private boolean sendEmail(final String email,final Report report, final String team) {
-        return emailService.sendEmail(email, report, team);
+    private boolean sendEmail(final Report report, final String team) {
+        return emailService.sendEmail(report, team);
     }
 
 }

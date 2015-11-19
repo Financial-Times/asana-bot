@@ -57,14 +57,13 @@ class EmailServiceSpec extends Specification {
     void "should send email"() {
 
         given:
-            String email = "one@ft.com"
             Report report = new Report();
             TemplateResolver templateResolver = Spy(TemplateResolver)
             templateResolver.setResourceResolver(new ClassLoaderResourceResolver())
             templateEngine.addTemplateResolver(templateResolver)
 
         when:
-            def response = emailService.sendEmail(email, report, "one")
+            def response = emailService.sendEmail(report, "one")
 
         then:
             response != null

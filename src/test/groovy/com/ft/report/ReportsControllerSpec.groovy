@@ -101,7 +101,6 @@ class ReportsControllerSpec extends Specification {
     void "create Sunday for Monday report"() {
         given:
             String team = 'one'
-            String email = ''
             ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
             controller.reportGenerator = mockDefaultReportGenerator
         and:
@@ -110,7 +109,7 @@ class ReportsControllerSpec extends Specification {
             Report expectedReport = new Report()
 
         when:
-            String viewName = controller.create(criteria, email, modelMap)
+            String viewName = controller.create(criteria, false, modelMap)
 
         then:
             1 * mockDefaultReportGenerator.generate(criteria) >> expectedReport
@@ -165,7 +164,6 @@ class ReportsControllerSpec extends Specification {
             EmailService mockEmailService = Mock(EmailService)
             controller.emailService = mockEmailService
             controller.reportGenerator = mockDefaultReportGenerator
-            String email = "one@ft.com"
 
         and:
             Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
@@ -173,10 +171,10 @@ class ReportsControllerSpec extends Specification {
             Report report = mockDefaultReportGenerator.generate(criteria)
 
         when:
-            String viewName = controller.create(criteria, email, modelMap)
+            controller.create(criteria, true, modelMap)
 
         then:
-            1 * mockEmailService.sendEmail(email, report, team)
+            1 * mockEmailService.sendEmail(report, team)
             1 * _
     }
 }

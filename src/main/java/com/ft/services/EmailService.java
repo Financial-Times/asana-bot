@@ -44,10 +44,10 @@ public class EmailService {
     @Setter
     private String apikey;
 
-    public boolean sendEmail(final String emails, final Report report, final String team) {
+    public boolean sendEmail(final Report report, final String team) {
 
         SendGrid sendGrid = new SendGrid(apikey);
-        SendGrid.Email email = createEmail(emails, report, team);
+        SendGrid.Email email = createEmail(report, team);
 
         try {
             return sendGrid.send(email).getStatus();
@@ -56,12 +56,10 @@ public class EmailService {
         }
     }
 
-    private SendGrid.Email createEmail(final String emails, final Report report, final String team) {
+    private SendGrid.Email createEmail(final Report report, final String team) {
         SendGrid.Email email = new SendGrid.Email();
-
-        final Set<String> emailsList = StringUtils.commaDelimitedListToSet(emails);
-        emailsList.stream().forEach(s -> email.addTo(s));
-        email.setFrom(getEmailAddress(team));
+        email.setFrom("noreply.asanareport.com");
+        email.addTo(getEmailAddress(team));
         email.setSubject(MessageFormat.format("VIDEOS - {0,date,full}", new Date()));
 
         final Context ctx = new Context();

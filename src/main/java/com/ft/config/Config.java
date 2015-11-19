@@ -25,6 +25,7 @@ public class Config {
     private String baseUrl;
 
     private List<String> authorizedTeams;
+    private List<Map<String, String>> emailTeams;
 
     private Map<String, String> tags;
 }

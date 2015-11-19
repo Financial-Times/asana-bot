@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:remove="all">Asana Report</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+    <div th:if="${report}" class="container-fluid">
+        <div class="panel panel-default">
+
+            <div class="panel-body printable">
+
+                <header>
+                    <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
+                </header>
+
+                <div>
+                    <th:block th:each="tt: ${report.tagTasks}">
+                        <span th:if="${report.groupByTags}" class="tags" th:text="${tt.key}">Tag</span>
+                        <table class="table table-condensed">
+                            <tbody th:if="${#lists.isEmpty(tt.value)}" th:text="None"></tbody>
+                            <tbody th:unless="${#lists.isEmpty(tt.value)}">
+                            <tr th:each="task: ${tt.value}">
+                                <td>
+                                    <div>
+                                        <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
+                                        <b th:text="${task.name}" ></b>
+                                    <span th:unless="${#lists.isEmpty(task.tags)}"
+                                          th:text="${#strings.listJoin(task.tags,', ')}"
+                                          class="tags_sm">Secondary tags</span>
+                                    </div>
+                                    <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
+                                    <ul>
+                                        <li th:each="subtask : ${task.subtasks}">
+                                            <span th:text="${subtask.name}">Subtask name</span>
+                                            <span th:if="${subtask.completed}" class="complete">&#10003;</span>
+                                        </li>
+                                    </ul>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

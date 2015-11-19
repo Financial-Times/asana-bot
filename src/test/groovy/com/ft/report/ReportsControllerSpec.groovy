@@ -1,10 +1,7 @@
 package com.ft.report
 
-import com.ft.report.model.Criteria
-import com.ft.report.model.Desk
-import com.ft.report.model.Project
-import com.ft.report.model.Report
-import com.ft.report.model.ReportType
+import com.ft.report.model.*
+import com.ft.services.EmailService
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
@@ -12,7 +9,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.ui.ModelMap
 import spock.lang.Specification
 import spock.lang.Unroll
-import sun.security.krb5.internal.crypto.Des
 
 import java.time.Clock
 import java.time.LocalDateTime
@@ -105,6 +101,7 @@ class ReportsControllerSpec extends Specification {
     void "create Sunday for Monday report"() {
         given:
             String team = 'one'
+            String email = ''
             ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
             controller.reportGenerator = mockDefaultReportGenerator
         and:
@@ -113,7 +110,7 @@ class ReportsControllerSpec extends Specification {
             Report expectedReport = new Report()
 
         when:
-            String viewName = controller.create(criteria, modelMap)
+            String viewName = controller.create(criteria, email, modelMap)
 
         then:
             1 * mockDefaultReportGenerator.generate(criteria) >> expectedReport
@@ -146,5 +143,40 @@ class ReportsControllerSpec extends Specification {
         and:
             notThrown(NullPointerException)
             teams == [:]
+    }
+
+    void "email link is set to true"() {
+        given:
+            EmailService mockEmailService = Mock(EmailService)
+            controller.emailService = mockEmailService
+            String team = 'one'
+
+        when:
+            def showEmailLink = controller.showEmailLink(team)
+
+        then:
+            showEmailLink == mockEmailService.isEmailTeam(team)
+    }
+
+    void "send report when email provided"() {
+        given:
+            String team = 'one'
+            ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
+            EmailService mockEmailService = Mock(EmailService)
+            controller.emailService = mockEmailService
+            controller.reportGenerator = mockDefaultReportGenerator
+            String email = "one@ft.com"
+
+        and:
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
+            ModelMap modelMap = new ModelMap()
+            Report report = mockDefaultReportGenerator.generate(criteria)
+
+        when:
+            String viewName = controller.create(criteria, email, modelMap)
+
+        then:
+            1 * mockEmailService.sendEmail(email, report, team)
+            1 * _
     }
 }

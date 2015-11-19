@@ -1,8 +1,7 @@
 package com.ft.report;
 
 import com.ft.report.model.*;
-import java.util.function.Function;
-
+import com.ft.services.EmailService;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.DayOfWeek;
@@ -24,7 +24,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ConfigurationProperties(prefix = "report")
@@ -41,6 +45,9 @@ public class ReportsController {
     @Setter @Autowired private ReportGenerator reportGenerator;
 
     @Setter @Getter private Map<String, Desk> desks;
+
+    @Autowired
+    EmailService emailService;
 
     @ModelAttribute("reportTypes")
     public ReportType[] populateReportTypes() {
@@ -72,6 +79,11 @@ public class ReportsController {
         return deskProjects;
     }
 
+    @ModelAttribute("showEmailLink")
+    public boolean showEmailLink(final String team) {
+       return emailService.isEmailTeam(team);
+    }
+
     public List<Project> findDeskProjects(String desk) {
         return desks.get(desk).getProjects();
     }
@@ -93,14 +105,21 @@ public class ReportsController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String create(@ModelAttribute Criteria criteria, ModelMap modelMap) {
-        modelMap.addAttribute("criteria", criteria);
+    public String create(@ModelAttribute Criteria criteria,
+                         @RequestParam(value ="emailAddresses", required = false) final String emailAddresses, ModelMap modelMap) {
 
-        criteria.lookupProject(desks.get(criteria.getTeam()).getProjects());
+        modelMap.addAttribute("criteria", criteria);
+        final String team = criteria.getTeam();
+
+        criteria.lookupProject(desks.get(team).getProjects());
         Report report = reportGenerator.generate(criteria);
         modelMap.addAttribute("report", report);
         modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
-        logger.debug(criteria.getReportType().format() + " report for " + criteria.getTeam() + " desk generated");
+        logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team );
+        if(emailAddresses != null && !emailAddresses.isEmpty()) {
+            if (sendEmail(emailAddresses, report, team))
+                modelMap.addAttribute("emailSent", true);
+        }
         return "reports/home";
     }
 
@@ -116,6 +135,10 @@ public class ReportsController {
         }
 
         return today.format(dateFormat);
+    }
+
+    private boolean sendEmail(final String email,final Report report, final String team) {
+        return emailService.sendEmail(email, report, team);
     }
 
 }

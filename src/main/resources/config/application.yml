@@ -16,6 +16,9 @@ asana:
     - Big Read
     - Features Production
     - Video
+  emailTeams:
+    - name: Video
+      email: video.topic.planner@ft.com
   tags:
     Companies: COS
     World: WN
@@ -55,7 +58,9 @@ spring:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
       preferTokenInfo: false
   thymeleaf.cache: false
-
+  mail:
+      host: smtp.svc.ft.com
+      port: 25
 ---
 report:
   hostDomain: ft.com
@@ -87,3 +92,6 @@ backup:
 ---
 notify:
   slackWebHookUrl: ${SLACK_WEBHOOK}
+---
+sendgrid:
+  apikey: ${SENDGRID_APIKEY}

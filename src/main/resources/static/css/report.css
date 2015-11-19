@@ -118,20 +118,19 @@ span.centre-align {
     max-width: 10%;
 }
 #email-sent {
-    width:200px;
-    height:20px;
+    width:500px;
     height:auto;
     position:absolute;
-    left:50%;
+    left:40%;
     margin-left:-100px;
-    top:80px;
-    background-color: #383838;
-    color: #F0F0F0;
+    top:250px;
+    background-color: #FFFFFF;
+    color: #00FF00;
     font-family: Calibri;
     font-size: 20px;
     padding:10px;
     text-align:center;
-    border-radius: 2px;
+    border-radius: 25px;
     -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);

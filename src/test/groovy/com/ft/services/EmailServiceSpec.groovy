@@ -60,7 +60,7 @@ class EmailServiceSpec extends Specification {
             String email = "one@ft.com"
             Report report = new Report();
             TemplateResolver templateResolver = Spy(TemplateResolver)
-            templateResolver.setResourceResolver(new ClassLoaderResourceResolver())
+            templateResolver.setResourceResolver(GroovyMock(ClassLoaderResourceResolver))
             templateEngine.addTemplateResolver(templateResolver)
 
         when:

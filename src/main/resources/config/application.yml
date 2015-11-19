@@ -18,7 +18,7 @@ asana:
     - Video
   emailTeams:
     - name: Video
-      email: video.topic.planner@ft.com
+      email: ${VIDEO_PLANNER_EMAIL}
   tags:
     Companies: COS
     World: WN

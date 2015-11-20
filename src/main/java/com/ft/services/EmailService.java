@@ -6,38 +6,25 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
-/**
- * Created by ola.okejimi on 16/11/15.
- */
 @ConfigurationProperties(prefix = "sendgrid")
 @Service
 public class EmailService {
 
-    private Logger logger = LoggerFactory.getLogger(EmailService.class);
-
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
+    @Autowired @Setter
     private TemplateEngine templateEngine;
 
-    @Autowired
+    @Autowired @Setter
     Config config;
 
     @Getter

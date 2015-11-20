@@ -36,7 +36,7 @@
 </header>
 
 <div th:if="${criteria.team}" class="container-fluid">
-    <div th:if="${emailSent}" id='email-sent' style='display:none'>Your message has been sent</div>
+    <div th:if="${emailSent}" id='email-sent' style='display:none' th:text="${emailSent}"/>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Select Report Type</h3>

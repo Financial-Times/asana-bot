@@ -44,16 +44,11 @@ public class EmailService {
     @Setter
     private String apikey;
 
-    public boolean sendEmail(final Report report, final String team) {
+    public boolean sendEmail(final Report report, final String team) throws SendGridException {
 
         SendGrid sendGrid = new SendGrid(apikey);
         SendGrid.Email email = createEmail(report, team);
-
-        try {
-            return sendGrid.send(email).getStatus();
-        } catch (SendGridException e) {
-            throw new RuntimeException(e);
-        }
+        return sendGrid.send(email).getStatus();
     }
 
     private SendGrid.Email createEmail(final Report report, final String team) {

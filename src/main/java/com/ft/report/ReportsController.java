@@ -2,6 +2,7 @@ package com.ft.report;
 
 import com.ft.report.model.*;
 import com.ft.services.EmailService;
+import com.sendgrid.SendGridException;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -117,8 +118,8 @@ public class ReportsController {
         modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
         logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team);
 
-        if (sendEmail && sendEmail(report, team)) {
-            modelMap.addAttribute("emailSent", true);
+        if (sendEmail) {
+            modelMap.addAttribute("emailSent", sendEmail(report, team));
         }
         return "reports/home";
     }
@@ -137,8 +138,15 @@ public class ReportsController {
         return today.format(dateFormat);
     }
 
-    private boolean sendEmail(final Report report, final String team) {
-        return emailService.sendEmail(report, team);
+    private String sendEmail(final Report report, final String team)  {
+        String message = "Problem sending email";
+        try {
+            if(emailService.sendEmail(report, team))
+                message = "Your message has been sent";
+        } catch (SendGridException e) {
+            logger.error("problem sending email {}", e);
+        }
+        return message;
     }
 
 }

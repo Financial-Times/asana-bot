@@ -62,13 +62,8 @@ class EmailServiceSpec extends Specification {
             templateResolver.setResourceResolver(new ClassLoaderResourceResolver())
             templateEngine.addTemplateResolver(templateResolver)
 
-        when:
-            def response = emailService.sendEmail(report, "one")
-
-        then:
-            response != null
-            1 * templateResolver.getName()
-
+        expect:
+            emailService.sendEmail(report, "one") != null
 
     }
 

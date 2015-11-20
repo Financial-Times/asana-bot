@@ -175,6 +175,7 @@ class ReportsControllerSpec extends Specification {
 
         then:
             1 * mockEmailService.sendEmail(report, team)
-            1 * _
+            1 * mockDefaultReportGenerator.generate(criteria)
+            0 * _
     }
 }

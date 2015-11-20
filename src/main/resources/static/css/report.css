@@ -113,3 +113,25 @@ span.centre-align {
     margin: 0 auto;
     display: table
 }
+.email-label {
+    display: block;
+    max-width: 10%;
+}
+#email-sent {
+    width:500px;
+    height:auto;
+    position:absolute;
+    left:40%;
+    margin-left:-100px;
+    top:250px;
+    background-color: #FFFFFF;
+    color: #00FF00;
+    font-family: Calibri;
+    font-size: 20px;
+    padding:10px;
+    text-align:center;
+    border-radius: 25px;
+    -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+    -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+    box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+}

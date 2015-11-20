@@ -30,6 +30,10 @@ Below environment variables must be set in order for the app to authenticate use
 * OAUTH_CLIENT_ID
 * OAUTH_CLIENT_SECRET
 
+Below environment variables must be set in order for the app to sent emails:
+* SENDGRID_APIKEY
+* VIDEO_PLANNER_EMAIL
+
 Finally backup properties are driven by following variables:
 * GOOGLE_API_PRIVATE_KEY_ID
 * GOOGLE_API_PRIVATE_KEY

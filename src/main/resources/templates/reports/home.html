@@ -36,6 +36,7 @@
 </header>
 
 <div th:if="${criteria.team}" class="container-fluid">
+    <div th:if="${emailSent}" id='email-sent' style='display:none' th:text="${emailSent}"/>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Select Report Type</h3>
@@ -81,7 +82,7 @@
                         <option th:each="project : ${teams['__${criteria.team}__']}" th:value="${project.id}" th:text="${project.name}">Project</option>
                     </select>
                 </div>
-
+                <input th:type="hidden" name="sendEmail" id="sendEmail"/>
                 <!-- Submit -->
                 <input type="submit" id="submitButton" name="submitButton" class="btn btn-primary" value="Submit"/>
             </form>
@@ -101,8 +102,12 @@
 
         <div class="panel-heading">
             <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
-                                                     href="javascript:window.print()">Print this report</a></h3>
+                                                     href="javascript:window.print()">Print this report</a>
+                <a th:if="${report.tagTasks.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
+                   href="#">Email Report</a>
+            </h3>
         </div>
+
         <div class="panel-body printable">
 
             <header>
@@ -144,8 +149,6 @@
         </div>
     </div>
 </div>
-
-
 <script th:inline="javascript">
     /*<![CDATA[*/
 
@@ -158,8 +161,15 @@
             el.options[el.options.length] = new Option(this.name, this.id);
         });
     }
-
     $(document).ready(function () {
+        $('#email-sent').fadeIn(400).delay(3000).fadeOut(400);
+        $('#email-report').bind('click', function(event){
+            event.preventDefault();
+            $("#sendEmail").val("true");
+            $("#reportCriteriaForm").submit();
+
+        });
+
         $('#teamSelect').bind('change', function() {
             var teamName = this.value;
             var projects = desks[teamName];

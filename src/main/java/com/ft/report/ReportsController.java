@@ -41,11 +41,16 @@ public class ReportsController {
     private static final DateTimeFormatter longDateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
     private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
-    @Setter private Clock clock = Clock.systemUTC();
+    @Setter
+    private Clock clock = Clock.systemUTC();
 
-    @Setter @Autowired private ReportGenerator reportGenerator;
+    @Setter
+    @Autowired
+    private ReportGenerator reportGenerator;
 
-    @Setter @Getter private Map<String, Desk> desks;
+    @Setter
+    @Getter
+    private Map<String, Desk> desks;
 
     @Autowired
     EmailService emailService;
@@ -75,14 +80,14 @@ public class ReportsController {
         Map authDetails = (Map) oAuth2Authentication.getUserAuthentication().getDetails();
         List<String> userDesks = Optional.ofNullable((List<String>) authDetails.get("teams"))
                 .orElse(Collections.emptyList());
-        Map<String, List<Project>> deskProjects =  userDesks.stream()
+        Map<String, List<Project>> deskProjects = userDesks.stream()
                 .collect(Collectors.toMap(Function.identity(), this::findDeskProjects));
         return deskProjects;
     }
 
     @ModelAttribute("showEmailLink")
     public boolean showEmailLink(final String team) {
-       return emailService.isEmailTeam(team);
+        return emailService.isEmailTeam(team);
     }
 
     public List<Project> findDeskProjects(String desk) {
@@ -91,8 +96,8 @@ public class ReportsController {
 
     // TODO: Add desk to model and remove this
     @ModelAttribute("showProjectsTeams")
-    public List<String> showProjectsTeams(){
-        return  desks.entrySet().stream()
+    public List<String> showProjectsTeams() {
+        return desks.entrySet().stream()
                 .filter(e -> e.getValue().isShowProjects())
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
@@ -151,7 +156,7 @@ public class ReportsController {
             criteria.lookupProject(desks.get(team).getProjects());
             reportDate = buildReportDate(criteria.getReportType());
             Report report = reportGenerator.generate(criteria);
-            reportsMap.put(criteria.getProject().getName(),report);
+            reportsMap.put(criteria.getProject().getName(), report);
             reports.add(report);
 
             modelMap.addAttribute("reportDate", reportDate);
@@ -194,10 +199,10 @@ public class ReportsController {
         return lastWeek + " - " + today.format(longDateFormat);
     }
 
-    private String sendEmail(final String team, final String title, final Report ... report)  {
+    private String sendEmail(final String team, final String title, final Report... report) {
         String message = "Problem sending email";
         try {
-            if(emailService.sendEmail(team, title, report))
+            if (emailService.sendEmail(team, title, report))
                 message = "Your message has been sent";
         } catch (SendGridException e) {
             logger.error("problem sending email {}", e);

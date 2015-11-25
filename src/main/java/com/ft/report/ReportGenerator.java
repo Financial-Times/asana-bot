@@ -27,14 +27,18 @@ public class ReportGenerator {
 
     private static final String COMPLETED_SINCE_NOW = "now"; //For Asana it means not completed
 
-    @Autowired private AsanaService asanaService;
-    @Autowired private DueDatePredicateFactory dueDatePredicateFactory;
-    @Autowired private ReportSorter reportSorter;
+    @Autowired
+    private AsanaService asanaService;
+    @Autowired
+    private DueDatePredicateFactory dueDatePredicateFactory;
+    @Autowired
+    private ReportSorter reportSorter;
 
     @Setter
     @Getter
     private Map<String, Desk> desks;
-    @Setter private Clock clock = Clock.systemUTC();
+    @Setter
+    private Clock clock = Clock.systemUTC();
 
 
     public Report generate(Criteria criteria) {
@@ -57,12 +61,12 @@ public class ReportGenerator {
 
     private Map<String, List<ReportTask>> toTagsMap(String team, Stream<ReportTask> reportTaskStream) {
         return reportTaskStream
-                .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())) );
+                .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())));
     }
 
     private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {
         return reportTaskStream
-                .collect(Collectors.groupingBy(rt -> NOT_TAGGED_TAG) );
+                .collect(Collectors.groupingBy(rt -> NOT_TAGGED_TAG));
     }
 
     private String extractTagName(String team, List<Tag> tags) {

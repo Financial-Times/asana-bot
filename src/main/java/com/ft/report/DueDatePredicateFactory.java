@@ -65,7 +65,7 @@ public class DueDatePredicateFactory {
     }
 
     private Predicate<ReportTask> createNextWeekEndPredicate(LocalDate today) {
-        LocalDate nextMonday= getNextDate(today, DayOfWeek.MONDAY);
+        LocalDate nextMonday = getNextDate(today, DayOfWeek.MONDAY);
         return rt -> LocalDate.parse(rt.getDue_on(), dateFormat).isBefore(nextMonday);
     }
 

@@ -57,13 +57,13 @@ class EmailServiceSpec extends Specification {
     void "should send email"() {
 
         given:
-            Report report = new Report();
+            List<Report> reports = new ArrayList<>()
             TemplateResolver templateResolver = Spy(TemplateResolver)
             templateResolver.setResourceResolver(new ClassLoaderResourceResolver())
             templateEngine.addTemplateResolver(templateResolver)
 
         expect:
-            emailService.sendEmail(report, "one") != null
+            emailService.sendEmail("one" , "title", reports[0]) != null
 
     }
 

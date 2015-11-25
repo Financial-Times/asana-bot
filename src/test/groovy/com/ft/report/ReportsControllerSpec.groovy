@@ -37,7 +37,7 @@ class ReportsControllerSpec extends Specification {
         when:
             ReportType[] result = controller.populateReportTypes()
         then:
-            result.size() == 3
+            result.size() == 5
             result == ReportType.values()
     }
 
@@ -169,13 +169,38 @@ class ReportsControllerSpec extends Specification {
             Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
             ModelMap modelMap = new ModelMap()
             Report report = mockDefaultReportGenerator.generate(criteria)
+            def reports = []
+            reports.add(report);
 
         when:
             controller.create(criteria, true, modelMap)
 
         then:
-            1 * mockEmailService.sendEmail(report, team)
+            1 * mockEmailService.sendEmail(team, _ , reports)
             1 * mockDefaultReportGenerator.generate(criteria)
             0 * _
+    }
+
+    void "create weekend report"() {
+        given:
+            String team = 'one'
+            ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
+            controller.reportGenerator = mockDefaultReportGenerator
+            and:
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
+            ModelMap modelMap = new ModelMap()
+            Report expectedReport = new Report()
+            def projectIds = ["1"]
+
+        when:
+            String viewName = controller.createMultiProject(criteria, false, projectIds, modelMap)
+
+        then:
+            1 * mockDefaultReportGenerator.generate(criteria) >> expectedReport
+            0 * _
+        and:
+            viewName == 'reports/multiproject'
+            modelMap['criteria'] == criteria
+            modelMap['reports']['project 1'] == expectedReport
     }
 }

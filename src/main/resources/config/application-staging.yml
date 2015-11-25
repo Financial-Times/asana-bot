@@ -120,6 +120,23 @@ report:
           name: Videos in production
       groupTags: false
       premiumTags: []
+    Weekend:
+      projects:
+        -
+          id: 68145410531979
+          name: Life & Arts
+        -
+          id: 68145410531980
+          name: House & Home
+        -
+          id: 68145410531981
+          name: FT Magazine
+        -
+          id: 68145410531982
+          name: Arts
+      groupTags: false
+      premiumTags: []
+      showProjects: false
 ---
 backup:
   google:

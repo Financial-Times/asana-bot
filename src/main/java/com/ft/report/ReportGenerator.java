@@ -1,7 +1,10 @@
 package com.ft.report;
 
 import com.ft.asanaapi.model.Tag;
-import com.ft.report.model.*;
+import com.ft.report.model.Criteria;
+import com.ft.report.model.Desk;
+import com.ft.report.model.Report;
+import com.ft.report.model.ReportTask;
 import com.ft.services.AsanaService;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +13,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +45,7 @@ public class ReportGenerator {
 
         List<ReportTask> reportTasks = asanaService.findTasks(criteria.getProject().getId(), COMPLETED_SINCE_NOW);
         Stream<ReportTask> reportTaskStream = reportTasks.stream()
+                .filter(rt -> rt.getDue_on() != null)
                 .filter(dueDatePredicateFactory.create(criteria.getReportType()));
 
         Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);

@@ -13,28 +13,27 @@
     <title>Conference report</title>
 </head>
 <body>
-
 <div th:include="common :: body"></div>
 <div class="clearfix"></div>
 
-<div th:if="${report}" class="container-fluid">
-    <div class="panel panel-default">
 
-        <div class="panel-heading">
+<th:block th:each="reportMap, iterStat: ${reports}" th:with="report=${reportMap.value},reportName=${reportMap.key}">
+<div th:if="${report.tagTasks.size() > 0}" class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading" th:if="${iterStat.count == 1}">
             <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
                                                      href="javascript:window.print()">Print this report</a>
-                <a th:if="${report.tagTasks.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
+                <a th:if="${reports.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
                    href="#">Email Report</a>
             </h3>
         </div>
-
         <div class="panel-body printable">
 
             <header>
                 <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
-                <span th:text="${criteria.getReportType().format()} + '\'s conference report ' + ${reportDate}">title</span>
+                <span th:text="${criteria.getReportType().format()} + '\'s plan ' + ${reportDate}">title</span>
                 <span th:text="'(' + ${criteria.getTeam()} + ' desk)'">Selected team</span>
-                <span th:if="${teams['__${criteria.team}__'].size() > 1}" th:text="'(' + ${criteria.getProject().getName()} + ' project)'">Multi-project team</span>
+                <span th:if="${teams['__${criteria.team}__'].size() > 1}" th:text="'(' + ${reportName} + ' project)'">Multi-project team</span>
             </header>
 
             <div>
@@ -69,6 +68,8 @@
         </div>
     </div>
 </div>
+</th:block>
 <div th:include="common :: footer"></div>
+
 </body>
 </html>

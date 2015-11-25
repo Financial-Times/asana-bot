@@ -9,4 +9,5 @@ public class Desk {
     private List<Project> projects;
     private boolean groupTags = false;
     private List<String> premiumTags;
+    private boolean showProjects = true;
 }

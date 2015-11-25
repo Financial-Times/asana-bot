@@ -19,16 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.text.MessageFormat;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,6 +37,8 @@ import java.util.stream.Collectors;
 public class ReportsController {
 
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter dayDateFormat = DateTimeFormatter.ofPattern("dd");
+    private static final DateTimeFormatter longDateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
     private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
     @Setter private Clock clock = Clock.systemUTC();
@@ -89,6 +89,15 @@ public class ReportsController {
         return desks.get(desk).getProjects();
     }
 
+    // TODO: Add desk to model and remove this
+    @ModelAttribute("showProjectsTeams")
+    public List<String> showProjectsTeams(){
+        return  desks.entrySet().stream()
+                .filter(e -> e.getValue().isShowProjects())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
 
     @RequestMapping(method = RequestMethod.GET)
     public String home(@ModelAttribute("teams") Map teams,
@@ -119,9 +128,43 @@ public class ReportsController {
         logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team);
 
         if (sendEmail) {
-            modelMap.addAttribute("emailSent", sendEmail(report, team));
+            final String title = MessageFormat.format("VIDEOS - {0,date,full}", new Date());
+            modelMap.addAttribute("emailSent", sendEmail(team, title, report));
         }
         return "reports/home";
+    }
+
+    @RequestMapping(method = RequestMethod.POST, params = "multiproject")
+    public String createMultiProject(@ModelAttribute Criteria criteria,
+                                     @RequestParam(value = "sendEmail", defaultValue = "false") final Boolean sendEmail,
+                                     @RequestParam("project.id") List<String> projectId, ModelMap modelMap) {
+
+        final String team = criteria.getTeam();
+        final Map<String, Report> reportsMap = new LinkedHashMap<>();
+        final List<Report> reports = new LinkedList<>();
+        String reportDate = "";
+
+        for (String str : projectId) {
+            criteria.setProject(new Project(Long.valueOf(str), null, false));
+
+            modelMap.addAttribute("criteria", criteria);
+            criteria.lookupProject(desks.get(team).getProjects());
+            reportDate = buildReportDate(criteria.getReportType());
+            Report report = reportGenerator.generate(criteria);
+            reportsMap.put(criteria.getProject().getName(),report);
+            reports.add(report);
+
+            modelMap.addAttribute("reportDate", reportDate);
+
+        }
+
+        modelMap.addAttribute("reports", reportsMap);
+        if (sendEmail) {
+            final String title = "Weekend Plan " + reportDate;
+            modelMap.addAttribute("emailSent", sendEmail(team, title, reports.toArray(new Report[reports.size()])));
+        }
+
+        return "reports/multiproject";
     }
 
     public String buildReportDate(ReportType preferredReportType) {
@@ -134,14 +177,27 @@ public class ReportsController {
         if (preferredReportType == ReportType.TOMORROW) {
             return today.plusDays(1).format(dateFormat);
         }
+        if (preferredReportType == ReportType.THIS_WEEK) {
+            LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+            return todayWeek(sunday);
+        }
+        if (preferredReportType == ReportType.NEXT_WEEK) {
+            LocalDate nextSunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).plusDays(7);
+            return todayWeek(nextSunday);
+        }
 
         return today.format(dateFormat);
     }
 
-    private String sendEmail(final Report report, final String team)  {
+    private String todayWeek(LocalDate today) {
+        String lastWeek = today.minusDays(7).format(dayDateFormat);
+        return lastWeek + " - " + today.format(longDateFormat);
+    }
+
+    private String sendEmail(final String team, final String title, final Report ... report)  {
         String message = "Problem sending email";
         try {
-            if(emailService.sendEmail(report, team))
+            if(emailService.sendEmail(team, title, report))
                 message = "Your message has been sent";
         } catch (SendGridException e) {
             logger.error("problem sending email {}", e);

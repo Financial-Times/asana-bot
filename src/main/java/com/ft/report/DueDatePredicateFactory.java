@@ -22,7 +22,7 @@ public class DueDatePredicateFactory {
 
     public Predicate<ReportTask> create(ReportType reportType) {
         LocalDate today = LocalDate.now(clock);
-
+        // TODO: replace if block with polymorphism
         if (reportType == ReportType.SUNDAY_FOR_MONDAY) {
             return createSundayForMondayPredicate(today);
         }
@@ -31,6 +31,12 @@ public class DueDatePredicateFactory {
         }
         if (reportType == ReportType.TODAY) {
             return createTodayPredicate(today);
+        }
+        if (reportType == ReportType.THIS_WEEK) {
+            return createNextWeekEndPredicate(today);
+        }
+        if (reportType == ReportType.NEXT_WEEK) {
+            return createNextWeekPredicate(today);
         }
 
         return createAllMatchPredicate();
@@ -51,11 +57,27 @@ public class DueDatePredicateFactory {
         return rt -> todayAsString.equals(rt.getDue_on());
     }
 
+    private Predicate<ReportTask> createNextWeekPredicate(LocalDate today) {
+        LocalDate nextWeekMonday = getNextDate(today.plusDays(7), DayOfWeek.MONDAY);
+        LocalDate nextMonday = getNextDate(today, DayOfWeek.MONDAY);
+        return rt -> LocalDate.parse(rt.getDue_on(), dateFormat).isBefore(nextWeekMonday)
+                && LocalDate.parse(rt.getDue_on(), dateFormat).isAfter(nextMonday);
+    }
+
+    private Predicate<ReportTask> createNextWeekEndPredicate(LocalDate today) {
+        LocalDate nextMonday= getNextDate(today, DayOfWeek.MONDAY);
+        return rt -> LocalDate.parse(rt.getDue_on(), dateFormat).isBefore(nextMonday);
+    }
+
     private Predicate<ReportTask> createAllMatchPredicate() {
         return rt -> true;
     }
 
     private String getNextDay(LocalDate day, DayOfWeek nextDayOfWeek) {
         return day.with(TemporalAdjusters.next(nextDayOfWeek)).format(dateFormat);
+    }
+
+    private LocalDate getNextDate(LocalDate day, DayOfWeek nextDayOfWeek) {
+        return day.with(TemporalAdjusters.next(nextDayOfWeek));
     }
 }

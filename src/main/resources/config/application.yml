@@ -16,9 +16,14 @@ asana:
     - Big Read
     - Features Production
     - Video
+    - Weekend
   emailTeams:
-    - name: Video
+    -
+      name: Video
       email: ${VIDEO_PLANNER_EMAIL}
+    -
+      name: Weekend
+      email: ${WEEKEND_PROJECT_EMAIL}
   tags:
     Companies: COS
     World: WN

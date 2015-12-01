@@ -1,10 +1,8 @@
 package com.ft.report;
 
 import com.ft.asanaapi.model.Tag;
-import com.ft.report.model.Criteria;
-import com.ft.report.model.Desk;
-import com.ft.report.model.Report;
-import com.ft.report.model.ReportTask;
+import com.ft.report.date.DueDatePredicateFactory;
+import com.ft.report.model.*;
 import com.ft.services.AsanaService;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,19 +40,29 @@ public class ReportGenerator {
     private Clock clock = Clock.systemUTC();
 
 
-    public Report generate(Criteria criteria) {
+    public List<Report> generate(Criteria criteria) {
+
+        List<Report> reports = new LinkedList<>();
+        for (Project project : criteria.getProjects()) {
+            Report report = generate(criteria.getTeam(), project, criteria.getReportType());
+            reports.add(report);
+        }
+        return reports;
+    }
+
+    public Report generate(String teamName, Project project, ReportType reportType) {
 
         Report report = new Report();
-        String team = criteria.getTeam();
-        report.setGroupByTags(shouldGroupByTags(team));
+        report.setProject(project);
+        report.setGroupByTags(shouldGroupByTags(teamName));
 
-        List<ReportTask> reportTasks = asanaService.findTasks(criteria.getProject().getId(), COMPLETED_SINCE_NOW);
+        List<ReportTask> reportTasks = asanaService.findTasks(project.getId(), COMPLETED_SINCE_NOW);
         Stream<ReportTask> reportTaskStream = reportTasks.stream()
                 .filter(rt -> rt.getDue_on() != null)
-                .filter(dueDatePredicateFactory.create(criteria.getReportType()));
+                .filter(dueDatePredicateFactory.create(reportType));
 
-        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(team, reportTaskStream) : toOneTagMap(reportTaskStream);
-        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(team, unsortedTasks);
+        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
+        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
         report.setTagTasks(sortedResult);
 
         return report;

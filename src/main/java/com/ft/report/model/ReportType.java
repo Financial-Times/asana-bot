@@ -1,12 +1,8 @@
 package com.ft.report.model;
 
-import lombok.Setter;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public enum ReportType {
     SUNDAY_FOR_MONDAY(ReportCategory.WEEKDAY),
@@ -15,11 +11,10 @@ public enum ReportType {
     THIS_WEEK(ReportCategory.WEEKEND),
     NEXT_WEEK(ReportCategory.WEEKEND);
 
-    @Setter
-    private final List<ReportCategory> category;
+    private final ReportCategory category;
 
-    ReportType(ReportCategory ... category) {
-        this.category = Arrays.asList(category);
+    ReportType(ReportCategory category) {
+        this.category = category;
     }
 
     public String format() {
@@ -31,7 +26,30 @@ public enum ReportType {
         return joiner.toString();
     }
 
-    public List<String> getCategory() {
-        return category.stream().map(Enum::name).collect(Collectors.toList());
+    public String formatAndAppendCategory() {
+        String formatted = format();
+        String suffix = "'s conference report ";
+        if (category == ReportCategory.WEEKEND) {
+            suffix = "'s plan ";
+        }
+        return formatted + suffix;
+    }
+
+    public ReportCategory getCategory() {
+        return category;
+    }
+
+    public static Map<String, List<Map<String, String>>> getReportTypesByCategories() {
+        Map<String, List<Map<String, String>>> reportTypes = new LinkedHashMap<>();
+        for (ReportType reportType : ReportType.values()) {
+            List<Map<String, String>> reportTypeProperties = reportTypes.getOrDefault(reportType.category.name(), new ArrayList<>());
+            Map<String, String> reportTypeProperty = new LinkedHashMap<>();
+            reportTypeProperty.put("id", reportType.name());
+            reportTypeProperty.put("name", reportType.format());
+            reportTypeProperties.add(reportTypeProperty);
+
+            reportTypes.put(reportType.category.name(), reportTypeProperties);
+        }
+        return reportTypes;
     }
 }

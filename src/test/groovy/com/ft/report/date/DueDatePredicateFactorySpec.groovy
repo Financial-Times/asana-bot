@@ -1,4 +1,4 @@
-package com.ft.report
+package com.ft.report.date
 
 import com.ft.report.model.ReportTask
 import com.ft.report.model.ReportType
@@ -46,7 +46,6 @@ class DueDatePredicateFactorySpec extends Specification {
             ReportType.TOMORROW          | TOMORROW
             ReportType.THIS_WEEK         | THIS_WEEK
             ReportType.NEXT_WEEK         | NEXT_WEEK
-            null                         | null
     }
 
     @Unroll

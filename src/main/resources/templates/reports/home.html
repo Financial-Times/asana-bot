@@ -17,58 +17,61 @@
 <div th:include="common :: body"></div>
 <div class="clearfix"></div>
 
-<div th:if="${report}" class="container-fluid">
-    <div class="panel panel-default">
+<div class="printable-container">
+    <th:block th:each="reportMap, iterStat: ${reports}" th:with="report=${reportMap.value},reportName=${reportMap.key}">
+    <div th:if="${report.tagTasks.size() > 0}" class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading" th:if="${iterStat.count == 1}">
+                <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
+                                                         href="javascript:window.print()">Print this report</a>
+                    <a th:if="${reports.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
+                       href="#">Email Report</a>
+                </h3>
+            </div>
+            <div class="panel-body printable">
 
-        <div class="panel-heading">
-            <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
-                                                     href="javascript:window.print()">Print this report</a>
-                <a th:if="${report.tagTasks.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
-                   href="#">Email Report</a>
-            </h3>
-        </div>
+                <header>
+                    <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
+                    <span th:text="${criteria.getReportType().formatAndAppendCategory()} + ${reportDate}">title</span>
+                    <span th:text="'(' + ${criteria.getTeam()} + ' desk)'">Selected team</span>
+                    <span th:if="${userTeams['__${criteria.team}__'].projects.size() > 1}" th:text="'(' + ${reportName} + ' project)'">Multi-project team</span>
+                </header>
 
-        <div class="panel-body printable">
+                <div>
+                    <th:block th:each="tt: ${report.tagTasks}">
+                        <span th:if="${report.groupByTags}" class="tags" th:text="${tt.key}">Tag</span>
+                        <table class="table table-condensed">
+                            <tbody th:if="${#lists.isEmpty(tt.value)}" th:text="None"></tbody>
+                            <tbody th:unless="${#lists.isEmpty(tt.value)}">
+                            <tr th:each="task: ${tt.value}">
+                                <td>
+                                    <div>
+                                        <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
+                                        <b th:text="${task.name}" ></b>
+                                        <span th:unless="${#lists.isEmpty(task.tags)}"
+                                              th:text="${#strings.listJoin(task.tags,', ')}"
+                                              class="tags_sm">Secondary tags</span>
+                                    </div>
+                                    <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
+                                    <ul>
+                                        <li th:each="subtask : ${task.subtasks}">
+                                            <span th:text="${subtask.name}">Subtask name</span>
+                                            <span th:if="${subtask.completed}" class="complete">&#10003;</span>
+                                        </li>
+                                    </ul>
 
-            <header>
-                <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
-                <span th:text="${criteria.getReportType().format()} + '\'s conference report ' + ${reportDate}">title</span>
-                <span th:text="'(' + ${criteria.getTeam()} + ' desk)'">Selected team</span>
-                <span th:if="${teams['__${criteria.team}__'].size() > 1}" th:text="'(' + ${criteria.getProject().getName()} + ' project)'">Multi-project team</span>
-            </header>
-
-            <div>
-                <th:block th:each="tt: ${report.tagTasks}">
-                    <span th:if="${report.groupByTags}" class="tags" th:text="${tt.key}">Tag</span>
-                    <table class="table table-condensed">
-                        <tbody th:if="${#lists.isEmpty(tt.value)}" th:text="None"></tbody>
-                        <tbody th:unless="${#lists.isEmpty(tt.value)}">
-                        <tr th:each="task: ${tt.value}">
-                            <td>
-                                <div>
-                                    <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
-                                    <b th:text="${task.name}" ></b>
-                                    <span th:unless="${#lists.isEmpty(task.tags)}"
-                                          th:text="${#strings.listJoin(task.tags,', ')}"
-                                          class="tags_sm">Secondary tags</span>
-                                </div>
-                                <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
-                                <ul>
-                                    <li th:each="subtask : ${task.subtasks}">
-                                        <span th:text="${subtask.name}">Subtask name</span>
-                                        <span th:if="${subtask.completed}" class="complete">&#10003;</span>
-                                    </li>
-                                </ul>
-
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </th:block>
+                </div>
             </div>
         </div>
     </div>
+    </th:block>
 </div>
 <div th:include="common :: footer"></div>
+
 </body>
 </html>

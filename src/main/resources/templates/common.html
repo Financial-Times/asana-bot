@@ -60,30 +60,25 @@
                     <label class="control-label" for="teamSelect">Desk</label>
                     <select id="teamSelect" name="team" class="form-control"
                             th:field="*{team}">
-                        <option th:each="team : ${teams}" th:value="${team.key}" th:text="${team.key}">Team</option>
+                        <option th:each="team : ${userTeams}" th:value="${team.key}" th:text="${team.key}">Team</option>
                     </select>
                 </div>
                 <!-- Report select -->
                 <div class="form-group">
-                    <label class="control-label" for="reportTypeSelect">Report</label>
-                    <select id="reportTypeSelectWeekend" name="reportType" class="form-control"
-                            th:field="*{reportType}">
-                        <option th:each="rt : ${reportTypes}" th:value="${rt}" th:if="${#lists.contains(rt.getCategory(), 'WEEKEND')}" th:text="${rt.format()}">Report</option>
-                    </select>
-
                     <select id="reportTypeSelect" name="reportType" class="form-control"
                             th:field="*{reportType}">
-                        <option th:each="rt : ${reportTypes}" th:value="${rt}" th:if="${#lists.contains(rt.getCategory(), 'WEEKDAY')}" th:text="${rt.format()}">Report</option>
+                        <option th:each="rt : ${reportTypes}" th:value="${rt}" th:if="${rt.category == criteria.reportType.category}" th:text="${rt.format()}">Report</option>
                     </select>
-
-
                 </div>
                 <!-- Project select -->
-                <div class="form-group" id="projects-holder" th:classappend="${teams['__${criteria.team}__'].size() > 1} ? '' : 'hidden'">
-                    <label class="control-label" for="projectSelect">Project</label>
-                    <select id="projectSelect" name="project" class="form-control"
-                            th:field="*{project.id}">
-                        <option th:each="project : ${teams['__${criteria.team}__']}" th:value="${project.id}" th:text="${project.name}">Project</option>
+                <div class="form-group" id="projects-holder" th:classappend="${userTeams['__${criteria.team}__'].getProjects().size() > 1} ? '' : 'hidden'">
+                    <label class="control-label" for="projects">Project</label>
+                    <select id="projects" name="projects" class="form-control">
+                        <option
+                                th:each="project : ${userTeams['__${criteria.team}__'].projects}"
+                                th:value="${{project}}"
+                                th:text="${project.name}"
+                                th:selected="${project.primary and criteria.projects == null or criteria.projects.contains(project)}">Project</option>
                     </select>
                 </div>
                 <input th:type="hidden" name="sendEmail" id="sendEmail"/>
@@ -103,9 +98,10 @@
 <div th:fragment="footer">
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var desks = /*[[${teams}]]*/ null;
-        var showProjectsTeams = /*[[${showProjectsTeams}]]*/ null;
-        var reportTypes = /*[[${reportTypes}]]*/ null;
+        var preferredReportType = /*[[${preferredReportType.name()}]]*/ null;
+        var userDesks = /*[[${userTeams}]]*/ null;
+        var reportTypes = /*[[${reportTypesMap}]]*/ null;
+        var criteria = /*[[${criteria}]]*/ null;
         /*]]>*/
     </script>
     <script th:inline="javascript" th:src="@{/js/report.js}">

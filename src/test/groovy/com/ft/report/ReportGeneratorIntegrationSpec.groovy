@@ -1,11 +1,8 @@
 package com.ft.report
 
 import com.ft.asanaapi.model.Tag
-import com.ft.report.model.Criteria
-import com.ft.report.model.Project
-import com.ft.report.model.Report
-import com.ft.report.model.ReportTask
-import com.ft.report.model.ReportType
+import com.ft.report.date.DueDatePredicateFactory
+import com.ft.report.model.*
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -14,14 +11,7 @@ import java.time.LocalDateTime
 import java.time.Month
 import java.time.ZoneId
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import static com.github.tomakehurst.wiremock.client.WireMock.containing
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import static com.github.tomakehurst.wiremock.client.WireMock.get
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
-import static com.github.tomakehurst.wiremock.client.WireMock.matching
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
@@ -52,15 +42,17 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             List<ReportTask> expectedFinservTasks = createFinservTasks()
             List<ReportTask> expectedNotTaggedTasks = createNotTaggedTask()
             List<ReportTask> expectedOtherTasks = createOtherTask()
-            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_COMPANIES_PROJECT_ID))
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_COMPANIES_PROJECT_ID)])
 
         when:
-            Report report = generator.generate(criteria)
+            List<Report> reports = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_COMPANIES_PROJECT_ID)
         and:
-            report
+            reports?.size() == 1
+        and:
+            Report report = reports[0]
             report.tagTasks.size() == 3
             report.tagTasks['Finserv'] == expectedFinservTasks
             report.tagTasks[OTHER_TAG].size() == 1
@@ -74,15 +66,17 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             String team = 'World'
             stubGetTasks(team, TEST_WORLD_PROJECT_ID)
             List<ReportTask> expectedEuropeTasks = createEuropeTasks()
-            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_WORLD_PROJECT_ID))
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_WORLD_PROJECT_ID)])
 
         when:
-            Report report = generator.generate(criteria)
+            List<Report> reports = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_WORLD_PROJECT_ID)
         and:
-            report
+            reports?.size() == 1
+        and:
+            Report report = reports[0]
             report.tagTasks.size() == 1
             report.tagTasks['Europe'].size() == 3
             report.tagTasks['Europe'] == expectedEuropeTasks
@@ -93,15 +87,17 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             String team = 'Lex'
             stubGetTasks(team, TEST_LEX_PROJECT_ID)
             List<ReportTask> expectedLexTasks = createLexTasks()
-            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_LEX_PROJECT_ID))
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_LEX_PROJECT_ID)])
 
         when:
-            Report report = generator.generate(criteria)
+            List<Report> reports = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_LEX_PROJECT_ID)
         and:
-            report
+            reports?.size() == 1
+        and:
+            Report report = reports[0]
             report.tagTasks.size() == 1
             report.tagTasks[NOT_TAGGED].size() == 2
             report.tagTasks[NOT_TAGGED] == expectedLexTasks
@@ -112,15 +108,17 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             String team = 'Big Read'
             stubGetTasks(team, TEST_BIG_READ_PROJECT_1_ID)
             List<ReportTask> expectedBigReadTasks = createBigReadTasks()
-            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, project: new Project(id: TEST_BIG_READ_PROJECT_1_ID))
+            Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_BIG_READ_PROJECT_1_ID)])
 
         when:
-            Report report = generator.generate(criteria)
+            List<Report> reports = generator.generate(criteria)
 
         then:
             verifyGetTasks(TEST_BIG_READ_PROJECT_1_ID)
         and:
-            report
+            reports?.size() == 1
+        and:
+            Report report = reports[0]
             report.tagTasks.size() == 1
             report.tagTasks[NOT_TAGGED].size() == 2
             report.tagTasks[NOT_TAGGED] == expectedBigReadTasks

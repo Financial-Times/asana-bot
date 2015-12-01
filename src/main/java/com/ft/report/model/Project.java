@@ -10,5 +10,9 @@ import lombok.NoArgsConstructor;
 public class Project {
     private Long id;
     private String name;
-    private Boolean primary = false;
+    private Boolean primary = true;
+
+    public Project(Long id) {
+        this.id = id;
+    }
 }

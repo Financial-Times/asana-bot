@@ -77,7 +77,7 @@ class ReportsControllerSpec extends Specification {
         given:
             ReportType preferredReportType = ReportType.SUNDAY_FOR_MONDAY
             Map<String, Object> model = [:]
-            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam)
+            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam, projects: [])
 
         when:
             String viewName = controller.home(teams, preferredReportType, model)

@@ -28,6 +28,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -112,6 +113,7 @@ public class ReportsController {
             criteria.setTeam((String) teams.keySet().toArray()[0]);
         }
         criteria.setReportType(preferredReportType);
+        criteria.setProjects(new ArrayList<>());
 
         model.put("criteria", criteria);
         return "reports/home";

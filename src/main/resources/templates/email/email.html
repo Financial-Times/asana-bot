@@ -5,7 +5,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-    <div th:if="${report}" class="container-fluid">
+    <th:block th:each="report: ${reports}">
+    <div class="container-fluid">
         <div class="panel panel-default">
 
             <div class="panel-body printable">
@@ -46,5 +47,6 @@
             </div>
         </div>
     </div>
+    </th:block>
     </body>
 </html>

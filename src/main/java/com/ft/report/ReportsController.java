@@ -1,6 +1,10 @@
 package com.ft.report;
 
-import com.ft.report.model.*;
+import com.ft.report.date.ReportDateBuilder;
+import com.ft.report.model.Criteria;
+import com.ft.report.model.Desk;
+import com.ft.report.model.Report;
+import com.ft.report.model.ReportType;
 import com.ft.services.EmailService;
 import com.sendgrid.SendGridException;
 import lombok.Getter;
@@ -21,12 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Clock;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -38,26 +40,39 @@ import java.util.stream.Collectors;
 @RequestMapping("/")
 public class ReportsController {
 
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
-    @Setter private Clock clock = Clock.systemUTC();
+    @Setter
+    private Clock clock = Clock.systemUTC();
 
-    @Setter @Autowired private ReportGenerator reportGenerator;
-
-    @Setter @Getter private Map<String, Desk> desks;
-
+    @Setter
     @Autowired
-    EmailService emailService;
+    private ReportGenerator reportGenerator;
+
+    @Setter
+    @Getter
+    private Map<String, Desk> desks;
+
+    @Autowired @Setter
+    private EmailService emailService;
+
+    @Autowired @Setter
+    private ReportDateBuilder reportDateBuilder;
 
     @ModelAttribute("reportTypes")
     public ReportType[] populateReportTypes() {
         return ReportType.values();
     }
 
+    @ModelAttribute("reportTypesMap")
+    public Map<String, List<Map<String, String>>> populateReportTypesMap() {
+        return ReportType.getReportTypesByCategories();
+    }
+
 
     @ModelAttribute("preferredReportType")
     public ReportType populatePreferredReportType() {
+        //TODO could extend that to weekends
         LocalDateTime now = LocalDateTime.now(clock);
         if (now.getHour() < 11) {
             return ReportType.TODAY;
@@ -69,79 +84,68 @@ public class ReportsController {
     }
 
     @SuppressWarnings("unchecked")
-    @ModelAttribute("teams")
-    public Map populateUserTeams() {
+    @ModelAttribute("userTeams")
+    public Map populateUserDesks() {
         OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
         Map authDetails = (Map) oAuth2Authentication.getUserAuthentication().getDetails();
         List<String> userDesks = Optional.ofNullable((List<String>) authDetails.get("teams"))
                 .orElse(Collections.emptyList());
-        Map<String, List<Project>> deskProjects =  userDesks.stream()
-                .collect(Collectors.toMap(Function.identity(), this::findDeskProjects));
+        Map<String, Desk> deskProjects = userDesks.stream()
+                .collect(Collectors.toMap(Function.identity(), this::findDesk));
         return deskProjects;
     }
 
     @ModelAttribute("showEmailLink")
     public boolean showEmailLink(final String team) {
-       return emailService.isEmailTeam(team);
+        return emailService.isEmailTeam(team);
     }
 
-    public List<Project> findDeskProjects(String desk) {
-        return desks.get(desk).getProjects();
+    public Desk findDesk(String desk) {
+        return desks.get(desk);
     }
-
 
     @RequestMapping(method = RequestMethod.GET)
-    public String home(@ModelAttribute("teams") Map teams,
+    public String home(@ModelAttribute("userTeams") Map teams,
                        @ModelAttribute("preferredReportType") ReportType preferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
         if (teams != null && !teams.isEmpty()) {
             criteria.setTeam((String) teams.keySet().toArray()[0]);
-            criteria.assignProject(desks.get(criteria.getTeam()).getProjects());
         }
         criteria.setReportType(preferredReportType);
+        criteria.setProjects(new ArrayList<>());
 
         model.put("criteria", criteria);
         return "reports/home";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String create(@ModelAttribute Criteria criteria,
-                         @RequestParam(value = "sendEmail", defaultValue = "false") final Boolean sendEmail, ModelMap modelMap) {
+    public String createMultiProject(@ModelAttribute Criteria criteria,
+                                     @RequestParam(value = "sendEmail", defaultValue = "false") final Boolean sendEmail,
+                                     ModelMap modelMap) {
 
+        final List<Report> reports = reportGenerator.generate(criteria);
+        final Map<String, Report> reportsMap = reports.stream()
+                .collect(Collectors.toMap(entry -> entry.getProject().getName(), Function.identity()));
+
+        String reportDate = reportDateBuilder.buildReportDate(criteria.getReportType());
+        modelMap.addAttribute("reportDate", reportDate);
         modelMap.addAttribute("criteria", criteria);
-        final String team = criteria.getTeam();
 
-        criteria.lookupProject(desks.get(team).getProjects());
-        Report report = reportGenerator.generate(criteria);
-        modelMap.addAttribute("report", report);
-        modelMap.addAttribute("reportDate", buildReportDate(criteria.getReportType()));
-        logger.debug(" {} report for {} desk generated", criteria.getReportType().format(), team);
-
+        modelMap.addAttribute("reports", reportsMap);
         if (sendEmail) {
-            modelMap.addAttribute("emailSent", sendEmail(report, team));
+            final String title = "Weekend Plan " + reportDate;
+            final String team = criteria.getTeam();
+            modelMap.addAttribute("emailSent", sendEmail(team, title, reports.toArray(new Report[reports.size()])));
         }
+
         return "reports/home";
     }
 
-    public String buildReportDate(ReportType preferredReportType) {
-        LocalDate today = LocalDate.now(clock);
-
-        if (preferredReportType == ReportType.SUNDAY_FOR_MONDAY) {
-            LocalDate sunday = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-            return sunday.format(dateFormat);
-        }
-        if (preferredReportType == ReportType.TOMORROW) {
-            return today.plusDays(1).format(dateFormat);
-        }
-
-        return today.format(dateFormat);
-    }
-
-    private String sendEmail(final Report report, final String team)  {
+    private String sendEmail(final String team, final String title, final Report... report) {
         String message = "Problem sending email";
         try {
-            if(emailService.sendEmail(report, team))
+            if (emailService.sendEmail(team, title, report))
                 message = "Your message has been sent";
         } catch (SendGridException e) {
             logger.error("problem sending email {}", e);

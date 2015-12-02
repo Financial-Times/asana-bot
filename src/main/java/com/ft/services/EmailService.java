@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.text.MessageFormat;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 
@@ -31,21 +29,21 @@ public class EmailService {
     @Setter
     private String apikey;
 
-    public boolean sendEmail(final Report report, final String team) throws SendGridException {
+    public boolean sendEmail(final String team, final String title, final Report ... report) throws SendGridException {
 
         SendGrid sendGrid = new SendGrid(apikey);
-        SendGrid.Email email = createEmail(report, team);
+        SendGrid.Email email = createEmail(team, title, report);
         return sendGrid.send(email).getStatus();
     }
 
-    private SendGrid.Email createEmail(final Report report, final String team) {
+    private SendGrid.Email createEmail(final String team, final String title, final Report ... report) {
         SendGrid.Email email = new SendGrid.Email();
         email.setFrom("noreply.asanareport.com");
         email.addTo(getEmailAddress(team));
-        email.setSubject(MessageFormat.format("VIDEOS - {0,date,full}", new Date()));
+        email.setSubject(title);
 
         final Context ctx = new Context();
-        ctx.setVariable("report", report);
+        ctx.setVariable("reports", report);
 
         final String content = templateEngine.process("email/email", ctx);
         email.setHtml(content);
@@ -61,9 +59,13 @@ public class EmailService {
     }
 
     public String getEmailAddress(final String team) {
+        return getEmailAttribute(team, "email");
+    }
+
+    private String getEmailAttribute(final String team, final String attribute){
         return config.getEmailTeams().stream()
                 .filter(s -> s.get("name").equalsIgnoreCase(team))
-                .map(s -> s.get("email"))
+                .map(s -> s.get(attribute))
                 .findFirst().get();
     }
 

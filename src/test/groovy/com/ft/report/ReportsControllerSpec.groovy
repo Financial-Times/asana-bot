@@ -1,5 +1,6 @@
 package com.ft.report
 
+import com.ft.report.date.ReportDateBuilder
 import com.ft.report.model.*
 import com.ft.services.EmailService
 import org.springframework.security.core.Authentication
@@ -22,9 +23,21 @@ class ReportsControllerSpec extends Specification {
     private static final ZoneId zoneId = ZoneId.systemDefault()
 
     private ReportsController controller
+    private ReportDateBuilder mockReportDateBuilder
+    private ReportGenerator mockReportGenerator
+    private EmailService mockEmailService
 
     void setup() {
         controller = new ReportsController()
+
+        mockReportDateBuilder = Mock(ReportDateBuilder)
+        controller.reportDateBuilder = mockReportDateBuilder
+
+        mockReportGenerator = Mock(ReportGenerator)
+        controller.reportGenerator = mockReportGenerator
+
+        mockEmailService = Mock(EmailService)
+        controller.emailService = mockEmailService
 
         Project project1 = new Project(id: 1, name: 'project 1')
         Project project2 = new Project(id: 2, name: 'project 2')
@@ -37,7 +50,7 @@ class ReportsControllerSpec extends Specification {
         when:
             ReportType[] result = controller.populateReportTypes()
         then:
-            result.size() == 3
+            result.size() == 5
             result == ReportType.values()
     }
 
@@ -59,31 +72,12 @@ class ReportsControllerSpec extends Specification {
             FRIDAY_EVENING | ReportType.SUNDAY_FOR_MONDAY
     }
 
-
-    @Unroll
-    void "buildReportDate for report type: #reportType"() {
-        given:
-            controller.clock = Clock.fixed(MONDAY_MORNING.atZone(zoneId).toInstant(), zoneId)
-
-        when:
-            String result = controller.buildReportDate(preferredReportType)
-
-        then:
-            result == expectedReportDate
-
-        where:
-            preferredReportType          | expectedReportDate
-            ReportType.TODAY             | '01/06/2015'
-            ReportType.TOMORROW          | '02/06/2015'
-            ReportType.SUNDAY_FOR_MONDAY | '07/06/2015'
-    }
-
     @Unroll
     void "home - #scenario"() {
         given:
             ReportType preferredReportType = ReportType.SUNDAY_FOR_MONDAY
             Map<String, Object> model = [:]
-            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam, project: expectedProject)
+            Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam, projects: [])
 
         when:
             String viewName = controller.home(teams, preferredReportType, model)
@@ -93,31 +87,31 @@ class ReportsControllerSpec extends Specification {
             model['criteria'] == expectedCriteria
 
         where:
-            scenario              | teams                  | expectedTeam | expectedProject
-            'user with no teams'  | [:]                    | null         | null
-            'user with two teams' | ['one': [], 'two': []] | 'one'        | new Project(id: 1, name: 'project 1')
+            scenario              | teams                  | expectedTeam
+            'user with no teams'  | [:]                    | null
+            'user with two teams' | ['one': [], 'two': []] | 'one'
     }
 
     void "create Sunday for Monday report"() {
         given:
             String team = 'one'
-            ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
-            controller.reportGenerator = mockDefaultReportGenerator
         and:
-            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
+            Project project = new Project(id: 1, name: 'project 1', primary: true)
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, projects: [project])
             ModelMap modelMap = new ModelMap()
-            Report expectedReport = new Report()
+            List<Report> expectedReports = [new Report(project: project)]
 
         when:
-            String viewName = controller.create(criteria, false, modelMap)
+            String viewName = controller.createMultiProject(criteria, false, modelMap)
 
         then:
-            1 * mockDefaultReportGenerator.generate(criteria) >> expectedReport
+            1 * _.generate(criteria) >> expectedReports
+            1 * mockReportDateBuilder.buildReportDate(ReportType.SUNDAY_FOR_MONDAY)
             0 * _
         and:
             viewName == 'reports/home'
             modelMap['criteria'] == criteria
-            modelMap['report'] == expectedReport
+            modelMap['reports'] == [(project.name): expectedReports[0]]
     }
 
     void "user teams are populated"() {
@@ -131,7 +125,7 @@ class ReportsControllerSpec extends Specification {
             def userDetails = [:]
 
         when:
-            def teams = controller.populateUserTeams()
+            def teams = controller.populateUserDesks()
 
         then:
             1 * mockSecurityContext.getAuthentication() >> mockOAuth2Authentication
@@ -146,36 +140,56 @@ class ReportsControllerSpec extends Specification {
 
     void "email link is set to true"() {
         given:
-            EmailService mockEmailService = Mock(EmailService)
-            controller.emailService = mockEmailService
             String team = 'one'
 
         when:
             def showEmailLink = controller.showEmailLink(team)
 
         then:
-            showEmailLink == mockEmailService.isEmailTeam(team)
+            1 * _.isEmailTeam(team) >> true
+            0 * _
+        and:
+            showEmailLink
     }
 
     void "send report when email provided"() {
         given:
             String team = 'one'
-            ReportGenerator mockDefaultReportGenerator = Mock(ReportGenerator)
-            EmailService mockEmailService = Mock(EmailService)
-            controller.emailService = mockEmailService
-            controller.reportGenerator = mockDefaultReportGenerator
+
 
         and:
-            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, project: new Project(id: 1, name: 'project 1'))
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.SUNDAY_FOR_MONDAY, projects: [new Project(id: 1, name: 'project 1')])
             ModelMap modelMap = new ModelMap()
-            Report report = mockDefaultReportGenerator.generate(criteria)
+            def reports = []
 
         when:
-            controller.create(criteria, true, modelMap)
+            controller.createMultiProject(criteria, true, modelMap)
 
         then:
-            1 * mockEmailService.sendEmail(report, team)
-            1 * mockDefaultReportGenerator.generate(criteria)
+            1 * mockEmailService.sendEmail(team, _ , reports)
+            1 * mockReportGenerator.generate(criteria) >> []
+            1 * mockReportDateBuilder.buildReportDate(ReportType.SUNDAY_FOR_MONDAY)
             0 * _
+    }
+
+    void "create weekend report"() {
+        given:
+            String team = 'one'
+            Project project = new Project(id: 1, name: 'project 1')
+            Criteria criteria = new Criteria(team: team, reportType: ReportType.THIS_WEEK, projects: [project])
+            ModelMap modelMap = new ModelMap()
+            List<Report> expectedReports = [new Report(project: project)]
+
+        when:
+            String viewName = controller.createMultiProject(criteria, false, modelMap)
+
+        then:
+            1 * mockReportGenerator.generate(criteria) >> expectedReports
+            1 * mockReportDateBuilder.buildReportDate(ReportType.THIS_WEEK)
+            0 * _
+        and:
+            viewName == 'reports/home'
+            modelMap['criteria'] == criteria
+            modelMap['reports']['project 1'] == expectedReports[0]
     }
 }

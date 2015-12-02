@@ -18,6 +18,7 @@ report:
           id: 37532256694653
           name: Companies Topics
       groupTags: true
+      showProjects: false
       premiumTags:
         - Finserv
         - TMT
@@ -32,6 +33,7 @@ report:
           name: World Topics
       groupTags: true
       premiumTags: []
+      showProjects: false
     UK:
       projects:
         -
@@ -39,6 +41,7 @@ report:
           name: UK Topics
       groupTags: false
       premiumTags: []
+      showProjects: false
     Markets:
       projects:
         -
@@ -46,6 +49,7 @@ report:
           name: Markets Topics
       groupTags: false
       premiumTags: []
+      showProjects: false
     Lex:
       projects:
         -
@@ -55,6 +59,7 @@ report:
       projectName: Lex Topics
       groupTags: false
       premiumTags: []
+      showProjects: false
     FT Money:
       projects:
         -
@@ -62,6 +67,7 @@ report:
           name: FT Money Topics
       groupTags: false
       premiumTags: []
+      showProjects: true
     FTfm:
       projects:
         -
@@ -69,6 +75,7 @@ report:
           name: FTfm Topics
       groupTags: false
       premiumTags: []
+      showProjects: false
     Comment and Leaders:
       projects:
         -
@@ -77,6 +84,7 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+      showProjects: false
     Business Life:
       projects:
         -
@@ -89,6 +97,7 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+      showProjects: true
     Big Read:
       projects:
         -
@@ -101,6 +110,7 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+      showProjects: true
     Features Production:
       projects:
         -
@@ -113,6 +123,7 @@ report:
           primary: true
       groupTags: false
       premiumTags: []
+      showProjects: true
     Video:
       projects:
         -
@@ -120,6 +131,24 @@ report:
           name: Videos in production
       groupTags: false
       premiumTags: []
+    Weekend:
+      projects:
+        -
+          id: 68145410531979
+          name: Life & Arts
+        -
+          id: 68145410531980
+          name: House & Home
+        -
+          id: 68145410531981
+          name: FT Magazine
+        -
+          id: 68145410531982
+          name: Arts
+      groupTags: false
+      premiumTags: []
+      showProjects: false
+      reportCategory: WEEKEND
 ---
 backup:
   google:

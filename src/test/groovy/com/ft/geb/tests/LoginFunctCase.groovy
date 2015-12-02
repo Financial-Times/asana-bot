@@ -56,7 +56,7 @@ class LoginFunctCase extends GebReportingSpec {
         page.acceptButton.click()
 
         then:
-        assert waitFor { page.getTitle() == 'Conference report'}
+        assert waitFor(10, { page.getTitle() == 'Conference report'})
         page.topFrame.text() == 'Asana Reports'
 
         when:
@@ -65,7 +65,7 @@ class LoginFunctCase extends GebReportingSpec {
         page.submitButton.click()
 
         then:
-        assert waitFor { page.standardText.isDisplayed() }
+        assert waitFor(10, { page.standardText.isDisplayed() })
     }
 
 }

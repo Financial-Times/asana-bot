@@ -91,7 +91,8 @@ ul li:before {
 @media print {
     body * {visibility: hidden;}
     .printable * {visibility: visible;}
-    .printable { position: absolute; top: 20px; left: 15px; }
+    .printable-container { position: absolute; top: 5px; left: 5px; bottom: 5px; }
+    .printable { position: relative; top: 0px; left: 0px; bottom: 5px; }
 }
 
 form {

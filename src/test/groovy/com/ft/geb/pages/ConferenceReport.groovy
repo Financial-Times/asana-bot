@@ -16,7 +16,7 @@ class ConferenceReport extends Page{
         deskType { $("#teamSelect") }
         submitButton { $("#submitButton") }
 
-        standardText { $("body header span") }
+        standardText { $("body div header") }
         displayedDeskText { $("body header span:nth-child(2)") }
 
         fullReportInformation { $('body div[class="panel-body printable"] div') }

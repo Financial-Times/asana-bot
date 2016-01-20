@@ -34,7 +34,7 @@
                     <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
                     <span th:text="${criteria.getReportType().formatAndAppendCategory()} + ${reportDate}">title</span>
                     <span th:text="'(' + ${criteria.getTeam()} + ' desk)'">Selected team</span>
-                    <span th:if="${userTeams['__${criteria.team}__'].projects.size() > 1}" th:text="'(' + ${reportName} + ' project)'">Multi-project team</span>
+                    <b th:if="${userTeams['__${criteria.team}__'].projects.size() > 1}" th:text="'(' + ${reportName} + ' project)'">Multi-project team</b>
                 </header>
 
                 <div>

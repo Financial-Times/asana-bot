@@ -160,7 +160,7 @@ report:
         -
           id: 81987306808746
           name: Life
-      groupTags: false
+      groupTags: true
       premiumTags: []
       showProjects: false
       reportCategory: WEEKEND

@@ -134,17 +134,32 @@ report:
     Weekend:
       projects:
         -
-          id: 68145410531979
-          name: Life & Arts
-        -
-          id: 68145410531980
-          name: House & Home
-        -
-          id: 68145410531981
-          name: FT Magazine
-        -
           id: 68145410531982
           name: Arts
+        -
+          id: 81987306808740
+          name: Style
+        -
+          id: 81987306808741
+          name: Books
+        -
+          id: 81987306808739
+          name: Travel
+        -
+          id: 81987306808742
+          name: Food & Drink
+        -
+          id: 81987306808743
+          name: Property
+        -
+          id: 81987306808744
+          name: Columnists
+        -
+          id: 81987306808745
+          name: Lunch with the FT
+        -
+          id: 81987306808746
+          name: Life
       groupTags: false
       premiumTags: []
       showProjects: false

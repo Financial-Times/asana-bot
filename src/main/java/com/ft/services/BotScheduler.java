@@ -21,6 +21,7 @@ public class BotScheduler {
     private static final int ONE_DAY = 24 * 60 * 60_000;
     private static final int ONE_HOUR = 60 * 60_000;
     private static final int FIVE_MINUTES = 5 * 60_000;
+    private static final int TWENTY_SEC = 20_000;
 
     @Autowired @Setter
     private AsanaService asanaService;
@@ -31,14 +32,19 @@ public class BotScheduler {
     @Autowired @Setter
     private AsanaChangesService asanaChangesService;
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = TWENTY_SEC)
     public void graphicsBot() {
         asanaService.addGraphicsProjectToGraphicsBotAssignedTasks();
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = TWENTY_SEC)
     public void picturesBot(){
         asanaService.addPicturesProjectToPicturesBotAssignedTasks();
+    }
+
+    @Scheduled(fixedRate = TWENTY_SEC)
+    public void desingBot(){
+        asanaService.addDesignProjectToPicturesBotAssignedTasks();
     }
 
     @Scheduled(fixedRate = ONE_HOUR)

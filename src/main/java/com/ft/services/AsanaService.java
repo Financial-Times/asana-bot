@@ -16,6 +16,7 @@ public class AsanaService {
 
     @Autowired private AsanaClient picturesAsanaClient;
     @Autowired private AsanaClient graphicsAsanaClient;
+    @Autowired private AsanaClient designAsanaClient;
 
     @Autowired private Config config;
 
@@ -25,6 +26,10 @@ public class AsanaService {
 
     public void addPicturesProjectToPicturesBotAssignedTasks(){
         picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getPicturesId());
+    }
+
+    public void addDesignProjectToPicturesBotAssignedTasks(){
+        designAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getDesignId());
     }
 
     public List<ReportTask> findTasks(Long projectId, String completedSince) {

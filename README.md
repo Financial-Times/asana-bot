@@ -9,6 +9,7 @@ it has been added when done.
 
 * GraphicsBot -> when assigned adds tasks to the Graphics project
 * PicturesBot -> when assigned adds tasks to the Pictures project
+* DesignBot -> when assigned adds tasks to the Design project
 * ReportBot -> when assigned backs up the project
 
 ## Setup

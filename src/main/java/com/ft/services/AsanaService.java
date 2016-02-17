@@ -28,7 +28,7 @@ public class AsanaService {
         picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getPicturesId());
     }
 
-    public void addDesignProjectToPicturesBotAssignedTasks(){
+    public void addDesignProjectToDesignBotAssignedTasks(){
         designAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getDesignId());
     }
 

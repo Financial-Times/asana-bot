@@ -44,7 +44,7 @@ public class BotScheduler {
 
     @Scheduled(fixedRate = TWENTY_SEC)
     public void desingBot(){
-        asanaService.addDesignProjectToPicturesBotAssignedTasks();
+        asanaService.addDesignProjectToDesignBotAssignedTasks();
     }
 
     @Scheduled(fixedRate = ONE_HOUR)

@@ -50,7 +50,7 @@ class BotSchedulerSpec extends Specification {
         botScheduler.desingBot()
 
         then:
-        1 * mockAsanaService.addDesignProjectToPicturesBotAssignedTasks()
+        1 * mockAsanaService.addDesignProjectToDesignBotAssignedTasks()
         0 * _
     }
 

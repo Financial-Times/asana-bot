@@ -47,11 +47,11 @@ class BotSchedulerSpec extends Specification {
 
     void "DesignBot"() {
         when:
-        botScheduler.desingBot()
+            botScheduler.desingBot()
 
         then:
-        1 * mockAsanaService.addDesignProjectToDesignBotAssignedTasks()
-        0 * _
+            1 * mockAsanaService.addDesignProjectToDesignBotAssignedTasks()
+            0 * _
     }
 
     void "backupAllProjects"() {

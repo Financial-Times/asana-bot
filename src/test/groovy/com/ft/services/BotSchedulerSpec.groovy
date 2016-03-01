@@ -45,6 +45,15 @@ class BotSchedulerSpec extends Specification {
             0 * _
     }
 
+    void "DesignBot"() {
+        when:
+            botScheduler.desingBot()
+
+        then:
+            1 * mockAsanaService.addDesignProjectToDesignBotAssignedTasks()
+            0 * _
+    }
+
     void "backupAllProjects"() {
         when:
             botScheduler.backupAllProjects()

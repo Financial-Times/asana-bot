@@ -40,6 +40,11 @@ public class AsanaBot {
         return new AsanaClient(System.getenv("ASANA_REPORT_KEY"), config, getHttpClient());
     }
 
+    @Bean(name = "designAsanaClient")
+    public AsanaClient getDesingAsanaClient() {
+        return new AsanaClient(System.getenv("ASANA_DESIGN_KEY"), config, getHttpClient());
+    }
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(AsanaBot.class, args);
     }

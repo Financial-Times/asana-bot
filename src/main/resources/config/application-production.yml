@@ -4,7 +4,7 @@ backup:
     sharedWith:
       users: []
       groups:
-        - prod@ft.com
+        - asana.backup@ft.com
         - digitalnewsroomprogramme@ft.com
 
 management:

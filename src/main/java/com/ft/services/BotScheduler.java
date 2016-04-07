@@ -47,6 +47,11 @@ public class BotScheduler {
         asanaService.addDesignProjectToDesignBotAssignedTasks();
     }
 
+    @Scheduled(fixedRate = TWENTY_SEC)
+    public void socialBot() {
+        asanaService.addSocialProjectToSocialBotAssignedTasks();
+    }
+
     @Scheduled(fixedRate = ONE_HOUR)
     public void backupAllProjects(){
         try {

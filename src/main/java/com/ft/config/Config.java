@@ -24,6 +24,7 @@ public class Config {
     private String picturesId;
     private String designId;
     private String baseUrl;
+    private String socialId;
 
     private List<String> authorizedTeams;
     private List<Map<String, String>> emailTeams;

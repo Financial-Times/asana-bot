@@ -54,6 +54,14 @@ class BotSchedulerSpec extends Specification {
             0 * _
     }
 
+    void "SocialBot"() {
+        when:
+            botScheduler.socialBot()
+        then:
+            1 * mockAsanaService.addSocialProjectToSocialBotAssignedTasks()
+            0 * _
+    }
+
     void "backupAllProjects"() {
         when:
             botScheduler.backupAllProjects()

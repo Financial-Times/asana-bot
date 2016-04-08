@@ -28,9 +28,9 @@ public class FileFinder {
     public File findFolder(String root) throws IOException {
         FileList candidates = drive.files().list()
                 .setQ(buildQuery(root))
-                .setMaxResults(1)
+                .setPageSize(1)
                 .execute();
-        List<File> folders = candidates.getItems();
+        List<File> folders = candidates.getFiles();
 
         if (!folders.isEmpty()) {
             return folders.get(0);
@@ -40,15 +40,15 @@ public class FileFinder {
     }
 
     private File createFolder(String root) throws IOException {
-        File folder = new File().setTitle(root);
+        File folder = new File().setName(root);
         folder.setMimeType(FOLDER_MIME_TYPE);
-        Drive.Files.Insert request = drive.files().insert(folder);
+        Drive.Files.Create request = drive.files().create(folder);
         folder = request.execute();
 
         return folder;
     }
 
     private String buildQuery(String root) {
-        return "title = '" + root + "' and mimeType = '" + FOLDER_MIME_TYPE + "'";
+        return "name = '" + root + "' and mimeType = '" + FOLDER_MIME_TYPE + "'";
     }
 }

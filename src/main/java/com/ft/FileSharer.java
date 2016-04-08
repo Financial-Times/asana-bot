@@ -1,6 +1,10 @@
 package com.ft;
 
 import com.ft.config.GoogleApiConfig;
+import com.google.api.client.googleapis.batch.BatchRequest;
+import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
@@ -24,6 +28,24 @@ public class FileSharer {
     private final List<String> users;
     private final List<String> groups;
 
+    private final JsonBatchCallback<Permission> callback = new JsonBatchCallback<Permission>() {
+        @Override
+        public void onFailure(GoogleJsonError e,
+                              HttpHeaders responseHeaders)
+                throws IOException {
+            logger.warn("Could not share file " + file.getName());
+            logger.warn(e.getMessage());
+        }
+
+        @Override
+        public void onSuccess(Permission permission,
+                              HttpHeaders responseHeaders)
+                throws IOException {
+            if (logger.isDebugEnabled())
+                logger.debug("Successfully shared file " + file.getName());
+        }
+    };
+
     public FileSharer(Drive drive, File file, GoogleApiConfig.SharedWith sharedWith) {
         this.drive = drive;
         this.file = file;
@@ -36,19 +58,21 @@ public class FileSharer {
     }
 
     public void share() throws IOException {
-        users.parallelStream().forEach(user -> shareWithUser(user, USER_TYPE));
-        groups.parallelStream().forEach(user -> shareWithUser(user, GROUP_TYPE));
-
+        BatchRequest batch = drive.batch();
+        users.parallelStream().forEach(user -> shareWithUser(batch, user, USER_TYPE));
+        groups.parallelStream().forEach(user -> shareWithUser(batch, user, GROUP_TYPE));
+        batch.execute();
     }
 
-    private void shareWithUser(String email, String type) {
+    private void shareWithUser(BatchRequest batch, String email, String type) {
         Permission newPermission = new Permission();
-        newPermission.setValue(email).setType(type).setRole(WRITER_ROLE);
+        newPermission.setType(type).setRole(WRITER_ROLE).setEmailAddress(email);
 
         try {
-            drive.permissions().insert(file.getId(), newPermission)
-                    .setSendNotificationEmails(false) //set to false to bypassed 51 requests per day limit
-                    .execute();
+            drive.permissions().create(file.getId(), newPermission)
+                    .setSendNotificationEmail(false) //set to false to bypassed 51 requests per day limit
+                    .setFields("id")
+                    .queue(batch, callback);
         } catch (IOException e) {
             logger.warn("Could not share file with " + email, e);
         }

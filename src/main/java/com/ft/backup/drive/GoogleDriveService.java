@@ -46,10 +46,7 @@ public class GoogleDriveService {
 
     public void uploadProjectFile(ProjectInfo project, File folder, String body) throws IOException {
         CsvFileUploader csvFileUploader = new CsvFileUploader(drive, project.getName(), folder, body);
-        File uploaded = csvFileUploader.upload();
-
-        FileSharer fileSharer = new FileSharer(drive, uploaded, googleApiConfig.getSharedWith());
-        fileSharer.share();
+        csvFileUploader.upload();
     }
 
     public File findOrCreateRootFolder() throws IOException {

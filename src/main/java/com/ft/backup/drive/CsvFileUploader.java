@@ -3,7 +3,6 @@ package com.ft.backup.drive;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.ParentReference;
 
 import javax.validation.constraints.NotNull;
 import java.io.BufferedInputStream;
@@ -33,20 +32,17 @@ public class CsvFileUploader {
     }
 
     public File upload() throws IOException{
-        Drive.Files.Insert request = drive.files().insert(fileToUpload, mediaContent).setConvert(true);
-        return request.execute();
+        Drive.Files.Create request = drive.files().create(fileToUpload, mediaContent);
+        File newFile = request.execute();
+        return newFile;
     }
 
     private File buildFile() throws IOException {
-        File file = new File();
-        file.setDescription(name);
-        file.setFileExtension("csv");
-        file.setTitle(buildFileTitle(name));
-        file.setShared(true);
-        ParentReference parentReference = new ParentReference().setId(parent.getId());
-        file.setParents(Collections.singletonList(parentReference));
-
-        return file;
+        return new File()
+            .setDescription(name)
+            .setMimeType("application/vnd.google-apps.spreadsheet")
+            .setName(buildFileTitle(name))
+            .setParents(Collections.singletonList(parent.getId()));
     }
 
     private String buildFileTitle(String projectName) {

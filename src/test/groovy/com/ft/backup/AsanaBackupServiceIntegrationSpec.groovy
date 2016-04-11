@@ -2,6 +2,10 @@ package com.ft.backup
 
 import com.ft.backup.drive.GoogleDriveService
 import com.ft.test.IntegrationSpec
+import com.google.api.client.googleapis.batch.BatchRequest
+import com.google.api.client.googleapis.batch.json.JsonBatchCallback
+import com.google.api.client.googleapis.json.GoogleJsonError
+import com.google.api.client.http.HttpHeaders
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
 import org.springframework.beans.factory.annotation.Autowired
@@ -117,20 +121,33 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
     private List<File> getTestFiles() throws IOException {
         FileList result = googleDriveService.drive.files().list()
-                .setQ("title contains 'Test'")
-                .setMaxResults(50)
+                .setQ("name contains 'Test'")
+                .setPageSize(50)
                 .execute()
-        return result.getItems()
+        return result.getFiles()
+    }
+
+    private final JsonBatchCallback<Void> callback = new JsonBatchCallback<Void>() {
+        @Override
+        public void onFailure(GoogleJsonError e, HttpHeaders responseHeaders) throws IOException {
+            println (e.getMessage())
+        }
+
+        @Override
+        void onSuccess(Void ignore, HttpHeaders responseHeaders) throws IOException {
+        }
     }
 
     private void listAndDeleteMyFiles(List<File> files) throws IOException {
+        BatchRequest batch = googleDriveService.drive.batch()
         files.each { file ->
-            println file.title
+            println file.getName()
             try {
-                googleDriveService.drive.files().delete(file.getId()).execute()
+                googleDriveService.drive.files().delete(file.getId()).queue(batch, callback)
             } catch (Exception ignore) {
                 println "Didn't delete the file due to ${ignore.message}"
             }
         }
+        batch.execute()
     }
 }

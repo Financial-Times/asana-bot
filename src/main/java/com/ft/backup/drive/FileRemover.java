@@ -37,8 +37,10 @@ public class FileRemover {
                 .setPageSize(200)
                 .execute();
 
-        result.getFiles().parallelStream().forEach(this::queueDeleteFile);
-        batch.execute();
+        if (result.getFiles().size() > 0) {
+            result.getFiles().parallelStream().forEach(this::queueDeleteFile);
+            batch.execute();
+        }
     }
 
     private String buildQuery(String folderId, String formattedDateTimeFrom) {

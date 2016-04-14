@@ -4,6 +4,7 @@ asana:
   graphicsId: 28686036279645
   designId: 102068710859175
   socialId: 37074265374689
+  bots: []
   baseUrl: https://app.asana.com/api/1.0
   authorizedTeams:
     - Companies

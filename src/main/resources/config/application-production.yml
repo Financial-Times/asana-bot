@@ -1,3 +1,9 @@
+asana:
+  bots:
+    -
+      projectId: 108406100432614
+      name: scheduled
+      apiKey: ${ASANA_SCHEDULED_KEY}
 backup:
   google:
     rootFolder: asana_backup

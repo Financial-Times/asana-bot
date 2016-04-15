@@ -26,6 +26,8 @@ public class BotScheduler {
     @Autowired @Setter
     private AsanaService asanaService;
     @Autowired @Setter
+    private AsanaBotService asanaBotService;
+    @Autowired @Setter
     private AsanaBackupService asanaBackupService;
     @Autowired @Setter
     private SlackService slackService;
@@ -50,6 +52,11 @@ public class BotScheduler {
     @Scheduled(fixedRate = TWENTY_SEC)
     public void socialBot() {
         asanaService.addSocialProjectToSocialBotAssignedTasks();
+    }
+
+    @Scheduled(fixedRate = ONE_DAY)
+    public void runAllBots() {
+        asanaBotService.runAllBots();
     }
 
     @Scheduled(fixedRate = ONE_HOUR)

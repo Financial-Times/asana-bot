@@ -5,6 +5,11 @@ asana:
   baseUrl: http://localhost:8888/api/1.0
   tags:
     Markets: MKT
+  bots:
+    -
+      name: scheduled
+      projectId: 11223344
+      apiKey: testKey
 ---
 report:
   hostDomain: ftqa.com

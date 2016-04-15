@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +26,17 @@ public class Config {
     private String designId;
     private String baseUrl;
     private String socialId;
+    private String scheduledId;
 
     private List<String> authorizedTeams;
     private List<Map<String, String>> emailTeams;
+    private List<TaskBot> bots;
 
     private Map<String, String> tags;
+
+
+    @PostConstruct
+    public void setupClient() {
+        bots.forEach(TaskBot::setupClient);
+    }
 }

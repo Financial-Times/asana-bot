@@ -12,6 +12,7 @@ it has been added when done.
 * DesignBot -> when assigned adds tasks to the Design project
 * ReportBot -> when assigned backs up the project
 * SocialBot -> when assigned adds tasks to the Social Promotion Requests project
+* SocialBot -> when assigned adds tasks to the Scheduled Publishes project
 
 ## Setup
 
@@ -21,6 +22,7 @@ Below environment variables must be set in order for the bot to be able to commu
 * ASANA_PICTURES_KEY
 * ASANA_REPORT_KEY
 * ASANA_SOCIAL_KEY
+* ASANA_SCHEDULED_KEY
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 
 This user needs to have access to projects where tasks are being assigned and also the projects where tasks are being added. 
@@ -55,7 +57,7 @@ This project is built on spring boot and to run locally just run the command:
 Two config files are included:
 
 * Procfile for [Heroku](http://docs.spring.io/spring-boot/docs/current/reference/html/cloud-deployment-heroku.html) deployment.
-* circle.yml for [CircleCI](http://circleci.com) continous integration/deployment configuration. 
+* circle.yml for [CircleCI](http://circleci.com) continuous integration/deployment configuration.
 
 The Heroku instance will also need the system.properties set. [Heroku has some documentation on how to do so](https://devcenter.heroku.com/articles/config-vars)
 

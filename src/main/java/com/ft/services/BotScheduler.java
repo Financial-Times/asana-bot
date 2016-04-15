@@ -54,7 +54,7 @@ public class BotScheduler {
         asanaService.addSocialProjectToSocialBotAssignedTasks();
     }
 
-    @Scheduled(fixedRate = ONE_DAY)
+    @Scheduled(fixedRate = TWENTY_SEC)
     public void runAllBots() {
         asanaBotService.runAllBots();
     }

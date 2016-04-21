@@ -18,7 +18,6 @@ public class BotScheduler {
 
     Logger logger = LoggerFactory.getLogger(BotScheduler.class);
 
-    private static final int ONE_DAY = 24 * 60 * 60_000;
     private static final int ONE_HOUR = 60 * 60_000;
     private static final int FIVE_MINUTES = 5 * 60_000;
     private static final int TWENTY_SEC = 20_000;
@@ -68,7 +67,7 @@ public class BotScheduler {
         }
     }
 
-    @Scheduled(fixedRate = ONE_DAY)
+    @Scheduled(fixedRate = ONE_HOUR)
     public void removeOldBackupFiles(){
         try {
             asanaBackupService.removeOldBackupFiles();

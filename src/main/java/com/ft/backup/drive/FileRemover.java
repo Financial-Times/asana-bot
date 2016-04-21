@@ -31,28 +31,36 @@ public class FileRemover {
     public void removeFilesOlderThan(File root, LocalDateTime dateTimeFrom) throws IOException {
         String formattedDateTimeFrom = dateTimeFrom.format(DateTimeFormatter.ISO_DATE_TIME);
         String query = buildQuery(root.getId(), formattedDateTimeFrom);
-        FileList result = drive.files()
-                .list()
-                .setQ(query)
-                .setPageSize(200)
-                .execute();
+        String pageToken = null;
+        do {
+            FileList result = drive.files()
+                    .list()
+                    .setQ(query)
+                    .setPageSize(50)
+                    .setSpaces("drive")
+                    .setFields("nextPageToken, files(id, name)")
+                    .setOrderBy("modifiedTime")
+                    .setPageToken(pageToken)
+                    .execute();
 
-        if (result.getFiles().size() > 0) {
-            result.getFiles().parallelStream().forEach(this::queueDeleteFile);
-            batch.execute();
-        }
+            pageToken = result.getNextPageToken();
+            if (result.getFiles().size() > 0) {
+                result.getFiles().stream().forEach(this::queueDeleteFile);
+                batch.execute();
+            }
+        } while (pageToken != null);
     }
 
-    private String buildQuery(String folderId, String formattedDateTimeFrom) {
-        return "'"+folderId+"' in parents and mimeType != '" + FOLDER_MIME_TYPE +
-                "' and modifiedTime <= '" + formattedDateTimeFrom+"'";
+    static String buildQuery(String folderId, String formattedDateTimeFrom) {
+        return String.format("'%s' in parents and mimeType != '%s' and modifiedTime <= '%s'",
+                folderId, FOLDER_MIME_TYPE, formattedDateTimeFrom);
     }
 
     private void queueDeleteFile(File file)  {
         try {
             drive.files().delete(file.getId()).queue(batch, callback);
         } catch (IOException e) {
-            logger.error("Could not delete file" + file.getId(), e);
+            logger.error("Could queue file for deletion" + file.getId(), e);
         }
     }
 

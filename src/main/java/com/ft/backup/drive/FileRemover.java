@@ -51,9 +51,9 @@ public class FileRemover {
         } while (pageToken != null);
     }
 
-    private String buildQuery(String folderId, String formattedDateTimeFrom) {
-        return "'"+folderId+"' in parents and mimeType != '" + FOLDER_MIME_TYPE +
-                "' and modifiedTime <= '" + formattedDateTimeFrom + "'";
+    static String buildQuery(String folderId, String formattedDateTimeFrom) {
+        return String.format("'%s' in parents and mimeType != '%s' and modifiedTime <= '%s'",
+                folderId, FOLDER_MIME_TYPE, formattedDateTimeFrom);
     }
 
     private void queueDeleteFile(File file)  {

@@ -4,6 +4,10 @@ asana:
       projectId: 108406100432614
       name: scheduled
       apiKey: ${ASANA_SCHEDULED_KEY}
+    -
+      projectId: 102068710859175
+      name: design
+      apiKey: ${ASANA_DESIGN_KEY}
 backup:
   google:
     rootFolder: asana_backup

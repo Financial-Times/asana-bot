@@ -23,7 +23,6 @@ public class Config {
     private String workspace;
     private String graphicsId;
     private String picturesId;
-    private String designId;
     private String baseUrl;
     private String socialId;
     private String scheduledId;

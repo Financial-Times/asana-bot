@@ -16,7 +16,6 @@ public class AsanaService {
 
     @Autowired private AsanaClient picturesAsanaClient;
     @Autowired private AsanaClient graphicsAsanaClient;
-    @Autowired private AsanaClient designAsanaClient;
     @Autowired private AsanaClient socialAsanaClient;
 
     @Autowired private Config config;

@@ -27,15 +27,6 @@ class BotSchedulerSpec extends Specification {
         capture.flush()
     }
 
-    void "GraphicsBot"() {
-        when:
-            botScheduler.graphicsBot()
-
-        then:
-            1 * mockAsanaService.addGraphicsProjectToGraphicsBotAssignedTasks()
-            0 * _
-    }
-
     void "SocialBot"() {
         when:
             botScheduler.socialBot()

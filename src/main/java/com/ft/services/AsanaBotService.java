@@ -71,6 +71,9 @@ public class AsanaBotService {
         Task parent = task.parent;
         if (parent == null) {
             parent = client.getTask(task.id);
+            if (parent.projects == null || parent.projects.isEmpty()) {
+                return null;
+            }
         }
         return extractProjectFromTask(parent, client);
     }

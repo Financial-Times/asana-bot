@@ -12,6 +12,10 @@ asana:
       projectId: 29414423499815
       name: picture
       apiKey: ${ASANA_PICTURES_KEY}
+    -
+      projectId: 28686036279645
+      name: graphics
+      apiKey: ${ASANA_GRAPHICS_KEY}
 backup:
   google:
     rootFolder: asana_backup

@@ -34,11 +34,6 @@ public class BotScheduler {
     private AsanaChangesService asanaChangesService;
 
     @Scheduled(fixedRate = TWENTY_SEC)
-    public void graphicsBot() {
-        asanaService.addGraphicsProjectToGraphicsBotAssignedTasks();
-    }
-
-    @Scheduled(fixedRate = TWENTY_SEC)
     public void socialBot() {
         asanaService.addSocialProjectToSocialBotAssignedTasks();
     }

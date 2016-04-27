@@ -19,7 +19,6 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static final Long TEST_WORLD_PROJECT_ID = 23456L
     private static final Long TEST_LEX_PROJECT_ID = 9876L
     private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
-    private static final Long TEST_BIG_READ_PROJECT_2_ID = 100048122L
     private static final String encodedOptFields = "name%2Ctags.name%2Cdue_on%2Cnotes%2Ccompleted%2Csubtasks.name%2Csubtasks.completed"
     private static final String decodedOptFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
 

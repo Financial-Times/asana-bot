@@ -19,10 +19,6 @@ public class AsanaService {
 
     @Autowired private Config config;
 
-    public void addGraphicsProjectToGraphicsBotAssignedTasks(){
-        graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getGraphicsId());
-    }
-
     public void addSocialProjectToSocialBotAssignedTasks() {
         socialAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getSocialId());
     }

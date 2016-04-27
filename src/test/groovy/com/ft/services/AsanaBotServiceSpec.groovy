@@ -9,7 +9,7 @@ import com.ft.config.Config
 import com.ft.config.TaskBot
 import spock.lang.Specification
 
-class AsanaBotServiceIntegrationSpec extends Specification {
+class AsanaBotServiceSpec extends Specification {
     private AsanaBotService service
     private AsanaClientWrapper mockClient
     private Config config

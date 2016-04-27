@@ -21,7 +21,6 @@ public class Config {
 
     //From application.yml
     private String workspace;
-    private String graphicsId;
     private String baseUrl;
     private String socialId;
     private String scheduledId;

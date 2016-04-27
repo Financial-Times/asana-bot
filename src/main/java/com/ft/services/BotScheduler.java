@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class BotScheduler {
 
-    Logger logger = LoggerFactory.getLogger(BotScheduler.class);
+    private static Logger logger = LoggerFactory.getLogger(BotScheduler.class);
 
     private static final int ONE_HOUR = 60 * 60_000;
     private static final int FIVE_MINUTES = 5 * 60_000;
@@ -36,11 +36,6 @@ public class BotScheduler {
     @Scheduled(fixedRate = TWENTY_SEC)
     public void graphicsBot() {
         asanaService.addGraphicsProjectToGraphicsBotAssignedTasks();
-    }
-
-    @Scheduled(fixedRate = TWENTY_SEC)
-    public void picturesBot(){
-        asanaService.addPicturesProjectToPicturesBotAssignedTasks();
     }
 
     @Scheduled(fixedRate = TWENTY_SEC)

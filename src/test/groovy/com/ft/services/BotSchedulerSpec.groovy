@@ -36,15 +36,6 @@ class BotSchedulerSpec extends Specification {
             0 * _
     }
 
-    void "PicturesBot"() {
-        when:
-            botScheduler.picturesBot()
-
-        then:
-            1 * mockAsanaService.addPicturesProjectToPicturesBotAssignedTasks()
-            0 * _
-    }
-
     void "SocialBot"() {
         when:
             botScheduler.socialBot()

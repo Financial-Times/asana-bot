@@ -14,7 +14,6 @@ import java.util.List;
 @EnableConfigurationProperties(Config.class)
 public class AsanaService {
 
-    @Autowired private AsanaClient picturesAsanaClient;
     @Autowired private AsanaClient graphicsAsanaClient;
     @Autowired private AsanaClient socialAsanaClient;
 
@@ -22,10 +21,6 @@ public class AsanaService {
 
     public void addGraphicsProjectToGraphicsBotAssignedTasks(){
         graphicsAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getGraphicsId());
-    }
-
-    public void addPicturesProjectToPicturesBotAssignedTasks(){
-        picturesAsanaClient.addProjectToCurrentlyAssignedIncompleteTasks(config.getPicturesId());
     }
 
     public void addSocialProjectToSocialBotAssignedTasks() {

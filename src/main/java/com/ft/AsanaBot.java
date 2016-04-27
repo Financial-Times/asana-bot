@@ -30,19 +30,9 @@ public class AsanaBot {
         return new AsanaClient(System.getenv("ASANA_GRAPHICS_KEY"), config, getHttpClient());
     }
 
-    @Bean(name = "picturesAsanaClient")
-    public AsanaClient getPicturesAsanaClient() {
-        return new AsanaClient(System.getenv("ASANA_PICTURES_KEY"), config, getHttpClient());
-    }
-
     @Bean(name = "reportAsanaClient")
     public AsanaClient getReportAsanaClient() {
         return new AsanaClient(System.getenv("ASANA_REPORT_KEY"), config, getHttpClient());
-    }
-
-    @Bean(name = "designAsanaClient")
-    public AsanaClient getDesingAsanaClient() {
-        return new AsanaClient(System.getenv("ASANA_DESIGN_KEY"), config, getHttpClient());
     }
 
     @Bean(name = "socialAsanaClient")

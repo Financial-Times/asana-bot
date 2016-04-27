@@ -1,6 +1,5 @@
 asana:
   workspace: 36628479813449
-  picturesId: 36788370362617
   graphicsId: 36788370362615
   socialId: 43400279162108
   bots:
@@ -12,6 +11,10 @@ asana:
       projectId: 90407076979571
       name: design
       apiKey: ${ASANA_DESIGN_KEY}
+    -
+      projectId: 36788370362617
+      name: picture
+      apiKey: ${ASANA_PICTURES_KEY}
 ---
 logging:
     level:

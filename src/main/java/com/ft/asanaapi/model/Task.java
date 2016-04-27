@@ -2,7 +2,6 @@ package com.ft.asanaapi.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -14,10 +13,6 @@ import java.util.List;
 public class Task extends AsanaEntity {
     private Task parent;
     private List<ProjectInfo> projects;
-
-    public boolean isSubTask() {
-        return parent != null;
-    }
 
     @Override
     public String toString() {

@@ -1,11 +1,16 @@
 package com.ft.asanaapi;
 
+import com.ft.asanaapi.model.ProjectData;
+import com.ft.asanaapi.model.TasksData;
+import com.ft.asanaapi.model.TeamsData;
+import com.ft.asanaapi.model.UserData;
 import com.ft.backup.model.BackupTasksData;
 import com.ft.backup.model.ProjectsData;
-import com.ft.asanaapi.model.*;
 import com.ft.report.model.ReportTasksData;
 import retrofit.client.Response;
-import retrofit.http.*;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface Asana {
 
@@ -28,53 +33,6 @@ public interface Asana {
     @GET("/projects/{project-id}")
     ProjectData project(
             @Path("project-id") String projectId
-    );
-
-    @FormUrlEncoded
-    @POST("/tasks/{task-id}/addProject")
-    Response addProjectToTask(
-            @Path("task-id") String taskId,
-            @Field("project") String projectId
-    );
-
-    @GET("/tasks/{task-id}")
-    TaskData getTask(
-            @Path("task-id") String taskId,
-            @Query("opt_fields") String optionalFields
-    );
-
-    @FormUrlEncoded
-    @PUT("/tasks/{task-id}")
-    Response updateTask(
-            @Path("task-id") String taskId,
-            @Field("assignee") String assignee
-    );
-
-    @FormUrlEncoded
-    @POST("/tasks/{task-id}/stories")
-    Response commentOnTask(
-            @Path("task-id") String taskId,
-            @Field("text") String text
-    );
-
-    @GET("/workspaces/{workspace-id}/typeahead?type=tag")
-    TagsData queryForTag(
-            @Path("workspace-id") String workspaceId,
-            @Query("query") String tagName
-    );
-
-    @FormUrlEncoded
-    @POST("/tasks/{task-id}/addTag")
-    Response addTagToTask(
-            @Path("task-id") String taskId,
-            @Field("tag") String tagId
-    );
-
-    @FormUrlEncoded
-    @POST("/workspaces/{workspace-id}/tags")
-    TagData createTag(
-            @Path("workspace-id") String workspaceId,
-            @Field("name")String tagName
     );
 
     @GET("/users/{user-id}/teams")

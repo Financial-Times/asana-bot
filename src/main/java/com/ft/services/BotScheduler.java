@@ -23,8 +23,6 @@ public class BotScheduler {
     private static final int TWENTY_SEC = 20_000;
 
     @Autowired @Setter
-    private AsanaService asanaService;
-    @Autowired @Setter
     private AsanaBotService asanaBotService;
     @Autowired @Setter
     private AsanaBackupService asanaBackupService;
@@ -32,11 +30,6 @@ public class BotScheduler {
     private SlackService slackService;
     @Autowired @Setter
     private AsanaChangesService asanaChangesService;
-
-    @Scheduled(fixedRate = TWENTY_SEC)
-    public void socialBot() {
-        asanaService.addSocialProjectToSocialBotAssignedTasks();
-    }
 
     @Scheduled(fixedRate = TWENTY_SEC)
     public void runAllBots() {

@@ -20,6 +20,7 @@ import java.util.Optional;
 public class AsanaBotService {
 
     private static final Logger logger = LoggerFactory.getLogger(AsanaBotService.class);
+    public static final int MAX_ATTEMPTS = 5;
     private Config config;
 
     @Autowired
@@ -39,9 +40,9 @@ public class AsanaBotService {
 
             for (Task task: tasks) {
                 try {
-                    Project originalProject = extractProjectFromTask(task,client);
+                    Project originalProject = extractProjectFromTask(task,client, 0);
                     client.addTaskToProject(task, newProject);
-                    if (originalProject.team != null) {
+                    if (originalProject != null && originalProject.team != null) {
                         Tag tag = findOrCreateTagByName(originalProject.team, client);
                         client.tagTask(task, tag);
                     }
@@ -63,7 +64,7 @@ public class AsanaBotService {
         return task.parent != null;
     }
 
-    private Project extractProjectFromTask(Task task, AsanaClientWrapper client) throws IOException {
+    private Project extractProjectFromTask(Task task, AsanaClientWrapper client, Integer attempts) throws IOException {
         Optional<Project> candidate = task.projects.stream().findFirst();
         if (candidate.isPresent()) {
             return candidate.get();
@@ -71,11 +72,11 @@ public class AsanaBotService {
         Task parent = task.parent;
         if (parent == null) {
             parent = client.getTask(task.id);
-            if (parent.projects == null || parent.projects.isEmpty()) {
-                return null;
-            }
         }
-        return extractProjectFromTask(parent, client);
+        if (attempts >= MAX_ATTEMPTS) {
+            return null;
+        }
+        return extractProjectFromTask(parent, client, ++attempts);
     }
 
     private Tag findOrCreateTagByName(Team team, AsanaClientWrapper client) throws IOException {

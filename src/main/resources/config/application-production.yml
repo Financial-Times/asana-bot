@@ -16,6 +16,10 @@ asana:
       projectId: 28686036279645
       name: graphics
       apiKey: ${ASANA_GRAPHICS_KEY}
+    -
+      projectId: 37074265374689
+      name: social
+      apiKey: ${ASANA_SOCIAL_KEY}
 backup:
   google:
     rootFolder: asana_backup

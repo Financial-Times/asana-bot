@@ -22,8 +22,6 @@ public class Config {
     //From application.yml
     private String workspace;
     private String baseUrl;
-    private String socialId;
-    private String scheduledId;
 
     private List<String> authorizedTeams;
     private List<Map<String, String>> emailTeams;

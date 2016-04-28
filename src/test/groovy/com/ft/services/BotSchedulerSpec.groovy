@@ -9,7 +9,6 @@ import spock.lang.Specification
 
 class BotSchedulerSpec extends Specification {
     private BotScheduler botScheduler
-    private AsanaService mockAsanaService = Mock(AsanaService)
     private AsanaBackupService mockAsanaBackupService = Mock(AsanaBackupService)
     private AsanaChangesService mockAsanaChangesService = Mock(AsanaChangesService)
     private SlackService mockSlackService = Mock(SlackService)
@@ -19,20 +18,11 @@ class BotSchedulerSpec extends Specification {
 
     void setup() {
         botScheduler = new BotScheduler()
-        botScheduler.asanaService = mockAsanaService
         botScheduler.asanaBackupService = mockAsanaBackupService
         botScheduler.asanaChangesService = mockAsanaChangesService
         botScheduler.slackService = mockSlackService
 
         capture.flush()
-    }
-
-    void "SocialBot"() {
-        when:
-            botScheduler.socialBot()
-        then:
-            1 * mockAsanaService.addSocialProjectToSocialBotAssignedTasks()
-            0 * _
     }
 
     void "backupAllProjects"() {

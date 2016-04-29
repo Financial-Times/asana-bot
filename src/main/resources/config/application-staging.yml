@@ -5,18 +5,27 @@ asana:
       projectId: 112192541246514
       name: scheduled
       apiKey: ${ASANA_SCHEDULED_KEY}
+      runnerBean: taskOnProjectTaskRunner
     -
       projectId: 90407076979571
       name: design
       apiKey: ${ASANA_DESIGN_KEY}
+      runnerBean: taskOnProjectTaskRunner
     -
       projectId: 36788370362617
       name: picture
       apiKey: ${ASANA_PICTURES_KEY}
+      runnerBean: taskOnProjectTaskRunner
+    -
+      projectId: 36788370362615
+      name: graphicsEmail
+      apiKey: ${ASANA_DUE_DATE_BOT_KEY}
+      runnerBean: taskDueDateTaskRunner
     -
       projectId: 36788370362615
       name: graphics
       apiKey: ${ASANA_GRAPHICS_KEY}
+      runnerBean: taskOnProjectTaskRunner
     -
       projectId: 43400279162108
       name: social

@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
+@Component("taskDueDateTaskRunner")
 public class TaskDueDateTaskRunner implements TaskRunner {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("(.+)\\|(.*)");

@@ -8,6 +8,7 @@ asana:
       name: scheduled
       projectId: 11223344
       apiKey: testKey
+      runnerBean: taskOnProjectTaskRunner
 ---
 report:
   hostDomain: ftqa.com

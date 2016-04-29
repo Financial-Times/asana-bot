@@ -8,10 +8,11 @@ import com.asana.models.Workspace;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class AsanaClientWrapper {
-    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name";
+    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on";
 
     private final Client client;
 
@@ -23,6 +24,13 @@ public class AsanaClientWrapper {
         return client.tasks.findAll()
                 .query("assignee", "me")
                 .query("workspace", workspaceId)
+                .query("completed_since", "now")
+                .query("opt_fields", TASK_FIELDS)
+                .execute();
+    }
+
+    public List<Task> getTasksByProject(String projectId) throws IOException {
+        return client.tasks.findByProject(projectId)
                 .query("completed_since", "now")
                 .query("opt_fields", TASK_FIELDS)
                 .execute();
@@ -54,6 +62,9 @@ public class AsanaClientWrapper {
                 .query("type", "tag")
                 .execute();
         return tags.stream().map(this::toTag).findFirst();
+    }
+    public void updateTask(Task task, Map<String, Object> data) throws IOException {
+        client.tasks.update(task.id).data(data).execute();
     }
 
     private Tag toTag(Workspace workspace) {

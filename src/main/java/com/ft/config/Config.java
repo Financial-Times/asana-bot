@@ -32,6 +32,6 @@ public class Config {
 
     @PostConstruct
     public void setupClient() {
-        bots.forEach(TaskBot::setupClient);
+        bots.forEach(taskBot -> taskBot.setupClient(tags, workspace));
     }
 }

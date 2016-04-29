@@ -12,7 +12,8 @@ it has been added when done.
 * DesignBot -> when assigned adds tasks to the Design project
 * ReportBot -> when assigned backs up the project
 * SocialBot -> when assigned adds tasks to the Social Promotion Requests project
-* SocialBot -> when assigned adds tasks to the Scheduled Publishes project
+* ScheduleBot -> when assigned adds tasks to the Scheduled Publishes project
+* GraphicsEmailBot -> when assigned creates task due date from title for Graphics projects
 
 ## Setup
 
@@ -24,6 +25,7 @@ Below environment variables must be set in order for the bot to be able to commu
 * ASANA_SOCIAL_KEY
 * ASANA_DESIGN_KEY
 * ASANA_SCHEDULED_KEY
+* ASANA_GRAPHICS_DUE_DATE_BOT_KEY
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 
 This user needs to have access to projects where tasks are being assigned and also the projects where tasks are being added. 

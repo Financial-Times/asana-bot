@@ -3,13 +3,13 @@ package com.ft.tasks;
 import com.asana.models.Task;
 import com.ft.asanaapi.AsanaClientWrapper;
 import com.ft.config.TaskBot;
-import com.google.api.client.util.DateTime;
 import com.joestelmach.natty.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                 Map<String, Object> taskData = new HashMap<>();
                 while (matcher.find()) {
                     taskData.put("name", matcher.group(1));
-                    taskData.put("dueOn", parseDueDate(matcher.group(2)));
+                    taskData.put("due_on", parseDueDate(matcher.group(2)));
                     try {
                         client.updateTask(task, taskData);
                     } catch (IOException e) {
@@ -49,12 +49,11 @@ public class TaskDueDateTaskRunner implements TaskRunner {
 
     }
 
-    private DateTime parseDueDate(String date) {
+    private String parseDueDate(String date) {
         Parser parser = new Parser();
         Date parsedDate = parser.parse(date).get(0).getDates().get(0);
-        return new DateTime(parsedDate);
+        return new SimpleDateFormat("yyyy-MM-dd").format(parsedDate);
 
     }
-
 
 }

@@ -37,11 +37,6 @@ public class AsanaBot {
         return new AsanaClient(System.getenv("ASANA_REPORT_KEY"), config, getHttpClient());
     }
 
-    @Bean(name = "socialAsanaClient")
-    public AsanaClient getSocialAsanaClient() {
-        return new AsanaClient(System.getenv("ASANA_SOCIAL_KEY"), config, getHttpClient());
-    }
-
     @Bean
     public FactoryBean serviceLocatorFactoryBean() {
         ServiceLocatorFactoryBean factoryBean = new ServiceLocatorFactoryBean();

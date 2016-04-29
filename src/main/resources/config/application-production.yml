@@ -23,13 +23,13 @@ asana:
     -
       projectId: 28686036279645
       name: graphicsEmail
-      apiKey: ${ASANA_DUE_DATE_BOT_KEY}
+      apiKey: ${ASANA_GRAPHICS_DUE_DATE_BOT_KEY}
       runnerBean: taskDueDateTaskRunner
-
     -
       projectId: 37074265374689
       name: social
       apiKey: ${ASANA_SOCIAL_KEY}
+      runnerBean: taskOnProjectTaskRunner
 backup:
   google:
     rootFolder: asana_backup

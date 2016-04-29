@@ -19,7 +19,7 @@ asana:
     -
       projectId: 36788370362615
       name: graphicsEmail
-      apiKey: ${ASANA_DUE_DATE_BOT_KEY}
+      apiKey: ${ASANA_GRAPHICS_DUE_DATE_BOT_KEY}
       runnerBean: taskDueDateTaskRunner
     -
       projectId: 36788370362615
@@ -30,6 +30,7 @@ asana:
       projectId: 43400279162108
       name: social
       apiKey: ${ASANA_SOCIAL_KEY}
+      runnerBean: taskOnProjectTaskRunner
 ---
 logging:
     level:

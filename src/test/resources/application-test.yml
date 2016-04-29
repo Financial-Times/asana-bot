@@ -8,6 +8,7 @@ asana:
       name: scheduled
       projectId: 11223344
       apiKey: testKey
+      runInterval: 20_000
       runnerBean: taskOnProjectTaskRunner
 ---
 report:

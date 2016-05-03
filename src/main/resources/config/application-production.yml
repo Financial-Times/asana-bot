@@ -5,31 +5,52 @@ asana:
       name: scheduled
       apiKey: ${ASANA_SCHEDULED_KEY}
       runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
     -
       projectId: 102068710859175
       name: design
       apiKey: ${ASANA_DESIGN_KEY}
       runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
     -
       projectId: 29414423499815
       name: picture
       apiKey: ${ASANA_PICTURES_KEY}
       runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
     -
       projectId: 28686036279645
       name: graphics
       apiKey: ${ASANA_GRAPHICS_KEY}
       runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
     -
       projectId: 28686036279645
       name: graphicsEmail
       apiKey: ${ASANA_GRAPHICS_DUE_DATE_BOT_KEY}
       runnerBean: taskDueDateTaskRunner
+      runInterval: 20_000
     -
       projectId: 37074265374689
       name: social
       apiKey: ${ASANA_SOCIAL_KEY}
       runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
+      name: backup
+      apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
+      runnerBean: backupTaskRunner
+      runInterval: 3_600_000 # one hour in milliseconds
+    -
+      name: check for changes
+      apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
+      runnerBean: checkForChangesTaskRunner
+      runInterval: 300_000 # five minutes in milliseconds
+    -
+      name: Remove old backup files
+      apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
+      runnerBean: removeOldBackupFilesTaskRunner
+      runInterval: 3_600_000 # one hour in milliseconds
 backup:
   google:
     rootFolder: asana_backup

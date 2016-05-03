@@ -12,6 +12,7 @@ import com.ft.tasks.TaskRunnerFactory
 import spock.lang.Specification
 
 class AsanaBotServiceSpec extends Specification {
+    private static final int TWENTY_SECONDS = 20_000
     private AsanaBotService service
     private AsanaClientWrapper mockClient
     private Config config
@@ -25,7 +26,7 @@ class AsanaBotServiceSpec extends Specification {
         mockTaskRunner = Spy(TaskOnProjectTaskRunner)
         mockDueDateTaskRunner = Spy(TaskDueDateTaskRunner)
         mockTaskRunnerFactory = Mock(TaskRunnerFactory);
-        bot = new TaskBot('test name', '11223344', 'dummmy key', mockClient, 'runner', '223344', [:])
+        bot = new TaskBot('test name', '11223344', 'dummmy key', mockClient, 'runner', '223344', [:], TWENTY_SECONDS)
         List<TaskBot> bots = [bot]
         config = new Config(bots: bots, workspace: '223344', tags: [:])
         service = new AsanaBotService(config, mockTaskRunnerFactory)
@@ -38,7 +39,7 @@ class AsanaBotServiceSpec extends Specification {
             task.projects = [project]
             List<Task> tasks = [task]
         when:
-            service.runAllBots()
+            service.runBots(TWENTY_SECONDS)
         then:
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
@@ -62,7 +63,7 @@ class AsanaBotServiceSpec extends Specification {
             Tag tag = new Tag()
             String comment = "I have added the task ${subtask.name} to ${project.name}"
         when:
-            service.runAllBots()
+            service.runBots(TWENTY_SECONDS)
         then:
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
@@ -89,7 +90,7 @@ class AsanaBotServiceSpec extends Specification {
             task2.projects = [project]
             List<Task> tasks = [task1, task2]
         when:
-            service.runAllBots()
+            service.runBots(TWENTY_SECONDS)
         then:
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
@@ -109,10 +110,9 @@ class AsanaBotServiceSpec extends Specification {
             mockDueDateTaskRunner = Spy(TaskDueDateTaskRunner)
             Task task = new Task()
             task.name = "names|2016-01-01T09:10:46.449Z"
-            //task.dueOn = new DateTime(new Date())
             List<Task> tasks = [task]
         when:
-            service.runAllBots()
+            service.runBots(TWENTY_SECONDS)
         then:
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockDueDateTaskRunner
             1 * mockDueDateTaskRunner.run(bot)

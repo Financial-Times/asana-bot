@@ -1,5 +1,5 @@
-import com.ft.asanaapi.model.ProjectInfo
-import com.ft.asanaapi.model.Team
+import com.asana.models.Project
+import com.asana.models.Team
 import com.ft.monitoring.ProjectChange
 import com.ft.services.SlackService
 import org.springframework.web.client.RestTemplate
@@ -12,7 +12,7 @@ class SlackServiceSpec extends Specification {
 
     private Team worldTeam;
     private Team marketsTeam;
-    private ProjectInfo worldTopicsInfo;
+    private Project worldTopics;
 
     private String slackUrl = "http://dummy.slack.co.uk";
 
@@ -25,11 +25,11 @@ class SlackServiceSpec extends Specification {
         worldTeam.id = "1"
         worldTeam.name = "World"
 
-        worldTopicsInfo = new ProjectInfo()
-        worldTopicsInfo.id = "12345"
-        worldTopicsInfo.name = "World Topics"
-        worldTopicsInfo.team = worldTeam
-        worldTopicsInfo.archived = false
+        worldTopics = new Project()
+        worldTopics.id = "12345"
+        worldTopics.name = "World Topics"
+        worldTopics.team = worldTeam
+        worldTopics.isArchived = false
 
         marketsTeam = new Team()
         marketsTeam.id = "2"
@@ -57,14 +57,12 @@ class SlackServiceSpec extends Specification {
         String postedUrl = null
         HashMap payload = null
         given:
-
-
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            Project changedWorldTopicsInfo = new Project()
             changedWorldTopicsInfo.id = "12345"
             changedWorldTopicsInfo.name = "World Topicsssss changed"
             changedWorldTopicsInfo.team = worldTeam
-            changedWorldTopicsInfo.archived = false
-            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopicsInfo);
+            changedWorldTopicsInfo.isArchived = false
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopics);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -90,12 +88,12 @@ class SlackServiceSpec extends Specification {
         String postedUrl = null
         HashMap payload = null
         given:
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            Project changedWorldTopicsInfo = new Project()
             changedWorldTopicsInfo.id = "12345"
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = marketsTeam
-            changedWorldTopicsInfo.archived = false
-            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopicsInfo);
+            changedWorldTopicsInfo.isArchived = false
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopics);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -121,12 +119,12 @@ class SlackServiceSpec extends Specification {
         HashMap payload = null
         given:
 
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            Project changedWorldTopicsInfo = new Project()
             changedWorldTopicsInfo.id = "12345"
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = worldTeam
-            changedWorldTopicsInfo.archived = true
-            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopicsInfo);
+            changedWorldTopicsInfo.isArchived = true
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopics);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -152,12 +150,12 @@ class SlackServiceSpec extends Specification {
         HashMap payload = null
         given:
 
-            ProjectInfo changedWorldTopicsInfo = new ProjectInfo()
+            Project changedWorldTopicsInfo = new Project()
             changedWorldTopicsInfo.id = "12345"
             changedWorldTopicsInfo.name = "World Topics"
             changedWorldTopicsInfo.team = marketsTeam
-            changedWorldTopicsInfo.archived = true
-            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopicsInfo);
+            changedWorldTopicsInfo.isArchived = true
+            ProjectChange worldTopics = new ProjectChange(changedWorldTopicsInfo, worldTopics);
 
             List<ProjectChange> projectChanges = []
             projectChanges.add(worldTopics)
@@ -181,7 +179,7 @@ class SlackServiceSpec extends Specification {
 
     private void assertNameChanges(HashMap<String, Object> attachment){
         String title = attachment["text"]
-        assert title.contains(worldTopicsInfo.getId())
+        assert title.contains(worldTopics.id)
         List<Map> fields = attachment.get("fields")
         assert fields[0]['value'] == 'World Topicsssss changed'
         assert fields[0]['title'] == 'new name'
@@ -191,7 +189,7 @@ class SlackServiceSpec extends Specification {
 
     private void assertTeamChanges(HashMap<String, Object> attachment){
         String title = attachment["text"]
-        assert title.contains(worldTopicsInfo.getId())
+        assert title.contains(worldTopics.id)
         List<Map> fields = attachment["fields"]
         assert fields[0]['value'] == 'Markets'
         assert fields[0]['title'] == 'new team'
@@ -201,7 +199,7 @@ class SlackServiceSpec extends Specification {
 
     private void assertArchiveChanges(HashMap<String, Object> attachment){
         String title = attachment["text"]
-        assert title.contains(worldTopicsInfo.getId())
+        assert title.contains(worldTopics.id)
         assert title.contains("archived")
         assert attachment["fields"].size() == 0
     }

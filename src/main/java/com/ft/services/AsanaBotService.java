@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 public class AsanaBotService {
 
     private Config config;
-
     private TaskRunnerFactory taskRunnerFactory;
 
     @Autowired
@@ -19,8 +18,10 @@ public class AsanaBotService {
         this.taskRunnerFactory = taskRunnerFactory;
     }
 
-    public void runAllBots() {
-        config.getBots().forEach(bot -> {
+    public void runBots(Integer runInterval) {
+        config.getBots().parallelStream()
+                .filter(bot -> bot.getRunInterval().equals(runInterval) )
+                .forEach(bot -> {
             TaskRunner taskRunner = taskRunnerFactory.getTaskRunner(bot.getRunnerBean());
             taskRunner.run(bot);
         });

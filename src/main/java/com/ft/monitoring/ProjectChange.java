@@ -1,6 +1,6 @@
 package com.ft.monitoring;
 
-import com.ft.asanaapi.model.ProjectInfo;
+import com.asana.models.Project;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +11,14 @@ import java.util.List;
 
 @Getter @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "changes")
 public class ProjectChange {
 
-    private final ProjectInfo project;
-    private ProjectInfo referenceProject;
+    private final Project project;
+    private Project referenceProject;
     private final List<Change> changes;
 
-    public ProjectChange(ProjectInfo project, ProjectInfo referenceProject) {
+    public ProjectChange(Project project, Project referenceProject) {
         this.project = project;
         this.referenceProject = referenceProject;
         this.changes = new ArrayList<>();
@@ -29,9 +29,9 @@ public class ProjectChange {
         return !changes.isEmpty();
     }
 
-    private void build(ProjectInfo referenceProject) {
+    private void build(Project referenceProject) {
         if (project == null) {
-            addChangeType(referenceProject.getName(), null, ChangeType.NOT_FOUND);
+            addChangeType(referenceProject.name, null, ChangeType.NOT_FOUND);
             return;
         }
         checkName(referenceProject);
@@ -39,25 +39,25 @@ public class ProjectChange {
         checkTeam(referenceProject);
     }
 
-    private void checkName(ProjectInfo referenceProject) {
-        String oldName = referenceProject.getName();
-        String newName = project.getName();
+    private void checkName(Project referenceProject) {
+        String oldName = referenceProject.name;
+        String newName = project.name;
         if (!newName.equals(oldName)) {
             addChangeType(oldName, newName, ChangeType.NAME);
         }
     }
 
-    private void checkArchived(ProjectInfo referenceProject) {
-        Boolean oldArchived = referenceProject.getArchived();
-        Boolean newArchived = project.getArchived();
+    private void checkArchived(Project referenceProject) {
+        Boolean oldArchived = referenceProject.isArchived;
+        Boolean newArchived = project.isArchived;
         if (!newArchived.equals(oldArchived)) {
             addChangeType(oldArchived.toString(), newArchived.toString(), ChangeType.ARCHIVED);
         }
     }
 
-    private void checkTeam(ProjectInfo referenceProject) {
-        String oldTeam = referenceProject.getTeam().getName();
-        String newTeam = project.getTeam().getName();
+    private void checkTeam(Project referenceProject) {
+        String oldTeam = referenceProject.team.name;
+        String newTeam = project.team.name;
         if (!newTeam.equals(oldTeam)) {
             addChangeType(oldTeam, newTeam, ChangeType.TEAM);
         }

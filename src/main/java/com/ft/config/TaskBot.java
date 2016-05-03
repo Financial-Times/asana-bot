@@ -16,6 +16,7 @@ public class TaskBot {
     private String name;
     private String projectId;
     private String apiKey;
+    private Integer runInterval;
     private AsanaClientWrapper client;
     private String runnerBean;
     private Map<String, String> tags;
@@ -23,7 +24,8 @@ public class TaskBot {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskBot.class);
 
-    public TaskBot(String name, String projectId, String apiKey, AsanaClientWrapper client, String runnerBean, String workspaceId, Map<String, String> tags) {
+    public TaskBot(String name, String projectId, String apiKey, AsanaClientWrapper client, String runnerBean,
+                   String workspaceId, Map<String, String> tags, Integer runInterval) {
         this.name = name;
         this.projectId = projectId;
         this.apiKey = apiKey;
@@ -31,6 +33,7 @@ public class TaskBot {
         this.runnerBean = runnerBean;
         this.workspaceId = workspaceId;
         this.tags = tags;
+        this.runInterval = runInterval;
     }
 
     public void setupClient(Map<String, String> tags, String workspaceId) {

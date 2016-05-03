@@ -85,6 +85,6 @@ public class AsanaClientWrapper {
 
     public List<Project> getAllProjects(String workspaceId) throws IOException {
         return client.projects.findByWorkspace(workspaceId)
-                .query("opt_fields", PROJECT_FIELDS).execute();
+                .query("opt_expand", PROJECT_FIELDS).execute();
     }
 }

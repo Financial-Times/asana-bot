@@ -1,11 +1,6 @@
 package com.ft.services;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import com.ft.asanaapi.model.ProjectInfo;
+import com.asana.models.Project;
 import com.ft.monitoring.Change;
 import com.ft.monitoring.ChangeType;
 import com.ft.monitoring.ProjectChange;
@@ -15,6 +10,11 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 @ConfigurationProperties(prefix = "notify")
 @Component
@@ -28,7 +28,7 @@ public class SlackService {
         restTemplate = new RestTemplate();
     }
 
-    protected SlackService(RestTemplate restTemplate, String slackWebHookUrl){
+    public SlackService(RestTemplate restTemplate, String slackWebHookUrl){
         this.restTemplate = restTemplate;
         this.slackWebHookUrl = slackWebHookUrl;
     }
@@ -65,9 +65,9 @@ public class SlackService {
             Map<String, Object> attachmentsContent = Maps.newHashMap();
 
             List<Map<String, Object>> fields = Lists.newArrayList();
-            ProjectInfo project = projectChange.getProject() != null ? projectChange.getProject() : projectChange.getReferenceProject();
-            String projectName = project.getName();
-            String projectId = project.getId();
+            Project project = projectChange.getProject() != null ? projectChange.getProject() : projectChange.getReferenceProject();
+            String projectName = project.name;
+            String projectId = project.id;
             String projectLink = "https://app.asana.com/0/" + projectId + "/" + projectId;
 
             ChangeType changeType = change.getType();

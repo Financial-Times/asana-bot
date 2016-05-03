@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public class AsanaClientWrapper {
     private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on";
+    private static final String PROJECT_FIELDS = "this";
 
     private final Client client;
 
@@ -80,5 +81,10 @@ public class AsanaClientWrapper {
 
     public Task commentTask(Task task, String comment) throws IOException {
         return client.tasks.addComment(task.id).data("text", comment).execute();
+    }
+
+    public List<Project> getAllProjects(String workspaceId) throws IOException {
+        return client.projects.findByWorkspace(workspaceId)
+                .query("opt_fields", PROJECT_FIELDS).execute();
     }
 }

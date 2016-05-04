@@ -52,7 +52,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
     private String parseDueDate(String date) {
         Parser parser = new Parser();
         Date parsedDate = parser.parse(date).get(0).getDates().get(0);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return simpleDateFormat.format(parsedDate);

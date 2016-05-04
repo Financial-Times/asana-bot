@@ -33,10 +33,13 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                 Matcher matcher = TITLE_PATTERN.matcher(task.name);
                 Map<String, Object> taskData = new HashMap<>();
                 while (matcher.find()) {
-                    taskData.put("name", matcher.group(1));
-                    taskData.put("due_on", parseDueDate(matcher.group(2)));
+                    final String taskName = matcher.group(1);
+                    final String taskDueDate = parseDueDate(matcher.group(2));
+                    taskData.put("name", taskName);
+                    taskData.put("due_on", taskDueDate);
                     try {
                         client.updateTask(task, taskData);
+                        logger.info("Successfully updated task: {} due date to {}.", task.id, taskDueDate);
                     } catch (IOException e) {
                         logger.error("error updating task", e);
                     }

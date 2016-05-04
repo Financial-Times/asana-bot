@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +33,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                     final String taskName = matcher.group(1);
                     final String taskDueDate = parseDueDate(matcher.group(2));
                     taskData.put("name", taskName);
-                    taskData.put("due_on", taskDueDate);
+                    taskData.put("due_at", taskDueDate);
                     try {
                         client.updateTask(task, taskData);
                         logger.info("Successfully updated task: {} due date to {}.", task.id, taskDueDate);
@@ -55,7 +52,10 @@ public class TaskDueDateTaskRunner implements TaskRunner {
     private String parseDueDate(String date) {
         Parser parser = new Parser();
         Date parsedDate = parser.parse(date).get(0).getDates().get(0);
-        return new SimpleDateFormat("yyyy-MM-dd").format(parsedDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return simpleDateFormat.format(parsedDate);
 
     }
 

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 public class TaskDueDateTaskRunner implements TaskRunner {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("(.+)\\|(.*)");
+    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("(.+):(.*)");
     private static final Logger logger = LoggerFactory.getLogger(TaskDueDateTaskRunner.class);
 
     @Override
@@ -31,9 +32,10 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                 Map<String, Object> taskData = new HashMap<>();
                 while (matcher.find()) {
                     final String taskName = matcher.group(1);
-                    final String taskDueDate = parseDueDate(matcher.group(2));
+                    final String taskDueDate = matcher.group(2);
+                    final String dueDateField = TIMESTAMP_PATTERN.matcher(taskDueDate).matches() ? "due_at" : "due_on";
                     taskData.put("name", taskName);
-                    taskData.put("due_at", taskDueDate);
+                    taskData.put(dueDateField, parseDueDate(taskDueDate));
                     try {
                         client.updateTask(task, taskData);
                         logger.info("Successfully updated task: {} due date to {}.", task.id, taskDueDate);

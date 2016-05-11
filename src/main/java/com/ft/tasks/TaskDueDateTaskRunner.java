@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class TaskDueDateTaskRunner implements TaskRunner {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("(.+)\\|(.*)");
-    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("(.+):(.*)");
+    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("(.+)(at)?(:)?(.*)");
     private static final Logger logger = LoggerFactory.getLogger(TaskDueDateTaskRunner.class);
 
     @Override

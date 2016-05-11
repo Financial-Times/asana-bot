@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AsanaClientWrapper {
-    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on";
+    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
     private static final String PROJECT_FIELDS = "this";
 
     private final Client client;

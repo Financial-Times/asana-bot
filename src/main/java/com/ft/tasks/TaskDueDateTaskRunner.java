@@ -10,10 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +18,7 @@ import java.util.regex.Pattern;
 public class TaskDueDateTaskRunner implements TaskRunner {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("(.+)\\|(.*)");
+    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("(.+):(.*)");
     private static final Logger logger = LoggerFactory.getLogger(TaskDueDateTaskRunner.class);
 
     @Override
@@ -34,9 +32,10 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                 Map<String, Object> taskData = new HashMap<>();
                 while (matcher.find()) {
                     final String taskName = matcher.group(1);
-                    final String taskDueDate = parseDueDate(matcher.group(2));
+                    final String taskDueDate = matcher.group(2);
+                    final String dueDateField = TIMESTAMP_PATTERN.matcher(taskDueDate).matches() ? "due_at" : "due_on";
                     taskData.put("name", taskName);
-                    taskData.put("due_on", taskDueDate);
+                    taskData.put(dueDateField, parseDueDate(taskDueDate));
                     try {
                         client.updateTask(task, taskData);
                         logger.info("Successfully updated task: {} due date to {}.", task.id, taskDueDate);
@@ -55,7 +54,10 @@ public class TaskDueDateTaskRunner implements TaskRunner {
     private String parseDueDate(String date) {
         Parser parser = new Parser();
         Date parsedDate = parser.parse(date).get(0).getDates().get(0);
-        return new SimpleDateFormat("yyyy-MM-dd").format(parsedDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return simpleDateFormat.format(parsedDate);
 
     }
 

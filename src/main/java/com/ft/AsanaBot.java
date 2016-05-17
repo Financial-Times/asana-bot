@@ -1,6 +1,8 @@
 package com.ft;
 
+import com.asana.Client;
 import com.ft.asanaapi.AsanaClient;
+import com.ft.asanaapi.AsanaClientWrapper;
 import com.ft.config.Config;
 import com.ft.tasks.TaskRunnerFactory;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,6 +32,12 @@ public class AsanaBot {
     @Bean(name = "graphicsAsanaClient")
     public AsanaClient getGraphicsAsanaClient() {
         return new AsanaClient(System.getenv("ASANA_GRAPHICS_KEY"), config, getHttpClient());
+    }
+
+    @Bean(name = "defaultAsanaClientWrapper")
+    public AsanaClientWrapper getDefaultAsanaClientWrapper() {
+        Client client = Client.accessToken(System.getenv("ASANA_GRAPHICS_KEY"));
+        return new AsanaClientWrapper(client);
     }
 
     @Bean(name = "reportAsanaClient")

@@ -7,7 +7,6 @@ import com.ft.asanaapi.model.UserData;
 import com.ft.backup.model.BackupTasksData;
 import com.ft.backup.model.ProjectsData;
 import com.ft.report.model.ReportTasksData;
-import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -45,9 +44,6 @@ public interface Asana {
     UserData getUserByEmail(
             @Path("workspace-id") String workspaceId,
             @Query("query") String email);
-
-    @GET("/workspaces/{workspace-id}")
-    Response ping(@Path("workspace-id") String workspaceId);
 
     @GET("/projects")
     ProjectsData getMyProjects(

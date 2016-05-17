@@ -12,12 +12,10 @@ import com.ft.report.model.ReportTasksData;
 import com.squareup.okhttp.OkHttpClient;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
-import retrofit.client.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Deprecated //See AsanaClientWrapper
 public class AsanaClient {
     private static final String PROJECT_TASK_OPT_EXPAND = "(this|subtasks+)";
     public static final String ASANA_TASKS_LIMIT = "100";
@@ -36,12 +34,14 @@ public class AsanaClient {
     }
 
 
+    //Can't deprecate this one as there is no /users/{user-id}/teams endpoint in asana-client
     public List<Team> findTeams(String email) {
         User user =  findUserByEmail(email);
         TeamsData teamsData = asana.getUserTeams(config.getWorkspace(), user.getId());
         return teamsData.getData();
     }
 
+    @Deprecated //See AsanaClientWrapper
     public List<ReportTask> findTaskItems(Long projectId, String completedSince) {
         String optionalFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
         ReportTasksData reportTasksData = asana.openProjectTasks(config.getWorkspace(), projectId, completedSince, optionalFields);
@@ -56,15 +56,13 @@ public class AsanaClient {
         return userData.getData().get(0);
     }
 
-    public Response ping() {
-        return asana.ping(config.getWorkspace());
-    }
-
+    @Deprecated //See AsanaClientWrapper
     public List<ProjectInfo> getAllProjects() {
         ProjectsData projectsData = asana.getMyProjects(config.getWorkspace(), "this");
         return projectsData.getData();
     }
 
+    @Deprecated //See AsanaClientWrapper
     public List<BackupTask> getAllTasksByProject(ProjectInfo project) {
         List<BackupTask> tasks = new ArrayList<>();
         BackupTasksData data = asana.getAllTasksByProject(project.getId(), PROJECT_TASK_OPT_EXPAND, ASANA_TASKS_LIMIT, null);

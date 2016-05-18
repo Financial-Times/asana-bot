@@ -1,5 +1,6 @@
 package com.ft.report
 
+import com.ft.asanaapi.AsanaClientWrapper
 import com.ft.asanaapi.model.Tag
 import com.ft.report.date.DueDatePredicateFactory
 import com.ft.report.model.*
@@ -15,12 +16,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
+    protected static final String BASIC_AUTH_HEADER = "Bearer "
+
     private static final Long TEST_COMPANIES_PROJECT_ID = 12345L
     private static final Long TEST_WORLD_PROJECT_ID = 23456L
     private static final Long TEST_LEX_PROJECT_ID = 9876L
     private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
-    private static final String encodedOptFields = "name%2Ctags.name%2Cdue_on%2Cnotes%2Ccompleted%2Csubtasks.name%2Csubtasks.completed"
-    private static final String decodedOptFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
+    private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
 
     private static final LocalDateTime FRIDAY_EVENING = LocalDateTime.of(2015, Month.JUNE, 12, 15, 0)
     private static final ZoneId zoneId = ZoneId.systemDefault()
@@ -29,9 +31,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     @Autowired ReportGenerator generator
     @Autowired DueDatePredicateFactory dueDatePredicateFactory
+    @Autowired AsanaClientWrapper defaultAsanaClientWrapper
 
     void setup() {
         dueDatePredicateFactory.clock = Clock.fixed(FRIDAY_EVENING.atZone(zoneId).toInstant(), zoneId)
+        defaultAsanaClientWrapper.client.options['base_url'] = 'http://localhost:8888/api/1.0'
     }
 
     void "generate report with premium tags and grouping, e.g. companies sunday for monday report"() {
@@ -125,6 +129,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createFinservTasks() {
         ReportTask reportTask = new ReportTask()
+        reportTask.id = '37354116382321'
         reportTask.name = "Finserv task 1"
         reportTask.notes = "some notes"
         reportTask.completed = false
@@ -133,6 +138,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask.tags = [new Tag(id: 33751312101034, name: "Asia")]
 
         ReportTask importantReportTask = new ReportTask()
+        importantReportTask.id = '37354116382323'
         importantReportTask.name = "Finserv task 2"
         importantReportTask.notes = "some notes"
         importantReportTask.completed = false
@@ -145,12 +151,16 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createNotTaggedTask() {
         ReportTask reportTask1 = new ReportTask()
+        reportTask1.id = "37409461720410"
         reportTask1.name = "Test task 1"
         reportTask1.notes = ""
         reportTask1.completed = false
         reportTask1.due_on = "2015-06-14"
         reportTask1.tags = []
-        reportTask1.subtasks = [new ReportTask(name: "pictures for test task 1", completed: true), new ReportTask(name: "graphics for test task 1", completed: false)]
+        reportTask1.subtasks = [
+                new ReportTask(id: '37409461720415', name: "pictures for test task 1", completed: true),
+                new ReportTask(id: '37409461720418', name: "graphics for test task 1", completed: false)
+        ]
 
         return [reportTask1] as List<ReportTask>
     }
@@ -240,6 +250,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createOtherTask() {
         ReportTask reportTask2 = new ReportTask()
+        reportTask2.id = 37354116382322
         reportTask2.name = "Other task 1"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
@@ -251,12 +262,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     }
 
     private stubGetTasks(String desk, Long projectId) {
-        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/tasks"))
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/$projectId/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("workspace", equalTo(testWorkspaceId))
-                .withQueryParam("project", equalTo(projectId.toString()))
                 .withQueryParam("completed_since", equalTo("now"))
-                .withQueryParam("opt_fields", equalTo(encodedOptFields))
+                .withQueryParam("workspace", equalTo(testWorkspaceId))
+                .withQueryParam("opt_fields", equalTo(optFields))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
@@ -264,12 +274,12 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     }
 
     private boolean verifyGetTasks(Long projectId) {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/tasks\\?.*"))
+        wireMockRule.verify(1, getRequestedFor(urlMatching(".*/projects/$projectId/tasks\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("workspace", equalTo(testWorkspaceId))
-                .withQueryParam("project", equalTo(projectId.toString()))
                 .withQueryParam("completed_since", equalTo("now"))
-                .withQueryParam("opt_fields", matching(decodedOptFields)))
+                .withQueryParam("workspace", equalTo(testWorkspaceId))
+                .withQueryParam("opt_fields", matching(optFields))
+        )
         return true
     }
 }

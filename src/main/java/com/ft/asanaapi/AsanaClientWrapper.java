@@ -5,6 +5,8 @@ import com.asana.models.Project;
 import com.asana.models.Tag;
 import com.asana.models.Task;
 import com.asana.models.Workspace;
+import com.ft.asanaapi.model.ReportTasks;
+import com.ft.report.model.ReportTask;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,12 +15,18 @@ import java.util.Optional;
 
 public class AsanaClientWrapper {
     private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
+    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
     private static final String PROJECT_FIELDS = "this";
 
     private final Client client;
+    private final ReportTasks extendedTasks;
+    private final String workspaceId; //TODO refactor all methods not to use workspaceId
 
-    public AsanaClientWrapper(Client client) {
+    public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
+        this.extendedTasks = new ReportTasks(client);
+        this.workspaceId = workspaceId;
+
     }
 
     public List<Task> getTasks(String workspaceId) throws IOException {
@@ -90,5 +98,13 @@ public class AsanaClientWrapper {
 
     public Workspace getWorkspace(String workspace) throws IOException  {
         return client.workspaces.findById(workspace).execute();
+    }
+
+    public List<ReportTask> getReportTasks(String projectId) throws IOException  {
+        return extendedTasks.findByProject(projectId)
+                .query("workspace", workspaceId)
+                .query("completed_since", "now")
+                .query("opt_fields", REPORT_TASK_FIELDS)
+                .execute();
     }
 }

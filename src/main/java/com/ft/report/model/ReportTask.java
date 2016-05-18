@@ -1,8 +1,9 @@
 package com.ft.report.model;
 
-import com.ft.asanaapi.model.AsanaEntity;
 import com.ft.asanaapi.model.Tag;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import java.util.Comparator;
@@ -10,15 +11,17 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
-public class ReportTask extends AsanaEntity {
-    private String notes;
-    private String due_on;
-    private boolean completed = false;
-    private List<Tag> tags;
-    private List<ReportTask> subtasks;
-    private boolean important = false;
+@EqualsAndHashCode
+@ToString
+public class ReportTask {
+    private String id;
+    private String name;
+    public String notes;
+    public String due_on;
+    public boolean completed = false;
+    public List<Tag> tags;
+    public List<ReportTask> subtasks;
+    public boolean important = false;
 
     public ReportTask() {}
 

@@ -37,7 +37,7 @@ public class AsanaBot {
     @Bean(name = "defaultAsanaClientWrapper")
     public AsanaClientWrapper getDefaultAsanaClientWrapper() {
         Client client = Client.accessToken(System.getenv("ASANA_GRAPHICS_KEY"));
-        return new AsanaClientWrapper(client);
+        return new AsanaClientWrapper(client, config.getWorkspace());
     }
 
     @Bean(name = "reportAsanaClient")

@@ -20,7 +20,7 @@ public class AsanaClientWrapper {
 
     private final Client client;
     private final ReportTasks extendedTasks;
-    private final String workspaceId; //TODO refactor all methods not to use workspaceId
+    private final String workspaceId;
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
@@ -29,7 +29,7 @@ public class AsanaClientWrapper {
 
     }
 
-    public List<Task> getTasks(String workspaceId) throws IOException {
+    public List<Task> getTasks() throws IOException {
         return client.tasks.findAll()
                 .query("assignee", "me")
                 .query("workspace", workspaceId)
@@ -65,7 +65,7 @@ public class AsanaClientWrapper {
         return client.tasks.update(task.id).data("assignee", "null").execute();
     }
 
-    public Optional<Tag> findTagsByWorkspace(String workspaceId) throws IOException {
+    public Optional<Tag> findTagsByWorkspace() throws IOException {
         List<Workspace> tags = client.workspaces.typeahead(workspaceId)
                 .query("query", "Big")
                 .query("type", "tag")
@@ -83,7 +83,7 @@ public class AsanaClientWrapper {
         return tag;
     }
 
-    public Tag createTag(String workspaceId, String name) throws IOException {
+    public Tag createTag(String name) throws IOException {
         return client.tags.createInWorkspace(workspaceId).data("name", name).execute();
     }
 
@@ -91,13 +91,13 @@ public class AsanaClientWrapper {
         return client.tasks.addComment(task.id).data("text", comment).execute();
     }
 
-    public List<Project> getAllProjects(String workspaceId) throws IOException {
+    public List<Project> getAllProjects() throws IOException {
         return client.projects.findByWorkspace(workspaceId)
                 .query("opt_expand", PROJECT_FIELDS).execute();
     }
 
-    public Workspace getWorkspace(String workspace) throws IOException  {
-        return client.workspaces.findById(workspace).execute();
+    public Workspace getWorkspace() throws IOException  {
+        return client.workspaces.findById(workspaceId).execute();
     }
 
     public List<ReportTask> getReportTasks(String projectId) throws IOException  {

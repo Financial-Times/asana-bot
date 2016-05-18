@@ -27,7 +27,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
 
         AsanaClientWrapper client = taskBot.getClient();
         try {
-            List<Task> tasks = client.getTasks(taskBot.getWorkspaceId());
+            List<Task> tasks = client.getTasks();
             Project newProject = client.getProject(taskBot.getProjectId());
 
             for (Task task: tasks) {
@@ -74,14 +74,14 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
     private Tag findOrCreateTagByName(Team team, TaskBot taskBot) throws IOException {
         String tagName = mapTeamToTag(team, taskBot);
         AsanaClientWrapper client = taskBot.getClient();
-        Optional<Tag> tagOptional = client.findTagsByWorkspace(taskBot.getWorkspaceId());
+        Optional<Tag> tagOptional = client.findTagsByWorkspace();
         if (tagOptional.isPresent()) {
             Tag existingTag = tagOptional.get();
             if (tagName.equals(existingTag.name)) {
                 return existingTag;
             }
         }
-        return client.createTag(taskBot.getWorkspaceId(), tagName);
+        return client.createTag(tagName);
     }
 
     private String mapTeamToTag(Team team, TaskBot taskBot) {

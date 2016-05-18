@@ -52,7 +52,7 @@ public class CheckForChangesTaskRunner implements TaskRunner {
 
     private List<ProjectChange> getChanges(TaskBot taskBot) throws IOException {
         List<ProjectChange> projectChanges = new ArrayList<>();
-        List<Project> currentProjects = taskBot.getClient().getAllProjects(taskBot.getWorkspaceId());
+        List<Project> currentProjects = taskBot.getClient().getAllProjects();
         deskConfig.getDesks().forEach((teamName, desk) -> {
             desk.getProjects().forEach((projectSummary) -> {
                 Optional<Project> currentProjectCandidate = findMatchingProject(currentProjects, projectSummary.getId().toString());

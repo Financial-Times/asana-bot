@@ -29,11 +29,6 @@ public class AsanaBot {
         return httpClient;
     }
 
-    @Bean(name = "graphicsAsanaClient")
-    public AsanaClient getGraphicsAsanaClient() {
-        return new AsanaClient(System.getenv("ASANA_GRAPHICS_KEY"), config, getHttpClient());
-    }
-
     @Bean(name = "defaultAsanaClientWrapper")
     public AsanaClientWrapper getDefaultAsanaClientWrapper() {
         Client client = Client.accessToken(System.getenv("ASANA_GRAPHICS_KEY"));

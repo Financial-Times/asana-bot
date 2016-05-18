@@ -1,7 +1,8 @@
 package com.ft.asanaapi.auth
 
-import com.ft.asanaapi.AsanaClient
-import com.ft.asanaapi.model.Team
+import com.asana.models.Team
+import com.asana.models.User
+import com.ft.asanaapi.AsanaClientWrapper
 import com.ft.config.Config
 import org.junit.Rule
 import org.springframework.boot.test.OutputCapture
@@ -9,22 +10,19 @@ import spock.lang.Specification
 
 class TeamValidatorSpec extends Specification {
 
-    public static final String TEST_EMAIL = 'test@example.com'
+    private static final String TEST_EMAIL = 'test@example.com'
+    private static final User USER = new User(id: '2643', name: 'test user')
+    private static final Optional<User> OPTIONAL_USER = Optional.of(USER)
     private TeamValidator validator
-    private AsanaClient mockGraphicsAsanaClient
+    private AsanaClientWrapper mockAsanaClientWrapper
     private Config mockConfig
 
     @Rule OutputCapture capture = new OutputCapture()
 
     void setup() {
-        validator = new TeamValidator()
-
-        mockGraphicsAsanaClient = Mock(AsanaClient)
-        validator.graphicsAsanaClient = mockGraphicsAsanaClient
-
+        mockAsanaClientWrapper = Mock(AsanaClientWrapper)
         mockConfig = Mock(Config)
-        validator.config = mockConfig
-
+        validator = new TeamValidator(mockAsanaClientWrapper, mockConfig)
         capture.flush()
     }
 
@@ -38,7 +36,8 @@ class TeamValidatorSpec extends Specification {
             List<String> authorizedTeams = validator.validate(TEST_EMAIL)
 
         then:
-            1 * mockGraphicsAsanaClient.findTeams(TEST_EMAIL) >> teams
+            1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
+            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> teams
             1 * mockConfig.getAuthorizedTeams() >> configuredAuthorizedTeams
             0 * _
         and:
@@ -50,7 +49,8 @@ class TeamValidatorSpec extends Specification {
             List<String> authorizedTeams = validator.validate(TEST_EMAIL)
 
         then:
-            1 * mockGraphicsAsanaClient.findTeams(TEST_EMAIL) >> []
+            1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
+            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> []
             0 * _
         and:
             authorizedTeams == []
@@ -68,7 +68,8 @@ class TeamValidatorSpec extends Specification {
             List<String> authorizedTeams = validator.validate(TEST_EMAIL)
 
         then:
-            1 * mockGraphicsAsanaClient.findTeams(TEST_EMAIL) >> userTeams
+            1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
+            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> userTeams
             1 * mockConfig.getAuthorizedTeams() >> configuredAuthorizedTeams
             0 * _
         and:

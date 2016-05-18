@@ -71,7 +71,7 @@ class AsanaBotServiceSpec extends Specification {
             1 * mockClient.getTasks() >> tasks
             1 * mockClient.getProject('11223344') >> project
             1 * mockClient.addTaskToProject(subtask, project)
-            1 * mockClient.findTagsByWorkspace() >> []
+            1 * mockClient.findTagsByWorkspace(team.name) >> []
             1 * mockClient.createTag('test team') >> tag
             1 * mockClient.tagTask(subtask, tag)
             1 * mockClient.commentTask(task, comment)

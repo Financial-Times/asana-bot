@@ -74,7 +74,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
     private Tag findOrCreateTagByName(Team team, TaskBot taskBot) throws IOException {
         String tagName = mapTeamToTag(team, taskBot);
         AsanaClientWrapper client = taskBot.getClient();
-        Optional<Tag> tagOptional = client.findTagsByWorkspace();
+        Optional<Tag> tagOptional = client.findTagsByWorkspace(tagName);
         if (tagOptional.isPresent()) {
             Tag existingTag = tagOptional.get();
             if (tagName.equals(existingTag.name)) {

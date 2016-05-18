@@ -1,11 +1,9 @@
 package com.ft.asanaapi;
 
 import com.asana.Client;
-import com.asana.models.Project;
-import com.asana.models.Tag;
-import com.asana.models.Task;
-import com.asana.models.Workspace;
+import com.asana.models.*;
 import com.ft.asanaapi.model.ReportTasks;
+import com.ft.asanaapi.model.UserTeams;
 import com.ft.report.model.ReportTask;
 
 import java.io.IOException;
@@ -20,11 +18,13 @@ public class AsanaClientWrapper {
 
     private final Client client;
     private final ReportTasks extendedTasks;
+    private final UserTeams userTeams;
     private final String workspaceId;
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
         this.extendedTasks = new ReportTasks(client);
+        this.userTeams = new UserTeams(client);
         this.workspaceId = workspaceId;
 
     }
@@ -65,13 +65,14 @@ public class AsanaClientWrapper {
         return client.tasks.update(task.id).data("assignee", "null").execute();
     }
 
-    public Optional<Tag> findTagsByWorkspace() throws IOException {
+    public Optional<Tag> findTagsByWorkspace(String tagName) throws IOException {
         List<Workspace> tags = client.workspaces.typeahead(workspaceId)
-                .query("query", "Big")
+                .query("query", tagName)
                 .query("type", "tag")
                 .execute();
         return tags.stream().map(this::toTag).findFirst();
     }
+
     public void updateTask(Task task, Map<String, Object> data) throws IOException {
         client.tasks.update(task.id).data(data).execute();
     }
@@ -106,5 +107,26 @@ public class AsanaClientWrapper {
                 .query("completed_since", "now")
                 .query("opt_fields", REPORT_TASK_FIELDS)
                 .execute();
+    }
+
+    public List<Team> getUserTeams(String userId) throws IOException  {
+        return userTeams.findByUser(userId)
+                .query("workspace", workspaceId)
+                .execute();
+    }
+
+    public Optional<User> findUsersByWorkspace(String email) throws IOException {
+        List<Workspace> users = client.workspaces.typeahead(workspaceId)
+                .query("query", email)
+                .query("type", "user")
+                .execute();
+        return users.stream().map(this::toUser).findFirst();
+    }
+
+    private User toUser(Workspace workspace) {
+        User user = new User();
+        user.id = workspace.id;
+        user.name = workspace.name;
+        return user;
     }
 }

@@ -1,7 +1,7 @@
 package com.ft.boot;
 
 import com.asana.errors.AsanaError;
-import com.ft.services.AsanaService;
+import com.ft.asanaapi.AsanaClientWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -12,17 +12,17 @@ import java.io.IOException;
 @Component
 public class AsanaHealthIndicator implements HealthIndicator {
 
-    private AsanaService asanaService;
+    private AsanaClientWrapper asanaClientWrapper;
 
     @Autowired
-    public AsanaHealthIndicator(AsanaService asanaService) {
-        this.asanaService = asanaService;
+    public AsanaHealthIndicator(AsanaClientWrapper defaultAsanaClientWrapper) {
+        this.asanaClientWrapper = defaultAsanaClientWrapper;
     }
 
     @Override
     public Health health() {
         try {
-            asanaService.ping();
+            asanaClientWrapper.getWorkspace();
         } catch(IOException error) {
             if (error instanceof AsanaError) {
                 return buildDownHealth( ((AsanaError)error).status, error.getMessage());

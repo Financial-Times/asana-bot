@@ -1,7 +1,7 @@
 package com.ft.boot
 
 import com.asana.errors.AsanaError
-import com.ft.services.AsanaService
+import com.ft.asanaapi.AsanaClientWrapper
 import com.google.api.client.http.HttpResponseException
 import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.Status
@@ -11,11 +11,11 @@ import spock.lang.Unroll
 class AsanaHealthIndicatorSpec extends Specification {
 
     private AsanaHealthIndicator asanaHealthIndicator
-    private AsanaService mockAsanaService
+    private AsanaClientWrapper mockAsanaClientWrapper
 
     void setup() {
-        mockAsanaService = Mock(AsanaService)
-        asanaHealthIndicator = new AsanaHealthIndicator(mockAsanaService)
+        mockAsanaClientWrapper = Mock(AsanaClientWrapper)
+        asanaHealthIndicator = new AsanaHealthIndicator(mockAsanaClientWrapper)
     }
 
     void "health - ok"() {
@@ -23,7 +23,7 @@ class AsanaHealthIndicatorSpec extends Specification {
             Health health = asanaHealthIndicator.health()
 
         then:
-            1 * mockAsanaService.ping()
+            1 * mockAsanaClientWrapper.getWorkspace()
             0 * _
         and:
             health.status == Status.UP
@@ -35,7 +35,7 @@ class AsanaHealthIndicatorSpec extends Specification {
             Health health = asanaHealthIndicator.health()
 
         then:
-            1 * mockAsanaService.ping() >> { throw exception }
+            1 * mockAsanaClientWrapper.getWorkspace() >> { throw exception }
             0 * _
         and:
             health.status == Status.DOWN

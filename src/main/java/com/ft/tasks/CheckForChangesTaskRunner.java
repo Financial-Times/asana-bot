@@ -53,17 +53,15 @@ public class CheckForChangesTaskRunner implements TaskRunner {
     private List<ProjectChange> getChanges(TaskBot taskBot) throws IOException {
         List<ProjectChange> projectChanges = new ArrayList<>();
         List<Project> currentProjects = taskBot.getClient().getAllProjects();
-        deskConfig.getDesks().forEach((teamName, desk) -> {
-            desk.getProjects().forEach((projectSummary) -> {
-                Optional<Project> currentProjectCandidate = findMatchingProject(currentProjects, projectSummary.getId().toString());
-                Project currentProject = currentProjectCandidate.isPresent() ? currentProjectCandidate.get() : null;
-                Project asanaProject = new Project();
-                asanaProject.id = projectSummary.getId().toString();
-                asanaProject.name = projectSummary.getName();
-                Project previousProject = createReferenceProject(teamName, asanaProject);
-                checkForChanges(projectChanges, previousProject, currentProject);
-            });
-        });
+        deskConfig.getDesks().forEach((teamName, desk) -> desk.getProjects().forEach((projectSummary) -> {
+            Optional<Project> currentProjectCandidate = findMatchingProject(currentProjects, projectSummary.getId().toString());
+            Project currentProject = currentProjectCandidate.isPresent() ? currentProjectCandidate.get() : null;
+            Project asanaProject = new Project();
+            asanaProject.id = projectSummary.getId().toString();
+            asanaProject.name = projectSummary.getName();
+            Project previousProject = createReferenceProject(teamName, asanaProject);
+            checkForChanges(projectChanges, previousProject, currentProject);
+        }));
         return projectChanges;
     }
 

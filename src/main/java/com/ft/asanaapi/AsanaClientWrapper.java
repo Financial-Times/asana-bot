@@ -142,7 +142,7 @@ public class AsanaClientWrapper {
                 .execute();
     }
 
-    public List<BackupTask> findAllTasksByProject(String projectId) throws IOException {
+    public List<BackupTask> findAllTasksByProject(String projectId) {
         List<BackupTask> tasks = new LinkedList<>();
         Iterable<BackupTask> tasksIterable = backupTasks.findByProject(projectId)
                 .query("opt_fields", BACKUP_TASK_FIELDS)

@@ -1,7 +1,7 @@
 package com.ft.report
 
+import com.asana.models.Tag
 import com.ft.asanaapi.AsanaClientWrapper
-import com.ft.asanaapi.model.Tag
 import com.ft.report.date.DueDatePredicateFactory
 import com.ft.report.model.*
 import com.ft.test.IntegrationSpec

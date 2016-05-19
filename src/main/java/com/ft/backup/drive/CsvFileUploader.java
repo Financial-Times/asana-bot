@@ -31,13 +31,12 @@ public class CsvFileUploader {
         this.mediaContent = buildMediaContent(content);
     }
 
-    public File upload() throws IOException{
+    public void upload() throws IOException{
         Drive.Files.Create request = drive.files().create(fileToUpload, mediaContent);
-        File newFile = request.execute();
-        return newFile;
+        request.execute();
     }
 
-    private File buildFile() throws IOException {
+    private File buildFile() {
         return new File()
             .setDescription(name)
             .setMimeType("application/vnd.google-apps.spreadsheet")

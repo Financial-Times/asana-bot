@@ -1,7 +1,7 @@
 package com.ft.report;
 
+import com.asana.models.Tag;
 import com.ft.asanaapi.AsanaClientWrapper;
-import com.ft.asanaapi.model.Tag;
 import com.ft.report.date.DueDatePredicateFactory;
 import com.ft.report.model.*;
 import lombok.Getter;
@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 @ConfigurationProperties(prefix = "report")
 @Component
 public class ReportGenerator {
-    public static final String OTHERS_TAG = "Others";
-    public static final String NOT_TAGGED_TAG = "Not tagged";
+    static final String OTHERS_TAG = "Others";
+    static final String NOT_TAGGED_TAG = "Not tagged";
     private static final Logger logger = LoggerFactory.getLogger(ReportGenerator.class);
 
     @Autowired
@@ -86,13 +86,13 @@ public class ReportGenerator {
         List<String> premiumTags = desks.get(team).getPremiumTags();
         if (premiumTags == null || premiumTags.isEmpty()) {
             Tag firstTag = tags.remove(0);
-            return firstTag.getName();
+            return firstTag.name;
         }
 
-        Optional<Tag> candidate = tags.stream().filter(tag -> premiumTags.contains(tag.getName())).findFirst();
+        Optional<Tag> candidate = tags.stream().filter(tag -> premiumTags.contains(tag.name)).findFirst();
         if (candidate.isPresent()) {
             tags.remove(candidate.get());
-            return candidate.get().getName();
+            return candidate.get().name;
         }
 
         return OTHERS_TAG;

@@ -1,6 +1,6 @@
 package com.ft.report.model;
 
-import com.ft.asanaapi.model.Tag;
+import com.asana.models.Tag;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Data
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = "tags")
+@ToString(exclude = "tags")
 public class ReportTask {
     private String id;
     private String name;
     public String notes;
     public String due_on;
     public boolean completed = false;
-    public List<Tag> tags; //TODO use com.asana.models.Tag
+    public List<Tag> tags;
     public List<ReportTask> subtasks;
     public boolean important = false;
 
@@ -30,7 +30,7 @@ public class ReportTask {
             important = false;
         }
         important =  Stream.of(ImportantTag.values()).map(ImportantTag::getValue)
-                .anyMatch(importantTag -> tags.stream().anyMatch(tag -> tag.getName().equals(importantTag)));
+                .anyMatch(importantTag -> tags.stream().anyMatch(tag -> tag.name.equals(importantTag)));
     }
 
     public String getNotes() {

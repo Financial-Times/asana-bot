@@ -1,9 +1,11 @@
 package com.ft.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+@Profile("scheduling")
 @Component
 public class BotScheduler {
     private static final int ONE_HOUR = 60 * 60_000;

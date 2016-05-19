@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class SlackService {
         this.slackWebHookUrl = slackWebHookUrl;
     }
 
-    private void notifySlack(Map<String, Object> payloadContent) throws IOException {
+    private void notifySlack(Map<String, Object> payloadContent) {
         URI uri = URI.create(slackWebHookUrl);
         restTemplate.postForLocation(uri, payloadContent);
     }

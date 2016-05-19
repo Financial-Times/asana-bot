@@ -1,7 +1,8 @@
+package com.ft.services
+
 import com.asana.models.Project
 import com.asana.models.Team
 import com.ft.monitoring.ProjectChange
-import com.ft.services.SlackService
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 

@@ -1,11 +1,11 @@
 package com.ft.asanaapi.auth
 
+import com.ft.asanaapi.AsanaClientWrapper
 import com.ft.test.IntegrationSpec
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.OutputCapture
 import spock.lang.Unroll
-import java.nio.charset.Charset
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
@@ -19,7 +19,12 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
 
     private static final String testWorkspaceId = "324300775153"
     private static final String TEST_USER_ID = "676767"
-    private static final String BASIC_AUTH_HEADER = "Basic "
+
+    @Autowired AsanaClientWrapper defaultAsanaClientWrapper
+
+    void setup() {
+        defaultAsanaClientWrapper.client.options['base_url'] = 'http://localhost:8888/api/1.0'
+    }
 
     void cleanup() {
         capture.flush()
@@ -29,7 +34,6 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
     void "authorize - success #scenario"() {
         given:
             String TEST_EMAIL = "test@ftqa.com"
-            String ENCODED_TEST_EMAIL = encodeEmail(TEST_EMAIL)
             String responseFileSuffix = 'success'
 
             Map authenticationDetails = [
@@ -37,7 +41,7 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
                     hd   : 'ftqa.com'
             ]
         and:
-            stubGetUserByEmail(ENCODED_TEST_EMAIL, responseFileSuffix)
+            stubGetUserByEmail(TEST_EMAIL, responseFileSuffix)
             stubGetUserTeams(TEST_USER_ID, userTeamsFile)
             defaultUnmatchedRequest()
 
@@ -70,7 +74,7 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
                     hd   : hostDomain
             ]
         and:
-            stubGetUserByEmail(encodeEmail(email), userFile)
+            stubGetUserByEmail(email, userFile)
             stubGetUserTeams(TEST_USER_ID, 'success')
             defaultUnmatchedRequest()
 
@@ -98,15 +102,11 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
 
     }
 
-    private static String encodeEmail(String email) {
-        URLEncoder.encode(email, Charset.defaultCharset().toString())
-    }
-
     private stubGetUserByEmail(String email, String responseFile) {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/workspaces/" + testWorkspaceId + "/typeahead\\?.*")).atPriority(1)
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/workspaces/" + testWorkspaceId + "/typeahead")).atPriority(1)
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("query", equalTo(email))
                 .withQueryParam("type", equalTo("user"))
-                .withQueryParam("query", matching(email))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -114,7 +114,7 @@ class AuthorizationServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private stubGetUserTeams(String userId, String responseFile) {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/users/" + userId + "/teams\\?.*")).atPriority(1)
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/users/" + userId + "/teams")).atPriority(1)
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("organization", matching(".*"))
                 .willReturn(aResponse()

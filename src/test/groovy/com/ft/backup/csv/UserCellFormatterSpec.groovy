@@ -1,33 +1,27 @@
 package com.ft.backup.csv
 
-import com.ft.asanaapi.model.Tag
+import com.asana.models.User
 import org.supercsv.exception.SuperCsvCellProcessorException
 import org.supercsv.util.CsvContext
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class EntitiesCellFormatterSpec extends Specification {
-
+class UserCellFormatterSpec extends Specification {
     private static final CsvContext TEST_CONTEXT = new CsvContext(1, 1, 1)
 
-    private EntitiesCellFormatter formatter
+    private UserCellFormatter formatter
 
     void setup() {
-        formatter = new EntitiesCellFormatter()
+        formatter = new UserCellFormatter()
     }
 
     void "execute - success"() {
         given:
-            String tag1Name = 'test project 1'
-            Tag tag1 = new Tag(id: 1, name: tag1Name)
-            String tag2Name = 'test project 2'
-            Tag tag2 = new Tag(id: 2, name: tag2Name)
-            List<Tag> tags = [tag1, tag2]
-        and:
-            String expectedResult = "${tag1Name}, ${tag2Name}"
+            String expectedResult = 'test task'
+            User value = new User(id: 1, name: expectedResult)
 
         expect:
-            expectedResult == formatter.execute(tags, TEST_CONTEXT)
+            expectedResult == formatter.execute(value, TEST_CONTEXT)
     }
 
     @Unroll
@@ -43,6 +37,6 @@ class EntitiesCellFormatterSpec extends Specification {
         where:
             scenario             | value   | message
             'null value'         | null    | 'this processor does not accept null input - if the column is optional then chain an Optional() processor before this one'
-            'incompatible value' | 'dummy' | 'the input value should be of type java.util.List but is java.lang.String'
+            'incompatible value' | 'dummy' | 'the input value should be of type com.asana.models.User but is java.lang.String'
     }
 }

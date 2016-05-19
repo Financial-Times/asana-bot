@@ -12,7 +12,6 @@ import com.ft.services.SlackService
 import spock.lang.Specification
 
 class CheckForChangesTaskRunnerSpec extends Specification {
-    private static final String TEST_WORKSPACE_ID = '111'
     private CheckForChangesTaskRunner changesTaskRunner
     private SlackService mockSlackService
     private DeskConfig deskConfig
@@ -37,8 +36,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             changesTaskRunner.run(mockTaskBot)
         then:
             1 * mockTaskBot.client >> mockClient
-            1 * mockTaskBot.workspaceId >> TEST_WORKSPACE_ID
-            1 * mockClient.getAllProjects(TEST_WORKSPACE_ID) >> [asanaProject]
+            1 * mockClient.getAllProjects() >> [asanaProject]
             0 * _
     }
 
@@ -60,8 +58,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             changesTaskRunner.run(mockTaskBot)
         then:
             1 * mockTaskBot.client >> mockClient
-            1 * mockTaskBot.workspaceId >> TEST_WORKSPACE_ID
-            1 * mockClient.getAllProjects(TEST_WORKSPACE_ID) >> [newProject]
+            1 * mockClient.getAllProjects() >> [newProject]
             1 * mockSlackService.notifyProjectChange(changes)
             0 * _
     }
@@ -84,8 +81,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             changesTaskRunner.run(mockTaskBot)
         then:
             1 * mockTaskBot.client >> mockClient
-            1 * mockTaskBot.workspaceId >> TEST_WORKSPACE_ID
-            1 * mockClient.getAllProjects(TEST_WORKSPACE_ID) >> [newProject]
+            1 * mockClient.getAllProjects() >> [newProject]
             1 * mockSlackService.notifyProjectChange(changes)
             0 * _
     }
@@ -109,8 +105,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             changesTaskRunner.run(mockTaskBot)
         then:
             1 * mockTaskBot.client >> mockClient
-            1 * mockTaskBot.workspaceId >> TEST_WORKSPACE_ID
-            1 * mockClient.getAllProjects(TEST_WORKSPACE_ID) >> [newProject]
+            1 * mockClient.getAllProjects() >> [newProject]
             1 * mockSlackService.notifyProjectChange(changes)
             0 * _
     }
@@ -132,8 +127,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             changesTaskRunner.run(mockTaskBot)
         then:
             1 * mockTaskBot.client >> mockClient
-            1 * mockTaskBot.workspaceId >> TEST_WORKSPACE_ID
-            1 * mockClient.getAllProjects(TEST_WORKSPACE_ID) >> []
+            1 * mockClient.getAllProjects() >> []
             1 * mockSlackService.notifyProjectChange(changes)
             0 * _
     }

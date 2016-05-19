@@ -1,12 +1,12 @@
 package com.ft.backup.csv;
 
-import com.ft.asanaapi.model.AsanaEntity;
+import com.ft.backup.model.BackupTask;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
-public class EntityCellFormatter extends CellProcessorAdaptor implements StringCellProcessor {
+public class BackupTaskCellFormater extends CellProcessorAdaptor implements StringCellProcessor {
 
     @SuppressWarnings("unchecked")
     @Override
@@ -19,13 +19,13 @@ public class EntityCellFormatter extends CellProcessorAdaptor implements StringC
     }
 
     private String formatValue(Object value) {
-        AsanaEntity asanaEntity = (AsanaEntity) value;
-        return asanaEntity.getName();
+        BackupTask backupTask = (BackupTask) value;
+        return backupTask.getName();
     }
 
     private void validateInputClass(Object value, CsvContext context) {
-        if (!(value instanceof AsanaEntity)) {
-            throw new SuperCsvCellProcessorException(AsanaEntity.class, value, context, this);
+        if (!(value instanceof BackupTask)) {
+            throw new SuperCsvCellProcessorException(BackupTask.class, value, context, this);
         }
     }
 }

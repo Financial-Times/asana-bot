@@ -17,7 +17,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 class IntegrationSpec extends Specification {
 
     protected static final String testWorkspaceId = "324300775153"
-    protected static final String BASIC_AUTH_HEADER = "Basic "
+    protected static final String BASIC_AUTH_HEADER = "Bearer "
     protected static final String APPLICATION_JSON_CONTENT_TYPE = "application/json"
 
     @Rule

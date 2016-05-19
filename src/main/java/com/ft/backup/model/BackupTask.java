@@ -1,8 +1,8 @@
 package com.ft.backup.model;
 
-import com.ft.asanaapi.model.Tag;
-import com.ft.asanaapi.model.Task;
-import com.ft.asanaapi.model.User;
+import com.asana.models.Project;
+import com.asana.models.Tag;
+import com.asana.models.User;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,10 +11,12 @@ import lombok.ToString;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class BackupTask extends Task {
+@EqualsAndHashCode
+@ToString
+public class BackupTask {
 
+    private String id;
+    private String name;
     @SerializedName("created_at")
     private String createdAt;
     @SerializedName("modified_at")
@@ -27,4 +29,7 @@ public class BackupTask extends Task {
     private String dueOn;
     private List<Tag> tags;
     private String notes;
+
+    private BackupTask parent;
+    private List<Project> projects;
 }

@@ -1,6 +1,7 @@
+package com.ft.services
+
 import com.ft.config.Config
 import com.ft.report.model.Report
-import com.ft.services.EmailService
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver
 import org.thymeleaf.templateresolver.TemplateResolver

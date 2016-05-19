@@ -1,44 +1,38 @@
 package com.ft.report;
 
-import com.ft.asanaapi.model.Tag;
+import com.asana.models.Tag;
+import com.ft.asanaapi.AsanaClientWrapper;
 import com.ft.report.date.DueDatePredicateFactory;
 import com.ft.report.model.*;
-import com.ft.services.AsanaService;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.time.Clock;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ConfigurationProperties(prefix = "report")
 @Component
 public class ReportGenerator {
-    public static final String OTHERS_TAG = "Others";
-    public static final String NOT_TAGGED_TAG = "Not tagged";
-
-    private static final String COMPLETED_SINCE_NOW = "now"; //For Asana it means not completed
+    static final String OTHERS_TAG = "Others";
+    static final String NOT_TAGGED_TAG = "Not tagged";
+    private static final Logger logger = LoggerFactory.getLogger(ReportGenerator.class);
 
     @Autowired
-    private AsanaService asanaService;
+    private AsanaClientWrapper defaultAsanaClientWrapper;
     @Autowired
     private DueDatePredicateFactory dueDatePredicateFactory;
     @Autowired
     private ReportSorter reportSorter;
 
-    @Setter
-    @Getter
+    @Setter @Getter
     private Map<String, Desk> desks;
-    @Setter
-    private Clock clock = Clock.systemUTC();
-
 
     public List<Report> generate(Criteria criteria) {
 
@@ -56,7 +50,13 @@ public class ReportGenerator {
         report.setProject(project);
         report.setGroupByTags(shouldGroupByTags(teamName));
 
-        List<ReportTask> reportTasks = asanaService.findTasks(project.getId(), COMPLETED_SINCE_NOW);
+        List<ReportTask> reportTasks;
+        try {
+            reportTasks = defaultAsanaClientWrapper.getReportTasks(project.getId().toString());
+        } catch (IOException e) {
+            logger.warn("Could not fetch report tasks for project: " + project.getId(), e);
+            reportTasks = Collections.emptyList();
+        }
         Stream<ReportTask> reportTaskStream = reportTasks.stream()
                 .filter(rt -> rt.getDue_on() != null)
                 .filter(dueDatePredicateFactory.create(reportType));
@@ -86,13 +86,13 @@ public class ReportGenerator {
         List<String> premiumTags = desks.get(team).getPremiumTags();
         if (premiumTags == null || premiumTags.isEmpty()) {
             Tag firstTag = tags.remove(0);
-            return firstTag.getName();
+            return firstTag.name;
         }
 
-        Optional<Tag> candidate = tags.stream().filter(tag -> premiumTags.contains(tag.getName())).findFirst();
+        Optional<Tag> candidate = tags.stream().filter(tag -> premiumTags.contains(tag.name)).findFirst();
         if (candidate.isPresent()) {
             tags.remove(candidate.get());
-            return candidate.get().getName();
+            return candidate.get().name;
         }
 
         return OTHERS_TAG;

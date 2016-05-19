@@ -1,27 +1,41 @@
 package com.ft.asanaapi;
 
 import com.asana.Client;
-import com.asana.models.Project;
-import com.asana.models.Tag;
-import com.asana.models.Task;
-import com.asana.models.Workspace;
+import com.asana.models.*;
+import com.ft.asanaapi.model.BackupTasks;
+import com.ft.asanaapi.model.ReportTasks;
+import com.ft.asanaapi.model.UserTeams;
+import com.ft.backup.model.BackupTask;
+import com.ft.report.model.ReportTask;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class AsanaClientWrapper {
     private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
+    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
+    private static final String BACKUP_TASK_FIELDS = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
 
     private final Client client;
+    private final ReportTasks extendedTasks;
+    private final UserTeams userTeams;
+    private final BackupTasks backupTasks;
+    private final String workspaceId;
 
-    public AsanaClientWrapper(Client client) {
+    public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
+        this.extendedTasks = new ReportTasks(client);
+        this.userTeams = new UserTeams(client);
+        this.backupTasks = new BackupTasks(client);
+        this.workspaceId = workspaceId;
+
     }
 
-    public List<Task> getTasks(String workspaceId) throws IOException {
+    public List<Task> getTasks() throws IOException {
         return client.tasks.findAll()
                 .query("assignee", "me")
                 .query("workspace", workspaceId)
@@ -57,13 +71,14 @@ public class AsanaClientWrapper {
         return client.tasks.update(task.id).data("assignee", "null").execute();
     }
 
-    public Optional<Tag> findTagsByWorkspace(String workspaceId) throws IOException {
+    public Optional<Tag> findTagsByWorkspace(String tagName) throws IOException {
         List<Workspace> tags = client.workspaces.typeahead(workspaceId)
-                .query("query", "Big")
+                .query("query", tagName)
                 .query("type", "tag")
                 .execute();
         return tags.stream().map(this::toTag).findFirst();
     }
+
     public void updateTask(Task task, Map<String, Object> data) throws IOException {
         client.tasks.update(task.id).data(data).execute();
     }
@@ -75,7 +90,7 @@ public class AsanaClientWrapper {
         return tag;
     }
 
-    public Tag createTag(String workspaceId, String name) throws IOException {
+    public Tag createTag(String name) throws IOException {
         return client.tags.createInWorkspace(workspaceId).data("name", name).execute();
     }
 
@@ -83,8 +98,59 @@ public class AsanaClientWrapper {
         return client.tasks.addComment(task.id).data("text", comment).execute();
     }
 
-    public List<Project> getAllProjects(String workspaceId) throws IOException {
+    public List<Project> getAllProjects() throws IOException {
         return client.projects.findByWorkspace(workspaceId)
                 .query("opt_expand", PROJECT_FIELDS).execute();
+    }
+
+    public Workspace getWorkspace() throws IOException  {
+        return client.workspaces.findById(workspaceId).execute();
+    }
+
+    public List<ReportTask> getReportTasks(String projectId) throws IOException  {
+        return extendedTasks.findByProject(projectId)
+                .query("workspace", workspaceId)
+                .query("completed_since", "now")
+                .query("opt_fields", REPORT_TASK_FIELDS)
+                .execute();
+    }
+
+    public List<Team> getUserTeams(String userId) throws IOException  {
+        return userTeams.findByUser(userId)
+                .query("organization", workspaceId)
+                .execute();
+    }
+
+    public Optional<User> findUsersByWorkspace(String email) throws IOException {
+        List<Workspace> users = client.workspaces.typeahead(workspaceId)
+                .query("query", email)
+                .query("type", "user")
+                .execute();
+        return users.stream().map(this::toUser).findFirst();
+    }
+
+    private User toUser(Workspace workspace) {
+        User user = new User();
+        user.id = workspace.id;
+        user.name = workspace.name;
+        return user;
+    }
+
+    public List<Project> findProjectsByWorkspace() throws IOException {
+        return client.projects.findByWorkspace(workspaceId)
+                .query("opt_expand", "this")
+                .execute();
+    }
+
+    public List<BackupTask> findAllTasksByProject(String projectId) {
+        List<BackupTask> tasks = new LinkedList<>();
+        Iterable<BackupTask> tasksIterable = backupTasks.findByProject(projectId)
+                .query("opt_fields", BACKUP_TASK_FIELDS)
+                .option("page_size", 100);
+        //Redundant for loop is for Asana PageIterator so that it can page results
+        for(BackupTask task: tasksIterable) {
+            tasks.add(task);
+        }
+        return tasks;
     }
 }

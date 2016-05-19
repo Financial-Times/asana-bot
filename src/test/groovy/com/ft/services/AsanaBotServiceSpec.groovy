@@ -26,7 +26,7 @@ class AsanaBotServiceSpec extends Specification {
         mockTaskRunner = Spy(TaskOnProjectTaskRunner)
         mockDueDateTaskRunner = Spy(TaskDueDateTaskRunner)
         mockTaskRunnerFactory = Mock(TaskRunnerFactory);
-        bot = new TaskBot('test name', '11223344', 'dummmy key', mockClient, 'runner', '223344', [:], TWENTY_SECONDS)
+        bot = new TaskBot('test name', '11223344', 'dummmy key', mockClient, 'runner', [:], TWENTY_SECONDS)
         List<TaskBot> bots = [bot]
         config = new Config(bots: bots, workspace: '223344', tags: [:])
         service = new AsanaBotService(config, mockTaskRunnerFactory)
@@ -44,7 +44,7 @@ class AsanaBotServiceSpec extends Specification {
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
         and:
-            1 * mockClient.getTasks('223344') >> tasks
+            1 * mockClient.getTasks() >> tasks
             1 * mockClient.getProject('11223344') >> project
             1 * mockClient.addTaskToProject(task, project)
             1 * mockClient.unassignTask(task)
@@ -68,11 +68,11 @@ class AsanaBotServiceSpec extends Specification {
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
         and:
-            1 * mockClient.getTasks(config.workspace) >> tasks
+            1 * mockClient.getTasks() >> tasks
             1 * mockClient.getProject('11223344') >> project
             1 * mockClient.addTaskToProject(subtask, project)
-            1 * mockClient.findTagsByWorkspace('223344') >> []
-            1 * mockClient.createTag('223344', 'test team') >> tag
+            1 * mockClient.findTagsByWorkspace(team.name) >> []
+            1 * mockClient.createTag('test team') >> tag
             1 * mockClient.tagTask(subtask, tag)
             1 * mockClient.commentTask(task, comment)
             1 * mockClient.unassignTask(subtask)
@@ -95,7 +95,7 @@ class AsanaBotServiceSpec extends Specification {
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockTaskRunner
             1 * mockTaskRunner.run(bot)
         and:
-            1 * mockClient.getTasks(config.workspace) >> tasks
+            1 * mockClient.getTasks() >> tasks
             1 * mockClient.getProject('11223344') >> project
             1 * mockClient.addTaskToProject(task1, project) >> {throw new IOException()}
             1 * mockClient.addTaskToProject(task2, project)

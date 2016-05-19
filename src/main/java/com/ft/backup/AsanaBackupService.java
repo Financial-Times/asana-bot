@@ -1,7 +1,7 @@
 package com.ft.backup;
 
-import com.ft.asanaapi.AsanaClient;
-import com.ft.asanaapi.model.ProjectInfo;
+import com.asana.models.Project;
+import com.ft.asanaapi.AsanaClientWrapper;
 import com.ft.backup.csv.CsvTemplate;
 import com.ft.backup.drive.GoogleDriveService;
 import com.ft.backup.model.BackupTask;
@@ -29,7 +29,7 @@ public class AsanaBackupService {
 
     private static final Logger logger = LoggerFactory.getLogger(AsanaBackupService.class);
 
-    @Autowired private AsanaClient reportAsanaClient;
+    @Autowired private AsanaClientWrapper defaultAsanaClientWrapper;
     @Autowired private CsvTemplate csvTemplate;
     @Autowired private GoogleDriveService googleDriveService;
 
@@ -38,17 +38,17 @@ public class AsanaBackupService {
     @Async
     public void backupAllProjects() throws IOException {
         File folder = googleDriveService.findOrCreateRootFolder();
-        List<ProjectInfo> projectsToBackup = reportAsanaClient.getAllProjects();
+        List<Project> projectsToBackup = defaultAsanaClientWrapper.findProjectsByWorkspace();
         projectsToBackup.stream().forEach(project -> this.backupProject(project, folder));
     }
 
-    private void backupProject(ProjectInfo project, File folder) {
-        List<BackupTask> tasks = reportAsanaClient.getAllTasksByProject(project);
+    private void backupProject(Project project, File folder) {
         try {
+            List<BackupTask> tasks = defaultAsanaClientWrapper.findAllTasksByProject(project.id);
             String csv = toCSV(tasks);
             googleDriveService.uploadProjectFile(project, folder, csv);
         } catch (IOException e) {
-            logger.error("Failed to backup file for project: " + project.getName(), e);
+            logger.error("Failed to backup file for project: " + project.name, e);
         }
     }
 

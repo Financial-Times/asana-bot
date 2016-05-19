@@ -1,6 +1,6 @@
 package com.ft.report.model
 
-import com.ft.asanaapi.model.Tag
+import com.asana.models.Tag
 import spock.lang.Specification
 
 import java.util.stream.Collectors

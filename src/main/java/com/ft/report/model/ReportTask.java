@@ -19,7 +19,7 @@ public class ReportTask {
     public String notes;
     public String due_on;
     public boolean completed = false;
-    public List<Tag> tags;
+    public List<Tag> tags; //TODO use com.asana.models.Tag
     public List<ReportTask> subtasks;
     public boolean important = false;
 

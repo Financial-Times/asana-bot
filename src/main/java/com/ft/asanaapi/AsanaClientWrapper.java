@@ -2,11 +2,14 @@ package com.ft.asanaapi;
 
 import com.asana.Client;
 import com.asana.models.*;
+import com.ft.asanaapi.model.BackupTasks;
 import com.ft.asanaapi.model.ReportTasks;
 import com.ft.asanaapi.model.UserTeams;
+import com.ft.backup.model.BackupTask;
 import com.ft.report.model.ReportTask;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,17 +17,20 @@ import java.util.Optional;
 public class AsanaClientWrapper {
     private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
     private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed";
+    private static final String BACKUP_TASK_FIELDS = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
 
     private final Client client;
     private final ReportTasks extendedTasks;
     private final UserTeams userTeams;
+    private final BackupTasks backupTasks;
     private final String workspaceId;
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
         this.extendedTasks = new ReportTasks(client);
         this.userTeams = new UserTeams(client);
+        this.backupTasks = new BackupTasks(client);
         this.workspaceId = workspaceId;
 
     }
@@ -111,7 +117,7 @@ public class AsanaClientWrapper {
 
     public List<Team> getUserTeams(String userId) throws IOException  {
         return userTeams.findByUser(userId)
-                .query("workspace", workspaceId)
+                .query("organization", workspaceId)
                 .execute();
     }
 
@@ -128,5 +134,23 @@ public class AsanaClientWrapper {
         user.id = workspace.id;
         user.name = workspace.name;
         return user;
+    }
+
+    public List<Project> findProjectsByWorkspace() throws IOException {
+        return client.projects.findByWorkspace(workspaceId)
+                .query("opt_expand", "this")
+                .execute();
+    }
+
+    public List<BackupTask> findAllTasksByProject(String projectId) throws IOException {
+        List<BackupTask> tasks = new LinkedList<>();
+        Iterable<BackupTask> tasksIterable = backupTasks.findByProject(projectId)
+                .query("opt_fields", BACKUP_TASK_FIELDS)
+                .option("page_size", 100);
+        //Redundant for loop is for Asana PageIterator so that it can page results
+        for(BackupTask task: tasksIterable) {
+            tasks.add(task);
+        }
+        return tasks;
     }
 }

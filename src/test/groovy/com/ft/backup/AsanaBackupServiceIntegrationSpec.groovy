@@ -1,5 +1,6 @@
 package com.ft.backup
 
+import com.ft.asanaapi.AsanaClientWrapper
 import com.ft.backup.drive.GoogleDriveService
 import com.ft.test.IntegrationSpec
 import com.google.api.client.googleapis.batch.BatchRequest
@@ -18,8 +19,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
-    private static final String ENCODED_OPT_EXPAND = "%28this%7Csubtasks%2B%29"
-    private static final String DECODED_OPT_EXPAND = "(this|subtasks+)"
+    private static final String DECODED_OPT_EXPAND = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name"
     private static final String TEST_PICTURES_PROJECT_ID = "36788370362617"
     private static final String TEST_UK_PROJECT_ID = "37532256694667"
 
@@ -28,8 +28,10 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
     @Autowired AsanaBackupService asanaBackupService
     @Autowired GoogleDriveService googleDriveService
+    @Autowired AsanaClientWrapper defaultAsanaClientWrapper
 
     void setup() {
+        defaultAsanaClientWrapper.client.options['base_url'] = 'http://localhost:8888/api/1.0'
         asanaBackupService.clock = Clock.fixed(WEEK_AHEAD.atZone(zoneId).toInstant(), zoneId)
     }
 
@@ -37,7 +39,7 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
         given:
             stubGetProjects()
             stubGetProjectTasks(TEST_PICTURES_PROJECT_ID)
-            stubGetProjectTasks(TEST_UK_PROJECT_ID, 2)
+            stubGetProjectTasks(TEST_UK_PROJECT_ID, 2) //FIXME paging doesnt match
 
         when:
             asanaBackupService.backupAllProjects()
@@ -62,9 +64,8 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private void stubGetProjects() {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects\\?.*"))
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/workspaces/${testWorkspaceId}/projects"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("workspace", equalTo('324300775153'))
                 .withQueryParam("opt_expand", equalTo('this'))
                 .willReturn(aResponse()
                 .withStatus(200)
@@ -73,9 +74,10 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private void stubGetProjectTasks(String projectId) {
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/${projectId}/tasks\\?.*"))
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/${projectId}/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND))
+                .withQueryParam("opt_fields", equalTo(DECODED_OPT_EXPAND))
+//                .withQueryParam("limit", equalTo('100'))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -84,9 +86,9 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
     private void stubGetProjectTasks(String projectId, int numberOfPages) {
 
-        wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/${projectId}/tasks\\?.*"))
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/${projectId}/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND))
+                .withQueryParam("opt_fields", equalTo(DECODED_OPT_EXPAND))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -94,7 +96,7 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
         wireMockRule.stubFor(get(urlMatching("/api/1.0/projects/${projectId}/tasks\\?.*offset.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("opt_expand", equalTo(ENCODED_OPT_EXPAND))
+                .withQueryParam("opt_fields", equalTo(DECODED_OPT_EXPAND))
                 .withQueryParam("offset", matching(".*"))
                 .willReturn(aResponse()
                 .withStatus(200)
@@ -104,9 +106,8 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private boolean verifyGetProjects() {
-        wireMockRule.verify(1, getRequestedFor(urlMatching("/api/1.0/projects\\?.*"))
+        wireMockRule.verify(1, getRequestedFor(urlPathEqualTo("/api/1.0/workspaces/324300775153/projects"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("workspace", equalTo('324300775153'))
                 .withQueryParam("opt_expand", equalTo('this')))
         return true
     }
@@ -114,7 +115,7 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     private boolean verifyGetProjectTasks(String projectId, int count) {
         wireMockRule.verify(count, getRequestedFor(urlMatching("/api/1.0/projects/" + projectId + "/tasks\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
-                .withQueryParam("opt_expand", equalTo(DECODED_OPT_EXPAND))
+                .withQueryParam("opt_fields", equalTo(DECODED_OPT_EXPAND))
                 )
         return true
     }

@@ -1,7 +1,7 @@
 package com.ft.backup.drive;
 
+import com.asana.models.Project;
 import com.ft.FileSharer;
-import com.ft.asanaapi.model.ProjectInfo;
 import com.ft.config.GoogleApiConfig;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -30,8 +30,8 @@ public class GoogleDriveService {
     private static final List<String> DRIVE_SCOPES =  Collections.singletonList(DriveScopes.DRIVE);
     private static final HttpTransport httpTransport = new NetHttpTransport();
     private static final JacksonFactory jsonFactory = new JacksonFactory();
-    public static final int TWO_MINUTES = 2 * 60 * 1000;
-    public static final int THREE_MINUTES = 3 * 60 * 1000;
+    private static final int TWO_MINUTES = 2 * 60 * 1000;
+    private static final int THREE_MINUTES = 3 * 60 * 1000;
 
     @Autowired private GoogleApiConfig googleApiConfig;
 
@@ -55,8 +55,8 @@ public class GoogleDriveService {
         };
     }
 
-    public void uploadProjectFile(ProjectInfo project, File folder, String body) throws IOException {
-        CsvFileUploader csvFileUploader = new CsvFileUploader(drive, project.getName(), folder, body);
+    public void uploadProjectFile(Project project, File folder, String body) throws IOException {
+        CsvFileUploader csvFileUploader = new CsvFileUploader(drive, project.name, folder, body);
         csvFileUploader.upload();
     }
 

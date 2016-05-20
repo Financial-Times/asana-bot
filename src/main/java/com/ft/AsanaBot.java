@@ -4,6 +4,7 @@ import com.asana.Client;
 import com.ft.asanaapi.AsanaClientWrapper;
 import com.ft.config.Config;
 import com.ft.tasks.TaskRunnerFactory;
+import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class AsanaBot {
 
-    @Autowired
+    @Autowired @Setter
     private Config config;
 
     @Bean(name = "defaultAsanaClientWrapper")

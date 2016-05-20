@@ -62,7 +62,8 @@ backup:
 
 management:
   add-application-context-header: false
-
+spring:
+  thymeleaf.cache: true
 report:
   hostDomain: ft.com
   desks:

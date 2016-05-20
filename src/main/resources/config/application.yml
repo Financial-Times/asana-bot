@@ -44,11 +44,10 @@ logging:
       org.springframework.security: INFO
       com.netflix.discovery: 'OFF'
 ---
-spring:
+security:
   oauth2:
     sso:
       loginPath: /login
-      logoutPath: /logout
     client:
       clientId: ${OAUTH_CLIENT_ID}
       clientSecret: ${OAUTH_CLIENT_SECRET}
@@ -61,6 +60,7 @@ spring:
     resource:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me/openIdConnect
       preferTokenInfo: false
+spring:
   thymeleaf.cache: false
   mail:
       host: smtp.svc.ft.com

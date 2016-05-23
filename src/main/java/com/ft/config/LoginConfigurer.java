@@ -2,12 +2,12 @@ package com.ft.config;
 
 import com.ft.asanaapi.auth.InvalidDomainException;
 import com.ft.asanaapi.auth.NonAsanaUserException;
-import org.springframework.cloud.security.oauth2.sso.EnableOAuth2Sso;
-import org.springframework.cloud.security.oauth2.sso.OAuth2SsoConfigurerAdapter;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -26,12 +26,7 @@ import java.io.IOException;
 @Profile("web")
 @Configuration
 @EnableOAuth2Sso
-public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
-
-    @Override
-    public void match(RequestMatchers matchers) {
-        matchers.antMatchers("/**");
-    }
+public class LoginConfigurer extends WebSecurityConfigurerAdapter {
 
     private ObjectPostProcessor<FilterSecurityInterceptor> objectPostProcessor() {
         return new ObjectPostProcessor<FilterSecurityInterceptor>() {
@@ -47,10 +42,11 @@ public class LoginConfigurer extends OAuth2SsoConfigurerAdapter {
         http.antMatcher("/**").authorizeRequests().anyRequest()
                 .authenticated().withObjectPostProcessor(objectPostProcessor())
                 .and().exceptionHandling().accessDeniedHandler(new InvalidCsrfTokenAccessDeniedHandler())
+                .and().logout().logoutSuccessUrl("/login/logout").permitAll()
                 .and()
                 .csrf()
-                .csrfTokenRepository(csrfTokenRepository()).and()
-                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+                .csrfTokenRepository(csrfTokenRepository())
+                .and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }
 
     private Filter csrfHeaderFilter() {

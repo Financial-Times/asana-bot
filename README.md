@@ -25,6 +25,7 @@ Below environment variables must be set in order for the bot to be able to commu
 * ASANA_SOCIAL_KEY
 * ASANA_DESIGN_KEY
 * ASANA_SCHEDULED_KEY
+* ASANA_OVERNIGHT_KEY
 * ASANA_GRAPHICS_DUE_DATE_BOT_KEY
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 

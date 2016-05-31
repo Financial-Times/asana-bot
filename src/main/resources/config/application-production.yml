@@ -7,6 +7,12 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
+      projectId: -1 #TODO
+      name: overnight
+      apiKey: ${ASANA_OVERNIGHT_KEY}
+      runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
       projectId: 102068710859175
       name: design
       apiKey: ${ASANA_DESIGN_KEY}

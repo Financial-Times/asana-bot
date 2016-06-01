@@ -26,6 +26,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
         AsanaClientWrapper client = taskBot.getClient();
         try {
             List<Task> tasks = client.getTasksByProject(taskBot.getProjectId());
+            final String botName = taskBot.getName();
 
             tasks.stream().forEach(task -> {
                 Matcher matcher = TITLE_PATTERN.matcher(task.name);
@@ -38,7 +39,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                     taskData.put(dueDateField, parseDueDate(taskDueDate));
                     try {
                         client.updateTask(task, taskData);
-                        logger.info("Successfully updated task: {} due date to {}.", task.id, taskDueDate);
+                        logger.info("{} bot successfully updated task: {} due date to {}.", botName, task.id, taskDueDate);
                     } catch (IOException e) {
                         logger.error("error updating task", e);
                     }

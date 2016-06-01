@@ -26,6 +26,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
     public void run(final TaskBot taskBot) {
 
         AsanaClientWrapper client = taskBot.getClient();
+        final String botName = taskBot.getName();
         try {
             List<Task> tasks = client.getTasks();
             Project newProject = client.getProject(taskBot.getProjectId());
@@ -42,7 +43,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
                         addCommentToParent(newProject, task, client);
                     }
                     client.unassignTask(task);
-                    logTaskProcessingSuccess(newProject, task);
+                    logTaskProcessingSuccess(botName,newProject, task);
                 } catch (IOException e) {
                     logger.error("Could not process task: " + task.id, e);
                 }
@@ -93,9 +94,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
         client.commentTask(task.parent, comment);
     }
 
-    private void logTaskProcessingSuccess(Project project, Task task) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Successfully added task {} to {} project.", task.id, project.id);
-        }
+    private void logTaskProcessingSuccess(final String botName, final Project project, final Task task) {
+        logger.debug("{} bot successfully added task {} to {} project.", botName, task.id, project.id);
     }
 }

@@ -95,6 +95,6 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
     }
 
     private void logTaskProcessingSuccess(final String botName, final Project project, final Task task) {
-        logger.debug("{} bot successfully added task {} to {} project.", botName, task.id, project.id);
+        logger.info("{} bot successfully added task {} to {} project.", botName, task.id, project.id);
     }
 }

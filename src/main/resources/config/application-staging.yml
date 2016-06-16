@@ -44,6 +44,18 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
+      projectId: 144923892603882
+      name: front UK
+      apiKey: ${ASANA_FRONT_UK_KEY}
+      runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
+      projectId: 144923892603883
+      name: front US
+      apiKey: ${ASANA_FRONT_US_KEY}
+      runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
       name: backup
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: backupTaskRunner

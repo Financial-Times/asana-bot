@@ -35,11 +35,11 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
                 try {
                     Project originalProject = extractProjectFromTask(task,client, 0);
                     client.addTaskToProject(task, newProject);
-                    if (originalProject != null && originalProject.team != null) {
-                        Tag tag = findOrCreateTagByName(originalProject.team, taskBot);
-                        client.tagTask(task, tag);
-                    }
                     if (isSubTask(task)) {
+                        if (originalProject != null && originalProject.team != null) {
+                            Tag tag = findOrCreateTagByName(originalProject.team, taskBot);
+                            client.tagTask(task, tag);
+                        }
                         addCommentToParent(newProject, task, client);
                     }
                     client.unassignTask(task);

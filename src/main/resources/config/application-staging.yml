@@ -153,11 +153,11 @@ report:
       groupTags: false
       premiumTags: []
       showProjects: false
-    Business Life:
+    Work & Careers:
       projects:
         -
           id: 52535481220644
-          name: Business Life Daily
+          name: Work & Careers Daily
           primary: false
         -
           id: 55126358624001

@@ -9,7 +9,7 @@ asana:
       runInterval: 20_000
     -
       projectId: 138637266190858
-      name: overnight
+      name: Homepage UK
       apiKey: ${ASANA_OVERNIGHT_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000

@@ -14,6 +14,12 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
+      projectId: 164969270401862
+      name: homepage international
+      apiKey: ${ASANA_HOMEPAGE_INTL_KEY}
+      runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
       projectId: 90407076979571
       name: design
       apiKey: ${ASANA_DESIGN_KEY}

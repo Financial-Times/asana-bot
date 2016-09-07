@@ -197,3 +197,33 @@ report:
           name: Videos in production
       groupTags: false
       premiumTags: []
+    Weekend:
+      projects:
+        -
+          id: 172199181928664
+          name: Arts
+        -
+          id: 172199181928674
+          name: House & Home
+        -
+          id: 172199181928665
+          name: Style
+        -
+          id: 172199181928666
+          name: Books
+        -
+          id: 172199181928667
+          name: Travel
+        -
+          id: 172199181928673
+          name: Food & Drink
+        -
+          id: 172199181928670
+          name: Life & Arts
+        -
+          id: 172199181928675
+          name: Magazine
+      groupTags: true
+      premiumTags: []
+      showProjects: false
+      reportCategory: WEEKEND

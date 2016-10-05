@@ -10,16 +10,16 @@ public abstract class WeekendDateBuilder implements DateBuilder {
 
     protected String formatThisWeekend(final LocalDate today, final boolean isTwoWeeks) {
         if(isTwoWeeks) {
-            return formatThisWeekendUtil(today.minusDays(7)) + " & " + formatThisWeekendUtil(today);
+            return String.join("&", formatWeekends(today.minusDays(7)), formatWeekends(today));
         }
-        return formatThisWeekendUtil(today);
+        return formatWeekends(today);
     }
 
     protected String formatThisWeekend(final LocalDate today) {
         return formatThisWeekend(today, false);
     }
 
-    private String formatThisWeekendUtil(LocalDate today) {
+    private String formatWeekends(final LocalDate today) {
 
         LocalDate dayAgo = today.minusDays(1);
         String yesterday = dayAgo.format(dayDateFormat);

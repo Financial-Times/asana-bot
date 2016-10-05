@@ -50,6 +50,12 @@ $(document).ready(function () {
         $("#reportCriteriaForm").submit();
 
     });
+
+    $('#submitButton').on("click", function () {
+        $(this).addClass('disabled');
+        $(this).val('Loading...');
+    })
+
     teamSelect.bind('change', function() {
         var teamName = this.value;
         onTeamChange(teamName);

@@ -9,7 +9,8 @@ public enum ReportType {
     TOMORROW(ReportCategory.WEEKDAY),
     TODAY(ReportCategory.WEEKDAY),
     THIS_WEEK(ReportCategory.WEEKEND),
-    NEXT_WEEK(ReportCategory.WEEKEND);
+    NEXT_WEEK(ReportCategory.WEEKEND),
+    TWO_WEEKS(ReportCategory.WEEKEND);
 
     private final ReportCategory category;
 

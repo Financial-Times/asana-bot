@@ -27,6 +27,7 @@ public class ReportDateBuilder {
         dateBuilders.put(ReportType.SUNDAY_FOR_MONDAY, new ThisSundayDateBuilder());
         dateBuilders.put(ReportType.THIS_WEEK, new ThisWeekendDateBuilder());
         dateBuilders.put(ReportType.NEXT_WEEK, new NextWeekendDateBuilder());
+        dateBuilders.put(ReportType.TWO_WEEKS, new TwoWeekendDateBuilder());
         return dateBuilders;
     }
 

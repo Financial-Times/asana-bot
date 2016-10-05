@@ -8,12 +8,24 @@ public abstract class WeekendDateBuilder implements DateBuilder {
     private static final DateTimeFormatter dayMonthDateFormat = DateTimeFormatter.ofPattern("dd MMMM");
     private static final DateTimeFormatter longDateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
-    protected String formatThisWeekend(LocalDate today) {
-        LocalDate dayAgo = today.minusDays(1);
-        String lastWeek = dayAgo.format(dayDateFormat);
-        if (!dayAgo.getMonth().equals(today.getMonth())) {
-            lastWeek = dayAgo.format(dayMonthDateFormat);
+    protected String formatThisWeekend(final LocalDate today, final boolean isTwoWeeks) {
+        if(isTwoWeeks) {
+            return formatThisWeekendUtil(today.minusDays(7)) + " & " + formatThisWeekendUtil(today);
         }
-        return lastWeek + " - " + today.format(longDateFormat);
+        return formatThisWeekendUtil(today);
+    }
+
+    protected String formatThisWeekend(final LocalDate today) {
+        return formatThisWeekend(today, false);
+    }
+
+    private String formatThisWeekendUtil(LocalDate today) {
+
+        LocalDate dayAgo = today.minusDays(1);
+        String yesterday = dayAgo.format(dayDateFormat);
+        if (!dayAgo.getMonth().equals(today.getMonth())) {
+            yesterday = dayAgo.format(dayMonthDateFormat);
+        }
+        return yesterday + " - " + today.format(longDateFormat);
     }
 }

@@ -40,6 +40,7 @@ class ReportDateBuilderSpec extends Specification {
             ReportType.SUNDAY_FOR_MONDAY | '07/06/2015'
             ReportType.THIS_WEEK         | '06 - 07 June 2015'
             ReportType.NEXT_WEEK         | '13 - 14 June 2015'
+            ReportType.TWO_WEEKS         | '06 - 07 June 2015 & 13 - 14 June 2015'
     }
 
     void "build multi report date for report type: #reportType"() {

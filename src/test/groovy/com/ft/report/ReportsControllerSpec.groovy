@@ -50,7 +50,7 @@ class ReportsControllerSpec extends Specification {
         when:
             ReportType[] result = controller.populateReportTypes()
         then:
-            result.size() == 5
+            result.size() == 6
             result == ReportType.values()
     }
 

@@ -20,6 +20,7 @@ class DueDatePredicateFactorySpec extends Specification {
     private static final LocalDate NEXT_TUESDAY = LocalDate.of(2015, Month.JUNE, 16)
     private static final LocalDate THIS_WEEK = LocalDate.of(2015, Month.JUNE, 14)
     private static final LocalDate NEXT_WEEK = LocalDate.of(2015, Month.JUNE, 21)
+    private static final LocalDate TWO_WEEKS = LocalDate.of(2015, Month.JUNE, 21)
 
     private static final ZoneId zoneId = ZoneId.systemDefault()
 
@@ -46,6 +47,7 @@ class DueDatePredicateFactorySpec extends Specification {
             ReportType.TOMORROW          | TOMORROW
             ReportType.THIS_WEEK         | THIS_WEEK
             ReportType.NEXT_WEEK         | NEXT_WEEK
+            ReportType.TWO_WEEKS         | TWO_WEEKS
     }
 
     @Unroll

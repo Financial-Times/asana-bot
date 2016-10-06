@@ -229,6 +229,12 @@ report:
         -
           id: 172199181928675
           name: Magazine
+        -
+          id: 42850013094582
+          name: FT Money Ideas
+        -
+          id: 42850013094580
+          name: FT Money Topics
       groupTags: true
       premiumTags: []
       showProjects: false

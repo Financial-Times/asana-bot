@@ -29,6 +29,7 @@ public class DueDatePredicateFactory {
         dayPredicateFactories.put(ReportType.SUNDAY_FOR_MONDAY, new SundayPredicateFactory());
         dayPredicateFactories.put(ReportType.THIS_WEEK, new ThisWeekPredicateFactory());
         dayPredicateFactories.put(ReportType.NEXT_WEEK, new NextWeekPredicateFactory());
+        dayPredicateFactories.put(ReportType.TWO_WEEKS, new TwoWeeksPredicateFactory());
         return dayPredicateFactories;
     }
 

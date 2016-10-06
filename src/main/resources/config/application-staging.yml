@@ -240,6 +240,12 @@ report:
         -
           id: 81987306808746
           name: Life
+        -
+          id: 192226175037125
+          name: FT Money Ideas
+        -
+          id: 192226175037126
+          name: FT Money Topics
       groupTags: true
       premiumTags: []
       showProjects: false

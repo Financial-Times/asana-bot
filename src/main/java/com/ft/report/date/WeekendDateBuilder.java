@@ -10,7 +10,7 @@ public abstract class WeekendDateBuilder implements DateBuilder {
 
     protected String formatThisWeekend(final LocalDate today, final boolean isTwoWeeks) {
         if(isTwoWeeks) {
-            return String.join("&", formatWeekends(today.minusDays(7)), formatWeekends(today));
+            return String.join(" & ", formatWeekends(today.minusDays(7)), formatWeekends(today));
         }
         return formatWeekends(today);
     }

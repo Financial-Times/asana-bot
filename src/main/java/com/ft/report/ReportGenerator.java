@@ -47,6 +47,7 @@ public class ReportGenerator {
     public Report generate(String teamName, Project project, ReportType reportType) {
 
         Report report = new Report();
+        updateProject(project);
         report.setProject(project);
         report.setGroupByTags(shouldGroupByTags(teamName));
 
@@ -66,6 +67,12 @@ public class ReportGenerator {
         report.setTagTasks(sortedResult);
 
         return report;
+    }
+
+    private void updateProject(Project project) {
+        List<Project> projects = desks.values().stream().flatMap(r -> r.getProjects().stream()).collect(Collectors.toList());
+        Project projectName = projects.stream().filter(r -> r.getId().contains(project.getId())).findFirst().get();
+        project.setName(projectName.getName());
     }
 
     private Map<String, List<ReportTask>> toTagsMap(String team, Stream<ReportTask> reportTaskStream) {

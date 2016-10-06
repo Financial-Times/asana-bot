@@ -47,6 +47,14 @@ report:
           name: Big Read Forward Plan
       groupTags: false
       premiumTags: []
+    Weekend:
+          projects:
+            -
+              id: "987654323,12345678"
+              name: "Weekend1, Weekend2"
+          groupTags: false
+          showProjects: true
+          premiumTags: []
     Team 4:
       projects:
         -

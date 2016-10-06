@@ -206,35 +206,20 @@ report:
     Weekend:
       projects:
         -
-          id: 172199181928664
-          name: Arts
+          id: "172199181928665,172199181928664,172199181928666,172199181928667,172199181928670"
+          name: "Style,Arts,Books,Travel,Life & Arts"
+        -
+          id: "172199181928673,172199181928675"
+          name: "Food & Drink,Magazine"
         -
           id: 172199181928674
           name: House & Home
         -
-          id: 172199181928665
-          name: Style
+          id: "42850013094582,42850013094580"
+          name: "FT Money Ideas,FT Money Topics"
         -
-          id: 172199181928666
-          name: Books
-        -
-          id: 172199181928667
-          name: Travel
-        -
-          id: 172199181928673
-          name: Food & Drink
-        -
-          id: 172199181928670
-          name: Life & Arts
-        -
-          id: 172199181928675
-          name: Magazine
-        -
-          id: 42850013094582
-          name: FT Money Ideas
-        -
-          id: 42850013094580
-          name: FT Money Topics
+          id: 172199181928676
+          name: Weekend Early Publish
       groupTags: true
       premiumTags: []
       showProjects: false

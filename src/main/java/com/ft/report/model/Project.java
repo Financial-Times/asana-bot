@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project {
-    private Long id;
+    private String id;
     private String name;
     private Boolean primary = true;
 
     public Project(Long id) {
-        this.id = id;
+        this.id = String.valueOf(id);
     }
 }

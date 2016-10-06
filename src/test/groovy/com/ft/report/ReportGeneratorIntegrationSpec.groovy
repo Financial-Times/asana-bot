@@ -22,6 +22,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static final Long TEST_WORLD_PROJECT_ID = 23456L
     private static final Long TEST_LEX_PROJECT_ID = 9876L
     private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
+    private static final Long TEST__WEEKEND_PROJECT_1_ID = 987654323L
     private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
 
     private static final LocalDateTime FRIDAY_EVENING = LocalDateTime.of(2015, Month.JUNE, 12, 15, 0)
@@ -125,6 +126,27 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks.size() == 1
             report.tagTasks[NOT_TAGGED].size() == 2
             report.tagTasks[NOT_TAGGED] == expectedBigReadTasks
+    }
+
+    void "generate project report for weekend"() {
+        given:
+            String team = 'Weekend'
+            stubGetTasksForWeekend(team, TEST__WEEKEND_PROJECT_1_ID)
+            List<ReportTask> expectedWeekendRead = createWeekendReport()
+            Criteria criteria = new Criteria(reportType: ReportType.TWO_WEEKS, team: team, projects: [new Project(id: TEST__WEEKEND_PROJECT_1_ID)])
+
+        when:
+            List<Report> reports = generator.generate(criteria)
+
+        then:
+            verifyGetTasks(TEST__WEEKEND_PROJECT_1_ID)
+        and:
+            reports?.size() == 1
+        and:
+            Report report = reports[0]
+            report.tagTasks.size() == 1
+            report.tagTasks[NOT_TAGGED].size() == 1
+            report.tagTasks[NOT_TAGGED] == expectedWeekendRead
     }
 
     private static List<ReportTask> createFinservTasks() {
@@ -248,6 +270,19 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         return [reportTask2, reportTask1] as List<ReportTask>
     }
 
+    private static List<ReportTask> createWeekendReport() {
+        ReportTask reportTask2 = new ReportTask()
+        reportTask2.id = 37354116382323
+        reportTask2.name = "Weekend1, Weekend2"
+        reportTask2.notes = "some notes"
+        reportTask2.completed = false
+        reportTask2.due_on = "2015-06-14"
+        reportTask2.tags = [new Tag(id: '32896507462011', name: 'Unmapped tag')]
+        reportTask2.subtasks = []
+
+        return [reportTask2] as List<ReportTask>
+    }
+
     private static List<ReportTask> createOtherTask() {
         ReportTask reportTask2 = new ReportTask()
         reportTask2.id = 37354116382322
@@ -271,6 +306,18 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
                 .withStatus(200)
                 .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
                 .withBodyFile("report/${desk.toLowerCase()}-${projectId}_sunday_4_monday.json")))
+    }
+
+    private stubGetTasksForWeekend(String desk, Long projectId) {
+        wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/$projectId/tasks"))
+                .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
+                .withQueryParam("completed_since", equalTo("now"))
+                .withQueryParam("workspace", equalTo(testWorkspaceId))
+                .withQueryParam("opt_fields", equalTo(optFields))
+                .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", APPLICATION_JSON_CONTENT_TYPE)
+                .withBodyFile("report/${desk.toLowerCase()}-${projectId}_this_week.json")))
     }
 
     private boolean verifyGetTasks(Long projectId) {

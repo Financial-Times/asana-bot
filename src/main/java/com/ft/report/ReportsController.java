@@ -26,11 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -126,7 +122,7 @@ public class ReportsController {
 
         final List<Report> reports = reportGenerator.generate(criteria);
         final Map<String, Report> reportsMap = reports.stream()
-                .collect(Collectors.toMap(entry -> entry.getProject().getName(), Function.identity()));
+                .collect(Collectors.toMap(entry -> entry.getProject().getName(), Function.identity(), (name1, name2) -> name1));
 
         String reportDate = reportDateBuilder.buildReportDate(criteria.getReportType());
         modelMap.addAttribute("reportDate", reportDate);

@@ -75,10 +75,10 @@
                     <label class="control-label" for="projects">Project</label>
                     <select id="projects" name="projects" class="form-control">
                         <option
-                                th:each="project : ${userTeams['__${criteria.team}__'].projects}"
+                                th:each="project : ${userTeams['__${criteria.team}__'].projects}" th:with="projectId=${#strings.listSplit('__${{project.id}}__',',').get(0)}"
                                 th:value="${{project}}"
                                 th:text="${project.name}"
-                                th:selected="${project.primary and criteria.projects == null or criteria.projects.contains(project)}">Project</option>
+                                th:selected="${project.primary and criteria.projects == null or criteria.getProjectIds().contains(projectId)}">Project</option>
                     </select>
                 </div>
                 <input th:type="hidden" name="sendEmail" id="sendEmail"/>

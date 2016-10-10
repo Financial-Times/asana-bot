@@ -223,12 +223,6 @@ report:
           id: 81987306808743
           name: House & Home
         -
-          id: 81987306808744
-          name: Columnists
-        -
-          id: 81987306808745
-          name: Lunch with the FT
-        -
           id: "192226175037125,192226175037126"
           name: "FT Money Ideas,FT Money Topics"
       groupTags: true

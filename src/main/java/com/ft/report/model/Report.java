@@ -11,4 +11,5 @@ public class Report {
     private boolean groupByTags = false;
     private Project project;
     private Map<String, List<ReportTask>> tagTasks;
+    private Map<String, String> displayTitles;
 }

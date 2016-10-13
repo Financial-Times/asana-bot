@@ -49,6 +49,10 @@ public class ReportsController {
     @Getter
     private Map<String, Desk> desks;
 
+    @Setter
+    @Getter
+    private Map<String, String> displayTitles;
+
     @Autowired @Setter
     private EmailService emailService;
 
@@ -121,12 +125,13 @@ public class ReportsController {
                                      ModelMap modelMap) {
 
         final List<Report> reports = reportGenerator.generate(criteria);
-        final Map<String, Report> reportsMap = reports.stream()
-                .collect(Collectors.toMap(entry -> entry.getProject().getName(), Function.identity(), (name1, name2) -> name1));
+        Map<String, List<Report>> reportsMap =
+                reports.stream().collect(Collectors.groupingBy(entry -> entry.getProject().getName()));
 
         String reportDate = reportDateBuilder.buildReportDate(criteria.getReportType());
         modelMap.addAttribute("reportDate", reportDate);
         modelMap.addAttribute("criteria", criteria);
+        modelMap.addAttribute("displayTitles", displayTitles);
 
         modelMap.addAttribute("reports", reportsMap);
         if (sendEmail) {

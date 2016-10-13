@@ -229,6 +229,16 @@ report:
       premiumTags: []
       showProjects: true
       reportCategory: WEEKEND
+  displayTitles:
+    81987306808740: Style
+    81987306808741: Books
+    81987306808739: Travel
+    68145410531982: Arts
+    81987306808746: Life & Art
+    81987306808742: Food & Drink
+    94237279249298: Magazine
+    192226175037125: FT Money Ideas
+    192226175037126: FT Money Topics
 ---
 backup:
   google:

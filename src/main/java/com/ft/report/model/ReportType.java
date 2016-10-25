@@ -29,9 +29,9 @@ public enum ReportType {
 
     public String formatAndAppendCategory() {
         String formatted = format();
-        String suffix = "'s conference report ";
+        String suffix = formatted.endsWith("s") ? "' conference report " :"'s conference report ";
         if (category == ReportCategory.WEEKEND) {
-            suffix = "'s plan ";
+            suffix = formatted.endsWith("s") ? "' plan " : "'s plan ";
         }
         return formatted + suffix;
     }

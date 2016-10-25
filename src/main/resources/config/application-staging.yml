@@ -140,14 +140,6 @@ report:
       groupTags: false
       premiumTags: []
       showProjects: false
-    FT Money:
-      projects:
-        -
-          id: 42553710401200
-          name: FT Money Topics
-      groupTags: false
-      premiumTags: []
-      showProjects: true
     FTfm:
       projects:
         -

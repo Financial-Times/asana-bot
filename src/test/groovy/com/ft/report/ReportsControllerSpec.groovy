@@ -111,7 +111,7 @@ class ReportsControllerSpec extends Specification {
         and:
             viewName == 'reports/home'
             modelMap['criteria'] == criteria
-            modelMap['reports'] == [(project.name): expectedReports[0]]
+            modelMap['reports'] == [(project.name): [expectedReports[0]]]
     }
 
     void "user teams are populated"() {
@@ -190,6 +190,6 @@ class ReportsControllerSpec extends Specification {
         and:
             viewName == 'reports/home'
             modelMap['criteria'] == criteria
-            modelMap['reports']['project 1'] == expectedReports[0]
+            modelMap['reports']['project 1'] == [expectedReports[0]]
     }
 }

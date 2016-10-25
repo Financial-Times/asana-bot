@@ -131,4 +131,24 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             1 * mockSlackService.notifyProjectChange(changes)
             0 * _
     }
+
+    void "run find project in comma separated list"() {
+        given:
+            TaskBot mockTaskBot = Mock(TaskBot)
+            AsanaClientWrapper mockClient = Mock(AsanaClientWrapper)
+        and:
+            Project project = new Project(id: '12345,456789', name: 'test project,test project 2')
+            Desk desk = new Desk(projects: [project])
+            deskConfig.desks = ['test desk': desk]
+        and:
+            Team team = new Team(name: 'test desk')
+            AsanaProject asanaProject = new AsanaProject(id: 12345, name: 'test project', team: team)
+            AsanaProject asanaProject2 = new AsanaProject(id: 456789, name: 'test project 2', team: team)
+        when:
+            changesTaskRunner.run(mockTaskBot)
+        then:
+            1 * mockTaskBot.client >> mockClient
+            1 * mockClient.getAllProjects() >> [asanaProject, asanaProject2]
+            0 * _
+    }
 }

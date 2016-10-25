@@ -5,16 +5,16 @@ import com.asana.models.Team;
 import com.ft.config.TaskBot;
 import com.ft.monitoring.DeskConfig;
 import com.ft.monitoring.ProjectChange;
+import com.ft.report.model.Desk;
 import com.ft.services.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class CheckForChangesTaskRunner implements TaskRunner {
@@ -53,7 +53,7 @@ public class CheckForChangesTaskRunner implements TaskRunner {
     private List<ProjectChange> getChanges(TaskBot taskBot) throws IOException {
         List<ProjectChange> projectChanges = new ArrayList<>();
         List<Project> currentProjects = taskBot.getClient().getAllProjects();
-        deskConfig.getDesks().forEach((teamName, desk) -> desk.getProjects().forEach((projectSummary) -> {
+        nornaliseDesk().forEach((teamName, desk) -> desk.getProjects().forEach((projectSummary) -> {
             Optional<Project> currentProjectCandidate = findMatchingProject(currentProjects, projectSummary.getId().toString());
             Project currentProject = currentProjectCandidate.isPresent() ? currentProjectCandidate.get() : null;
             Project asanaProject = new Project();
@@ -87,6 +87,33 @@ public class CheckForChangesTaskRunner implements TaskRunner {
 
         if (!projectChange.getChanges().isEmpty()) {
             projectChanges.add(projectChange);
+        }
+    }
+
+    private Map<String, Desk> nornaliseDesk() {
+        Map<String, Desk> normalisedDesk = new HashMap<>();
+        deskConfig.getDesks().forEach((teamName, desk) ->{
+            List<com.ft.report.model.Project> normalisedProjects = new ArrayList<>();
+            buildProjectFromList(desk, normalisedProjects);
+            desk.setProjects(normalisedProjects);
+            normalisedDesk.put(teamName, desk);
+        });
+        return normalisedDesk;
+    }
+
+    private void buildProjectFromList(Desk desk, List<com.ft.report.model.Project> normalisedProjects) {
+        for (com.ft.report.model.Project project : desk.getProjects()) {
+            if (project.getName().contains(",")){
+               String[] projectNamesWithComma = StringUtils.commaDelimitedListToStringArray(project.getName());
+                String[] projectIdsWithComma = StringUtils.commaDelimitedListToStringArray(project.getId());
+
+                for (int i =0; i < projectNamesWithComma.length; i++){
+                    com.ft.report.model.Project normalisedProject = new com.ft.report.model.Project(projectIdsWithComma[i], projectNamesWithComma[i], project.getPrimary());
+                    normalisedProjects.add(normalisedProject);
+                }
+            } else {
+                normalisedProjects.add(project);
+            }
         }
     }
 }

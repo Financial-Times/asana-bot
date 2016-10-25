@@ -138,13 +138,6 @@ report:
           name: Lex Topics
       groupTags: false
       premiumTags: []
-    FT Money:
-      projects:
-        -
-          id: 42850013094580
-          name: FT Money Topics
-      groupTags: false
-      premiumTags: []
     FTfm:
       projects:
         -
@@ -222,5 +215,15 @@ report:
           name: Weekend Early Publish
       groupTags: true
       premiumTags: []
-      showProjects: false
+      showProjects: true
       reportCategory: WEEKEND
+  displayTitles:
+    172199181928665: Style
+    172199181928666: Books
+    172199181928667: Travel
+    172199181928664: Arts
+    172199181928670: Life & Art
+    172199181928673: Food & Drink
+    172199181928675: Magazine
+    42850013094582: FT Money Ideas
+    42850013094580: FT Money Topics

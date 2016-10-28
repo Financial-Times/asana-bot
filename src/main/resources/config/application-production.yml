@@ -193,7 +193,7 @@ report:
       projects:
         -
           id: 56381527297830
-          name: Videos in production
+          name: Videos
       groupTags: false
       premiumTags: []
     Weekend:
@@ -212,7 +212,7 @@ report:
           name: "FT Money Ideas,FT Money Topics"
         -
           id: 172199181928676
-          name: Weekend Early Publish
+          name: Weekend Schedule
       groupTags: true
       premiumTags: []
       showProjects: true

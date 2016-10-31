@@ -109,7 +109,7 @@ public class ReportsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String home(@ModelAttribute("userTeams") TreeMap teams,
+    public String home(@ModelAttribute("userTeams") LinkedHashMap teams,
                        @ModelAttribute("weekdayPreferredReportType") ReportType weekdayPreferredReportType,@ModelAttribute("weekendPreferredReportType") ReportType weekendPreferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
@@ -159,8 +159,9 @@ public class ReportsController {
         return message;
     }
 
-    private boolean isWeekendDesk(TreeMap teams) {
-        return teams.firstKey().equals("Weekend");
+    private boolean isWeekendDesk(LinkedHashMap teams) {
+        TreeMap sortedMap = new TreeMap(teams);
+        return sortedMap.size() > 0 && sortedMap.firstKey().equals("Weekend");
     }
 
 }

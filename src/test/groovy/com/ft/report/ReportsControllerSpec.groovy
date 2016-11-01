@@ -76,11 +76,12 @@ class ReportsControllerSpec extends Specification {
     void "home - #scenario"() {
         given:
             ReportType preferredReportType = ReportType.SUNDAY_FOR_MONDAY
+            ReportType weekEndpreferredReportType = ReportType.NEXT_WEEK
             Map<String, Object> model = [:]
             Criteria expectedCriteria = new Criteria(reportType: preferredReportType, team: expectedTeam, projects: [])
 
         when:
-            String viewName = controller.home(teams, preferredReportType, model)
+            String viewName = controller.home(teams, preferredReportType, weekEndpreferredReportType, model)
 
         then:
             viewName == 'reports/home'

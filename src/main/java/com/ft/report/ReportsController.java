@@ -70,9 +70,8 @@ public class ReportsController {
     }
 
 
-    @ModelAttribute("preferredReportType")
+    @ModelAttribute("weekdayPreferredReportType")
     public ReportType populatePreferredReportType() {
-        //TODO could extend that to weekends
         LocalDateTime now = LocalDateTime.now(clock);
         if (now.getHour() < 11) {
             return ReportType.TODAY;
@@ -81,6 +80,11 @@ public class ReportsController {
         }
 
         return ReportType.TOMORROW;
+    }
+
+    @ModelAttribute("weekendPreferredReportType")
+    public ReportType populateWeekendPreferredReportType() {
+        return ReportType.NEXT_WEEK;
     }
 
     @SuppressWarnings("unchecked")
@@ -105,13 +109,14 @@ public class ReportsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String home(@ModelAttribute("userTeams") Map teams,
-                       @ModelAttribute("preferredReportType") ReportType preferredReportType,
+    public String home(@ModelAttribute("userTeams") LinkedHashMap teams,
+                       @ModelAttribute("weekdayPreferredReportType") ReportType weekdayPreferredReportType,@ModelAttribute("weekendPreferredReportType") ReportType weekendPreferredReportType,
                        Map<String, Object> model) {
         Criteria criteria = new Criteria();
         if (teams != null && !teams.isEmpty()) {
             criteria.setTeam((String) teams.keySet().toArray()[0]);
         }
+        final ReportType preferredReportType = isWeekendDesk(teams) ? weekendPreferredReportType : weekdayPreferredReportType;
         criteria.setReportType(preferredReportType);
         criteria.setProjects(new ArrayList<>());
 
@@ -152,6 +157,11 @@ public class ReportsController {
             logger.error("problem sending email {}", e);
         }
         return message;
+    }
+
+    private boolean isWeekendDesk(LinkedHashMap teams) {
+        TreeMap sortedMap = new TreeMap(teams);
+        return sortedMap.size() > 0 && sortedMap.firstKey().equals("Weekend");
     }
 
 }

@@ -51,13 +51,13 @@ asana:
       runInterval: 20_000
     -
       projectId: 144923892603882
-      name: front UK
+      name: 2ndfrontsbot
       apiKey: ${ASANA_FRONT_UK_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
       projectId: 144923892603883
-      name: front US
+      name: Frontsbot
       apiKey: ${ASANA_FRONT_US_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000

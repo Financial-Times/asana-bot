@@ -43,6 +43,12 @@ asana:
       runnerBean: taskDueDateTaskRunner
       runInterval: 20_000
     -
+      projectId: 32896507461944
+      name: companiesEmail
+      apiKey: ${ASANA_COMPANIES_DUE_DATE_BOT_KEY}
+      runnerBean: taskDueDateTaskRunner
+      runInterval: 20_000
+    -
       projectId: 37074265374689
       name: social
       apiKey: ${ASANA_SOCIAL_KEY}

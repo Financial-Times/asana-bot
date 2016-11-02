@@ -81,7 +81,7 @@ asana:
       name: check for changes
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: checkForChangesTaskRunner
-      runInterval: 300_000 # five minutes in milliseconds
+      runInterval: 3_600_000 # one hour in milliseconds
     -
       name: Remove old backup files
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed

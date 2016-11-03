@@ -98,7 +98,7 @@
 <div th:fragment="footer">
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var preferredReportType = /*[[${preferredReportType.name()}]]*/ null;
+        var preferredReportType = /*[[${criteria.reportType.name()}]]*/ null;
         var userDesks = /*[[${userTeams}]]*/ null;
         var reportTypes = /*[[${reportTypesMap}]]*/ null;
         var criteria = /*[[${criteria}]]*/ null;

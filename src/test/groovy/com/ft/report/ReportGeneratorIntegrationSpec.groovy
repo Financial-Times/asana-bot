@@ -23,7 +23,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static final Long TEST_LEX_PROJECT_ID = 9876L
     private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
     private static final Long TEST__WEEKEND_PROJECT_1_ID = 987654323L
-    private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
+    private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields"
 
     private static final LocalDateTime FRIDAY_EVENING = LocalDateTime.of(2015, Month.JUNE, 12, 15, 0)
     private static final ZoneId zoneId = ZoneId.systemDefault()
@@ -168,7 +168,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         importantReportTask.subtasks = []
         importantReportTask.important = true
         importantReportTask.tags = [new Tag(id: 33751312101134, name: "Level 1")]
-        return [importantReportTask, reportTask]
+        return [reportTask, importantReportTask]
     }
 
     private static List<ReportTask> createNotTaggedTask() {
@@ -216,7 +216,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask3.tags = [new Tag(id: '33751312101134', name: 'Level 1')]
         reportTask3.subtasks = []
 
-        return [reportTask3, reportTask1, reportTask2] as List<ReportTask>
+        return [reportTask1, reportTask2, reportTask3] as List<ReportTask>
     }
 
     private static List<ReportTask> createLexTasks() {
@@ -267,7 +267,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [bigTag, level1Tag]
         reportTask2.subtasks = []
 
-        return [reportTask2, reportTask1] as List<ReportTask>
+        return [reportTask1, reportTask2] as List<ReportTask>
     }
 
     private static List<ReportTask> createWeekendReport() {

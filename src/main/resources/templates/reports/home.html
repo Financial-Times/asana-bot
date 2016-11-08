@@ -54,6 +54,16 @@
                                                       th:text="${iter.last}? ${tag.name} : ${tag.name} + ','" th:remove="tag"
                                                       >Secondary tags</span>
                                             </span>
+                                            <span th:remove="tag" th:with="dateMask=${task.due_at != null ? 'dd-MMM-yyyy HH:mm:ss' : 'dd-MMM-yyyy'}">
+                                            <span class="tags_sm bold" th:text="'Due : ' + ${#dates.format(task.getDateToUse(), dateMask)}">due date</span>
+                                                </span>
+
+                                            <span class="tags_sm bold" th:unless="${#lists.isEmpty(task.custom_fields)}">
+                                                <span th:each="custom_field,iter : ${task.custom_fields}" th:if="${custom_field.enum_value != null and custom_field.enum_value.name == 'Published'}"
+                                                      th:text="${iter.last}? ${custom_field.name} +': '+ ${custom_field.enum_value.name} : ${custom_field.name} + ': ' + ${custom_field.enum_value.name} + ','" th:remove="tag"
+                                                >Custom fields</span>
+                                            </span>
+
                                         </div>
                                         <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
                                         <ul>

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
+
 @ConfigurationProperties(prefix = "report")
 @Component
 public class ReportSorter {
@@ -27,7 +29,7 @@ public class ReportSorter {
         tags.stream().forEach(tag -> {
                     List<ReportTask> reportTasks = reportTasksToSort.get(tag);
                     if (reportTasks != null) {
-                        List<ReportTask> sortedReportTasks = sortByImportance(reportTasks);
+                        List<ReportTask> sortedReportTasks = sortByNameAndDueDate(reportTasks);
                         sortedResult.put(tag, sortedReportTasks);
                     }
                 }
@@ -57,10 +59,11 @@ public class ReportSorter {
                 .collect(Collectors.toList());
     }
 
-    private List<ReportTask> sortByImportance(List<ReportTask> reportTasks) {
+    private List<ReportTask> sortByNameAndDueDate(List<ReportTask> reportTasks) {
         return reportTasks.stream()
                 .peek(ReportTask::assignImportant)
-                .sorted(ReportTask.byImportance)
+                .sorted(comparing(ReportTask::getName)
+                        .thenComparing(ReportTask.byDueDate))
                 .collect(Collectors.toList());
     }
 }

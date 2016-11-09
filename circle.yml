@@ -11,3 +11,11 @@ test:
     - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
     - git config --global user.name "circleci"
     - git config --global user.email "circleci@ft.com"
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master
+        - staging
+        - test

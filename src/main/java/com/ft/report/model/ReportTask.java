@@ -50,6 +50,7 @@ public class ReportTask {
     public String getNotes() {
         return StringUtils.replace(this.notes, "\n", "<br/>");
     }
+    public static final Comparator<ReportTask> byImportance = (rt1, rt2) -> Boolean.compare(rt2.isImportant(), rt1.isImportant());
     public static final Comparator<ReportTask> byDueDate = nullsLast((rt1, rt2) -> rt1.getDateToUse().compareTo(rt2.getDateToUse()));
 
     public Date getDateToUse() {

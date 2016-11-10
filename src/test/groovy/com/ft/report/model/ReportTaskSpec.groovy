@@ -9,6 +9,7 @@ import java.util.stream.Collectors
 class ReportTaskSpec extends Specification {
 
     public static final Tag IMPORTANT_TAG = new Tag(name: ImportantTag.asList().first().value)
+    public static final Tag NOT_IMPORTANT_TAG = new Tag(name: 'not important')
 
     void "isImportant with no tags"() {
         expect:
@@ -38,24 +39,30 @@ class ReportTaskSpec extends Specification {
             reportTask.important
     }
 
-    void 'sort collection of report tasks by date'() {
+    void 'sort collection of report tasks by importance, name and date'() {
         given:
-            def today = LocalDate.now().toString()
-            def tomorrow = LocalDate.now().plusDays(1).toString()
-            def tomorrowTime = (new Date() + 1 ).format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+            ReportTask importantReportTask = new ReportTask(tags: [IMPORTANT_TAG])
+            importantReportTask.assignImportant()
 
-            ReportTask dueTask_1 = new ReportTask(due_on: today)
+            ReportTask notImportantReportTask = new ReportTask(tags: [NOT_IMPORTANT_TAG])
+            notImportantReportTask.assignImportant()
 
-            ReportTask dueTask_2 = new ReportTask(due_on: tomorrow)
+            ReportTask notTaggedReportTask = new ReportTask()
+            notImportantReportTask.assignImportant()
 
-            ReportTask dueTask_3 = new ReportTask(due_at: tomorrowTime)
+            ReportTask dueTask_1 = new ReportTask(due_on: LocalDate.now().minusDays(1).toString())
+            notImportantReportTask.assignImportant()
 
-            List<ReportTask> reportTasks = [dueTask_1, dueTask_2, dueTask_3]
-            List<ReportTask> expectedSortedReportTasks = [dueTask_1, dueTask_3, dueTask_2]
+            ReportTask dueTask_2 = new ReportTask(due_on: LocalDate.now().toString())
+            notImportantReportTask.assignImportant()
+
+            List<ReportTask> reportTasks = [notTaggedReportTask, importantReportTask, notImportantReportTask,dueTask_1, dueTask_2]
+            List<ReportTask> expectedSortedReportTasks = [importantReportTask, notTaggedReportTask, notImportantReportTask,dueTask_1,dueTask_2]
 
         when:
             List<ReportTask> result = reportTasks.stream()
-                    .sorted(ReportTask.byDueDate)
+                    .sorted(ReportTask.byImportance
+                                    .thenComparing(ReportTask.byDueDate))
                     .collect(Collectors.toList())
         then:
             result == expectedSortedReportTasks

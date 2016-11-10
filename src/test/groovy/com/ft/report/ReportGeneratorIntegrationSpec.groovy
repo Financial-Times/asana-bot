@@ -168,7 +168,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         importantReportTask.subtasks = []
         importantReportTask.important = true
         importantReportTask.tags = [new Tag(id: 33751312101134, name: "Level 1")]
-        return [reportTask, importantReportTask]
+        return [importantReportTask, reportTask]
     }
 
     private static List<ReportTask> createNotTaggedTask() {
@@ -216,7 +216,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask3.tags = [new Tag(id: '33751312101134', name: 'Level 1')]
         reportTask3.subtasks = []
 
-        return [reportTask1, reportTask2, reportTask3] as List<ReportTask>
+        return [reportTask3, reportTask1, reportTask2] as List<ReportTask>
     }
 
     private static List<ReportTask> createLexTasks() {
@@ -267,7 +267,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [bigTag, level1Tag]
         reportTask2.subtasks = []
 
-        return [reportTask1, reportTask2] as List<ReportTask>
+        return [reportTask2, reportTask1] as List<ReportTask>
     }
 
     private static List<ReportTask> createWeekendReport() {

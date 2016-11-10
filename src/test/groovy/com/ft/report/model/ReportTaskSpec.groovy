@@ -3,6 +3,7 @@ package com.ft.report.model
 import com.asana.models.Tag
 import spock.lang.Specification
 
+import java.time.LocalDate
 import java.util.stream.Collectors
 
 class ReportTaskSpec extends Specification {
@@ -38,7 +39,7 @@ class ReportTaskSpec extends Specification {
             reportTask.important
     }
 
-    void 'sort collection of report tasks by importance'() {
+    void 'sort collection of report tasks by importance, name and date'() {
         given:
             ReportTask importantReportTask = new ReportTask(tags: [IMPORTANT_TAG])
             importantReportTask.assignImportant()
@@ -49,12 +50,19 @@ class ReportTaskSpec extends Specification {
             ReportTask notTaggedReportTask = new ReportTask()
             notImportantReportTask.assignImportant()
 
-            List<ReportTask> reportTasks = [notTaggedReportTask, importantReportTask, notImportantReportTask]
-            List<ReportTask> expectedSortedReportTasks = [importantReportTask, notTaggedReportTask, notImportantReportTask]
+            ReportTask dueTask_1 = new ReportTask(due_on: LocalDate.now().minusDays(1).toString())
+            notImportantReportTask.assignImportant()
+
+            ReportTask dueTask_2 = new ReportTask(due_on: LocalDate.now().toString())
+            notImportantReportTask.assignImportant()
+
+            List<ReportTask> reportTasks = [notTaggedReportTask, importantReportTask, notImportantReportTask,dueTask_1, dueTask_2]
+            List<ReportTask> expectedSortedReportTasks = [importantReportTask, notTaggedReportTask, notImportantReportTask,dueTask_1,dueTask_2]
 
         when:
             List<ReportTask> result = reportTasks.stream()
-                    .sorted(ReportTask.byImportance)
+                    .sorted(ReportTask.byImportance
+                                    .thenComparing(ReportTask.byDueDate))
                     .collect(Collectors.toList())
         then:
             result == expectedSortedReportTasks

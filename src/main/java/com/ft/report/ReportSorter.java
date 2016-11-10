@@ -27,7 +27,7 @@ public class ReportSorter {
         tags.stream().forEach(tag -> {
                     List<ReportTask> reportTasks = reportTasksToSort.get(tag);
                     if (reportTasks != null) {
-                        List<ReportTask> sortedReportTasks = sortByImportance(reportTasks);
+                        List<ReportTask> sortedReportTasks = sortByTagNameAndDueDate(reportTasks);
                         sortedResult.put(tag, sortedReportTasks);
                     }
                 }
@@ -57,10 +57,12 @@ public class ReportSorter {
                 .collect(Collectors.toList());
     }
 
-    private List<ReportTask> sortByImportance(List<ReportTask> reportTasks) {
+    private List<ReportTask> sortByTagNameAndDueDate(List<ReportTask> reportTasks) {
         return reportTasks.stream()
                 .peek(ReportTask::assignImportant)
-                .sorted(ReportTask.byImportance)
+                .sorted(ReportTask.byImportance
+                        .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(ReportTask.byDueDate))
                 .collect(Collectors.toList());
     }
 }

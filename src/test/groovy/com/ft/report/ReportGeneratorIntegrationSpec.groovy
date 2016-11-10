@@ -23,7 +23,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static final Long TEST_LEX_PROJECT_ID = 9876L
     private static final Long TEST_BIG_READ_PROJECT_1_ID = 100048121L
     private static final Long TEST__WEEKEND_PROJECT_1_ID = 987654323L
-    private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed"
+    private static final String optFields = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields"
 
     private static final LocalDateTime FRIDAY_EVENING = LocalDateTime.of(2015, Month.JUNE, 12, 15, 0)
     private static final ZoneId zoneId = ZoneId.systemDefault()

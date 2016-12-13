@@ -109,7 +109,6 @@ public class AsanaClientWrapper {
 
     public List<ReportTask> getReportTasks(String projectId) throws IOException  {
         return extendedTasks.findByProject(projectId)
-                .query("workspace", workspaceId)
                 .query("completed_since", "now")
                 .query("opt_fields", REPORT_TASK_FIELDS)
                 .execute();

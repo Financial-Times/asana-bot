@@ -1,4 +1,5 @@
 *.iml
+.env
 /.idea
 target
 /.DS_Store

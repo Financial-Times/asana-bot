@@ -300,7 +300,6 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/$projectId/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("completed_since", equalTo("now"))
-                .withQueryParam("workspace", equalTo(testWorkspaceId))
                 .withQueryParam("opt_fields", equalTo(optFields))
                 .willReturn(aResponse()
                 .withStatus(200)
@@ -312,7 +311,6 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         wireMockRule.stubFor(get(urlPathEqualTo("/api/1.0/projects/$projectId/tasks"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("completed_since", equalTo("now"))
-                .withQueryParam("workspace", equalTo(testWorkspaceId))
                 .withQueryParam("opt_fields", equalTo(optFields))
                 .willReturn(aResponse()
                 .withStatus(200)
@@ -324,7 +322,6 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         wireMockRule.verify(1, getRequestedFor(urlMatching(".*/projects/$projectId/tasks\\?.*"))
                 .withHeader("Authorization", containing(BASIC_AUTH_HEADER))
                 .withQueryParam("completed_since", equalTo("now"))
-                .withQueryParam("workspace", equalTo(testWorkspaceId))
                 .withQueryParam("opt_fields", matching(optFields))
         )
         return true

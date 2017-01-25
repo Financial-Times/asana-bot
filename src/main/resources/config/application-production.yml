@@ -73,6 +73,12 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
+      projectId: 189631157487152
+      name: vizbot plan
+      apiKey: ${VIZBOT_KEY}
+      runnerBean: taskOnProjectTaskRunner
+      runInterval: 20_000
+    -
       name: backup
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: backupTaskRunner

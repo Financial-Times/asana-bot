@@ -233,6 +233,13 @@ report:
       premiumTags: []
       showProjects: true
       reportCategory: WEEKEND
+    US Newsdesk:
+      projects:
+        -
+          id: 373770600581385
+          name: US Overnight List
+      groupTags: false
+      premiumTags: []
   displayTitles:
     81987306808740: Style
     81987306808741: Books

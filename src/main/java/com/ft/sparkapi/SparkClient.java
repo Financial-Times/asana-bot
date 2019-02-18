@@ -34,6 +34,7 @@ public class SparkClient {
                     .put("uuid", uuid)
                     .put("title", task.getName())
                     .put("author", "Asana User")
+                    .put("byline", "Asana User")
                     .put("desk", deskId)
                     .put("plannedPublishDate", dueDateStartOfDay(task.getDue_on())) //2019-02-15T00:00:00.000Z
                     .build();

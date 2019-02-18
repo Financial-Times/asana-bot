@@ -74,3 +74,9 @@ backup:
         - asana-bot-forward@ftqa.org
         - lucas.gluchowski@ft.com
       groups: []
+
+spark:
+  apiKey: 123456
+  url: spark_url
+  desks:
+    FTfm: 12345678

@@ -60,12 +60,13 @@ public class SparkStoryRunner implements TaskRunner {
      * @return a boolean
      */
     private static boolean isReadyForSpark(CustomTask task) {
-        Instant fiveMinsAgo = Instant.now().minus(5, ChronoUnit.MINUTES);
+        Instant fiveMinsAgo = Instant.now().minus(1, ChronoUnit.MINUTES);
         return task.getName() != null
+                && task.getName().matches(".*TEST.*")
                 && Instant.parse(task.getCreated_at()).isBefore(fiveMinsAgo)
                 && task.getCustom_fields()
-                .stream()
-                .noneMatch(d -> d.getName().equals("ORIGINAL UUID") && d.getText_value() != null);
+                        .stream()
+                        .noneMatch(d -> d.getName().equals("ORIGINAL UUID") && d.getText_value() != null);
     }
 
     /**

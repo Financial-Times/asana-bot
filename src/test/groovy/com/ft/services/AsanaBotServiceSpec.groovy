@@ -4,6 +4,7 @@ import com.asana.models.Tag
 import com.asana.models.Task
 import com.asana.models.Team
 import com.ft.asanaapi.AsanaClientWrapper
+import com.ft.asanaapi.model.CustomTask
 import com.ft.config.Config
 import com.ft.config.TaskBot
 import com.ft.tasks.TaskDueDateTaskRunner
@@ -84,11 +85,11 @@ class AsanaBotServiceSpec extends Specification {
     void "runBots - IOException doesn't break task loop"() {
         given:
             Project project = new Project()
-            Task task1 = new Task()
+            CustomTask task1 = new CustomTask()
             task1.projects = [project]
-            Task task2 = new Task()
+            CustomTask task2 = new CustomTask()
             task2.projects = [project]
-            List<Task> tasks = [task1, task2]
+            List<CustomTask> tasks = [task1, task2]
         when:
             service.runBots(TWENTY_SECONDS)
         then:
@@ -108,7 +109,7 @@ class AsanaBotServiceSpec extends Specification {
     void 'runBots - due date setter'() {
         given:
             mockDueDateTaskRunner = Spy(TaskDueDateTaskRunner)
-            Task task = new Task()
+            CustomTask task = new CustomTask()
             task.name = "names|2016-01-01T09:10:46.449Z"
             List<Task> tasks = [task]
         when:
@@ -117,7 +118,7 @@ class AsanaBotServiceSpec extends Specification {
             1 * mockTaskRunnerFactory.getTaskRunner('runner') >> mockDueDateTaskRunner
             1 * mockDueDateTaskRunner.run(bot)
         and:
-            1 * mockClient.getTasksByProject('11223344') >> tasks
+            1 * mockClient.getCustomTasks('11223344') >> tasks
             1 * mockClient.updateTask(task, _)
         and:
             0 * _

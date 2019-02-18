@@ -199,12 +199,6 @@
             <version>RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-booter</artifactId>
-            <version>3.0.0-M3</version>
-        </dependency>
-
     </dependencies>
 
     <build>

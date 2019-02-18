@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circleci-asana-bot
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/openjdk:8u181-jdk-node-browsers-legacy
     steps:
       - checkout
       - restore_cache:

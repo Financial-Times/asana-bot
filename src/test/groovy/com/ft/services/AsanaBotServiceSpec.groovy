@@ -85,9 +85,9 @@ class AsanaBotServiceSpec extends Specification {
     void "runBots - IOException doesn't break task loop"() {
         given:
             Project project = new Project()
-            CustomTask task1 = new CustomTask()
+            Task task1 = new Task()
             task1.projects = [project]
-            CustomTask task2 = new CustomTask()
+            Task task2 = new Task()
             task2.projects = [project]
             List<CustomTask> tasks = [task1, task2]
         when:

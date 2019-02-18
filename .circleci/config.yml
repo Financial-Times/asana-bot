@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circleci-asana-bot
     docker:
-      - image: carsharing/alpine-oraclejdk8-bash
+      - image: kugtong33/maven-oraclejdk
     steps:
       - checkout
       - restore_cache:

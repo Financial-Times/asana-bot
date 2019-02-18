@@ -1,6 +1,7 @@
-package com.ft.report.model;
+package com.ft.asanaapi.model;
 
 import com.asana.models.Tag;
+import com.ft.report.model.ImportantTag;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -23,19 +24,20 @@ import static java.util.Comparator.nullsLast;
 @Data
 @EqualsAndHashCode(exclude = "tags")
 @ToString(exclude = "tags")
-public class ReportTask {
+public class CustomTask {
     private String id;
     private String name;
     public String notes;
     public String due_on;
     public String due_at;
+    public String created_at;
     public boolean completed = false;
     public List<Tag> tags;
-    public List<ReportTask> subtasks;
+    public List<CustomTask> subtasks;
     public boolean important = false;
     private List<CustomField> custom_fields;
 
-    public ReportTask() {
+    public CustomTask() {
     }
 
     public void assignImportant() {
@@ -50,8 +52,8 @@ public class ReportTask {
     public String getNotes() {
         return StringUtils.replace(this.notes, "\n", "<br/>");
     }
-    public static final Comparator<ReportTask> byImportance = (rt1, rt2) -> Boolean.compare(rt2.isImportant(), rt1.isImportant());
-    public static final Comparator<ReportTask> byDueDate = nullsLast((rt1, rt2) -> rt1.getDateToUse().compareTo(rt2.getDateToUse()));
+    public static final Comparator<CustomTask> byImportance = (rt1, rt2) -> Boolean.compare(rt2.isImportant(), rt1.isImportant());
+    public static final Comparator<CustomTask> byDueDate = nullsLast((rt1, rt2) -> rt1.getDateToUse().compareTo(rt2.getDateToUse()));
 
     public Date getDateToUse() {
         Instant dateInstant;

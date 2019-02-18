@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circleci-asana-bot
     docker:
-      - image: circleci/openjdk:8-node-browsers-legacy
+      - image: carsharing/alpine-oraclejdk8-bash
     steps:
       - checkout
       - restore_cache:

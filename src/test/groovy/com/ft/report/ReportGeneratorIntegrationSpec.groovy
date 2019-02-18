@@ -2,8 +2,12 @@ package com.ft.report
 
 import com.asana.models.Tag
 import com.ft.asanaapi.AsanaClientWrapper
+import com.ft.asanaapi.model.CustomTask
 import com.ft.report.date.DueDatePredicateFactory
-import com.ft.report.model.*
+import com.ft.report.model.Criteria
+import com.ft.report.model.Project
+import com.ft.report.model.Report
+import com.ft.report.model.ReportType
 import com.ft.test.IntegrationSpec
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -43,9 +47,9 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'Companies'
             stubGetTasks(team, TEST_COMPANIES_PROJECT_ID)
-            List<ReportTask> expectedFinservTasks = createFinservTasks()
-            List<ReportTask> expectedNotTaggedTasks = createNotTaggedTask()
-            List<ReportTask> expectedOtherTasks = createOtherTask()
+            List<CustomTask> expectedFinservTasks = createFinservTasks()
+            List<CustomTask> expectedNotTaggedTasks = createNotTaggedTask()
+            List<CustomTask> expectedOtherTasks = createOtherTask()
             Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_COMPANIES_PROJECT_ID)])
 
         when:
@@ -69,7 +73,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'World'
             stubGetTasks(team, TEST_WORLD_PROJECT_ID)
-            List<ReportTask> expectedEuropeTasks = createEuropeTasks()
+            List<CustomTask> expectedEuropeTasks = createEuropeTasks()
             Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_WORLD_PROJECT_ID)])
 
         when:
@@ -90,7 +94,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'Lex'
             stubGetTasks(team, TEST_LEX_PROJECT_ID)
-            List<ReportTask> expectedLexTasks = createLexTasks()
+            List<CustomTask> expectedLexTasks = createLexTasks()
             Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_LEX_PROJECT_ID)])
 
         when:
@@ -111,7 +115,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'Big Read'
             stubGetTasks(team, TEST_BIG_READ_PROJECT_1_ID)
-            List<ReportTask> expectedBigReadTasks = createBigReadTasks()
+            List<CustomTask> expectedBigReadTasks = createBigReadTasks()
             Criteria criteria = new Criteria(reportType: ReportType.SUNDAY_FOR_MONDAY, team: team, projects: [new Project(id: TEST_BIG_READ_PROJECT_1_ID)])
 
         when:
@@ -132,7 +136,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         given:
             String team = 'Weekend'
             stubGetTasksForWeekend(team, TEST__WEEKEND_PROJECT_1_ID)
-            List<ReportTask> expectedWeekendRead = createWeekendReport()
+            List<CustomTask> expectedWeekendRead = createWeekendReport()
             Criteria criteria = new Criteria(reportType: ReportType.TWO_WEEKS, team: team, projects: [new Project(id: TEST__WEEKEND_PROJECT_1_ID)])
 
         when:
@@ -149,8 +153,8 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
             report.tagTasks[NOT_TAGGED] == expectedWeekendRead
     }
 
-    private static List<ReportTask> createFinservTasks() {
-        ReportTask reportTask = new ReportTask()
+    private static List<CustomTask> createFinservTasks() {
+        CustomTask reportTask = new CustomTask()
         reportTask.id = '37354116382321'
         reportTask.name = "Finserv task 1"
         reportTask.notes = "some notes"
@@ -159,7 +163,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask.subtasks = []
         reportTask.tags = [new Tag(id: 33751312101034, name: "Asia")]
 
-        ReportTask importantReportTask = new ReportTask()
+        CustomTask importantReportTask = new CustomTask()
         importantReportTask.id = '37354116382323'
         importantReportTask.name = "Finserv task 2"
         importantReportTask.notes = "some notes"
@@ -171,8 +175,8 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         return [importantReportTask, reportTask]
     }
 
-    private static List<ReportTask> createNotTaggedTask() {
-        ReportTask reportTask1 = new ReportTask()
+    private static List<CustomTask> createNotTaggedTask() {
+        CustomTask reportTask1 = new CustomTask()
         reportTask1.id = "37409461720410"
         reportTask1.name = "Test task 1"
         reportTask1.notes = ""
@@ -180,15 +184,15 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.due_on = "2015-06-14"
         reportTask1.tags = []
         reportTask1.subtasks = [
-                new ReportTask(id: '37409461720415', name: "pictures for test task 1", completed: true),
-                new ReportTask(id: '37409461720418', name: "graphics for test task 1", completed: false)
+                new CustomTask(id: '37409461720415', name: "pictures for test task 1", completed: true),
+                new CustomTask(id: '37409461720418', name: "graphics for test task 1", completed: false)
         ]
 
-        return [reportTask1] as List<ReportTask>
+        return [reportTask1] as List<CustomTask>
     }
 
-    private static List<ReportTask> createEuropeTasks() {
-        ReportTask reportTask1 = new ReportTask()
+    private static List<CustomTask> createEuropeTasks() {
+        CustomTask reportTask1 = new CustomTask()
         reportTask1.id = '37354116382321'
         reportTask1.name = "Europe task 1"
         reportTask1.notes = "some notes"
@@ -197,7 +201,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.tags = [new Tag(id: '33751312101034', name: 'Asia')]
         reportTask1.subtasks = []
 
-        ReportTask reportTask2 = new ReportTask()
+        CustomTask reportTask2 = new CustomTask()
         reportTask2.id = '37354116382322'
         reportTask2.name = "Europe task 2"
         reportTask2.notes = "some notes"
@@ -206,7 +210,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = []
         reportTask2.subtasks = []
 
-        ReportTask reportTask3 = new ReportTask()
+        CustomTask reportTask3 = new CustomTask()
         reportTask3.id = '37354116382323'
         reportTask3.name = "Important Europe task 3"
         reportTask3.important = true
@@ -216,12 +220,12 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask3.tags = [new Tag(id: '33751312101134', name: 'Level 1')]
         reportTask3.subtasks = []
 
-        return [reportTask3, reportTask1, reportTask2] as List<ReportTask>
+        return [reportTask3, reportTask1, reportTask2] as List<CustomTask>
     }
 
-    private static List<ReportTask> createLexTasks() {
+    private static List<CustomTask> createLexTasks() {
         Tag lawTag = new Tag(id: '32896507462027', name: 'Law')
-        ReportTask reportTask1 = new ReportTask()
+        CustomTask reportTask1 = new CustomTask()
         reportTask1.id = '37354116382321'
         reportTask1.name = "Lex task 1"
         reportTask1.notes = "some notes"
@@ -230,7 +234,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.tags = [lawTag, new Tag(id: '33751312101034', name: 'Justice')]
         reportTask1.subtasks = []
 
-        ReportTask reportTask2 = new ReportTask()
+        CustomTask reportTask2 = new CustomTask()
         reportTask2.id = '37354116382323'
         reportTask2.name = "Important Lex task 2"
         reportTask2.important = true
@@ -240,15 +244,15 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [lawTag, new Tag(id: '33751312101134', name: 'Level 1')]
         reportTask2.subtasks = []
 
-        return [reportTask2, reportTask1] as List<ReportTask>
+        return [reportTask2, reportTask1] as List<CustomTask>
     }
 
-    private static List<ReportTask> createBigReadTasks() {
+    private static List<CustomTask> createBigReadTasks() {
         Tag bigTag = new Tag(id: '32896507462037', name: 'Big')
         Tag readTag = new Tag(id: '33751312101038', name: 'Read')
         Tag level1Tag = new Tag(id: '33751312101134', name: 'Level 1')
 
-        ReportTask reportTask1 = new ReportTask()
+        CustomTask reportTask1 = new CustomTask()
         reportTask1.id = '37354116382321'
         reportTask1.name = "Big read project 1 task 1"
         reportTask1.notes = "some notes"
@@ -257,7 +261,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.tags = [bigTag, readTag]
         reportTask1.subtasks = []
 
-        ReportTask reportTask2 = new ReportTask()
+        CustomTask reportTask2 = new CustomTask()
         reportTask2.id = '37354116382323'
         reportTask2.name = "Important Big Read project 1 task 2"
         reportTask2.important = true
@@ -267,11 +271,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [bigTag, level1Tag]
         reportTask2.subtasks = []
 
-        return [reportTask2, reportTask1] as List<ReportTask>
+        return [reportTask2, reportTask1] as List<CustomTask>
     }
 
-    private static List<ReportTask> createWeekendReport() {
-        ReportTask reportTask2 = new ReportTask()
+    private static List<CustomTask> createWeekendReport() {
+        CustomTask reportTask2 = new CustomTask()
         reportTask2.id = 37354116382323
         reportTask2.name = "Weekend1, Weekend2"
         reportTask2.notes = "some notes"
@@ -280,11 +284,11 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [new Tag(id: '32896507462011', name: 'Unmapped tag')]
         reportTask2.subtasks = []
 
-        return [reportTask2] as List<ReportTask>
+        return [reportTask2] as List<CustomTask>
     }
 
-    private static List<ReportTask> createOtherTask() {
-        ReportTask reportTask2 = new ReportTask()
+    private static List<CustomTask> createOtherTask() {
+        CustomTask reportTask2 = new CustomTask()
         reportTask2.id = 37354116382322
         reportTask2.name = "Other task 1"
         reportTask2.notes = "some notes"
@@ -293,7 +297,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.tags = [new Tag(id: '32896507462011', name: 'Unmapped tag')]
         reportTask2.subtasks = []
 
-        return [reportTask2] as List<ReportTask>
+        return [reportTask2] as List<CustomTask>
     }
 
     private stubGetTasks(String desk, Long projectId) {

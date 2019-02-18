@@ -1,5 +1,6 @@
-package com.ft.report.model;
+package com.ft.asanaapi.model;
 
+import com.ft.report.model.CustomFieldEnumValue;
 import lombok.Data;
 
 @Data

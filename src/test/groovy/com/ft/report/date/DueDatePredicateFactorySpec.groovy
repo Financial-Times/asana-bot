@@ -1,6 +1,6 @@
 package com.ft.report.date
 
-import com.ft.report.model.ReportTask
+import com.ft.asanaapi.model.CustomTask
 import com.ft.report.model.ReportType
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -32,7 +32,7 @@ class DueDatePredicateFactorySpec extends Specification {
     @Unroll
     void "create and verify successful test - reportType: #reportType, dueDate: #dueDate"() {
         given:
-            ReportTask shouldPassPredicateReportTask = new ReportTask(due_on: dueDate.toString())
+            CustomTask shouldPassPredicateReportTask = new CustomTask(due_on: dueDate.toString())
 
         when:
             Predicate predicate = factory.create(reportType)
@@ -53,7 +53,7 @@ class DueDatePredicateFactorySpec extends Specification {
     @Unroll
     void "create and verify failure test - reportType: #reportType, dueDate: #dueDate"() {
         given:
-            ReportTask shouldFailPredicateReportTask = new ReportTask(due_on: dueDate.toString())
+            CustomTask shouldFailPredicateReportTask = new CustomTask(due_on: dueDate.toString())
 
         when:
             Predicate predicate = factory.create(reportType)

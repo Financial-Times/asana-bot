@@ -1,6 +1,7 @@
 package com.ft.report.model
 
 import com.asana.models.Tag
+import com.ft.asanaapi.model.CustomTask
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -13,13 +14,13 @@ class ReportTaskSpec extends Specification {
 
     void "isImportant with no tags"() {
         expect:
-            !new ReportTask().important
+            !new CustomTask().important
     }
 
     void "isImportant with not important tag"() {
         given:
             Tag tag = new Tag(name: 'dummy')
-            ReportTask reportTask = new ReportTask(tags: [tag])
+            CustomTask reportTask = new CustomTask(tags: [tag])
 
         when:
             reportTask.assignImportant()
@@ -30,7 +31,7 @@ class ReportTaskSpec extends Specification {
 
     void "isImportant with important tag"() {
         given:
-            ReportTask reportTask = new ReportTask(tags: [IMPORTANT_TAG])
+            CustomTask reportTask = new CustomTask(tags: [IMPORTANT_TAG])
 
         when:
             reportTask.assignImportant()
@@ -41,28 +42,28 @@ class ReportTaskSpec extends Specification {
 
     void 'sort collection of report tasks by importance, name and date'() {
         given:
-            ReportTask importantReportTask = new ReportTask(tags: [IMPORTANT_TAG])
+            CustomTask importantReportTask = new CustomTask(tags: [IMPORTANT_TAG])
             importantReportTask.assignImportant()
 
-            ReportTask notImportantReportTask = new ReportTask(tags: [NOT_IMPORTANT_TAG])
+            CustomTask notImportantReportTask = new CustomTask(tags: [NOT_IMPORTANT_TAG])
             notImportantReportTask.assignImportant()
 
-            ReportTask notTaggedReportTask = new ReportTask()
+            CustomTask notTaggedReportTask = new CustomTask()
             notImportantReportTask.assignImportant()
 
-            ReportTask dueTask_1 = new ReportTask(due_on: LocalDate.now().minusDays(1).toString())
+            CustomTask dueTask_1 = new CustomTask(due_on: LocalDate.now().minusDays(1).toString())
             notImportantReportTask.assignImportant()
 
-            ReportTask dueTask_2 = new ReportTask(due_on: LocalDate.now().toString())
+            CustomTask dueTask_2 = new CustomTask(due_on: LocalDate.now().toString())
             notImportantReportTask.assignImportant()
 
-            List<ReportTask> reportTasks = [notTaggedReportTask, importantReportTask, notImportantReportTask,dueTask_1, dueTask_2]
-            List<ReportTask> expectedSortedReportTasks = [importantReportTask, notTaggedReportTask, notImportantReportTask,dueTask_1,dueTask_2]
+            List<CustomTask> reportTasks = [notTaggedReportTask, importantReportTask, notImportantReportTask, dueTask_1, dueTask_2]
+            List<CustomTask> expectedSortedReportTasks = [importantReportTask, notTaggedReportTask, notImportantReportTask, dueTask_1, dueTask_2]
 
         when:
-            List<ReportTask> result = reportTasks.stream()
-                    .sorted(ReportTask.byImportance
-                                    .thenComparing(ReportTask.byDueDate))
+            List<CustomTask> result = reportTasks.stream()
+                    .sorted(CustomTask.byImportance
+                                    .thenComparing(CustomTask.byDueDate))
                     .collect(Collectors.toList())
         then:
             result == expectedSortedReportTasks
@@ -70,7 +71,7 @@ class ReportTaskSpec extends Specification {
 
     void "newline in notes becomes line break"() {
         given:
-            ReportTask reportTask = new ReportTask(notes: "note\n" +
+            CustomTask reportTask = new CustomTask(notes: "note\n" +
                     "with\n" +
                     "newline")
 

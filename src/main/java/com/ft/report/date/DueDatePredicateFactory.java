@@ -1,6 +1,6 @@
 package com.ft.report.date;
 
-import com.ft.report.model.ReportTask;
+import com.ft.asanaapi.model.CustomTask;
 import com.ft.report.model.ReportType;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class DueDatePredicateFactory {
         return dayPredicateFactories;
     }
 
-    public Predicate<ReportTask> create(ReportType reportType) {
+    public Predicate<CustomTask> create(ReportType reportType) {
         LocalDate today = LocalDate.now(clock);
         DayPredicateFactory dayPredicateFactory = dayPredicateFactories.get(reportType);
         return dayPredicateFactory.create(today);

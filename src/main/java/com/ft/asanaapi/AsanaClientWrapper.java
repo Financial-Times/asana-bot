@@ -3,10 +3,10 @@ package com.ft.asanaapi;
 import com.asana.Client;
 import com.asana.models.*;
 import com.ft.asanaapi.model.BackupTasks;
-import com.ft.asanaapi.model.ReportTasks;
+import com.ft.asanaapi.model.CustomTask;
+import com.ft.asanaapi.model.CustomTasks;
 import com.ft.asanaapi.model.UserTeams;
 import com.ft.backup.model.BackupTask;
-import com.ft.report.model.ReportTask;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,20 +15,20 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AsanaClientWrapper {
-    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
-    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields";
+    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at,notes,followers,created_atcustom_fields";
+    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields,created_at";
     private static final String BACKUP_TASK_FIELDS = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
 
     private final Client client;
-    private final ReportTasks extendedTasks;
+    private final CustomTasks extendedTasks;
     private final UserTeams userTeams;
     private final BackupTasks backupTasks;
     private final String workspaceId;
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
-        this.extendedTasks = new ReportTasks(client);
+        this.extendedTasks = new CustomTasks(client);
         this.userTeams = new UserTeams(client);
         this.backupTasks = new BackupTasks(client);
         this.workspaceId = workspaceId;
@@ -79,8 +79,8 @@ public class AsanaClientWrapper {
         return tags.stream().map(this::toTag).findFirst();
     }
 
-    public void updateTask(Task task, Map<String, Object> data) throws IOException {
-        client.tasks.update(task.id).data(data).execute();
+    public void updateTask(CustomTask task, Map<String, Object> data) throws IOException {
+        client.tasks.update(task.getId()).data(data).execute();
     }
 
     private Tag toTag(Workspace workspace) {
@@ -103,18 +103,18 @@ public class AsanaClientWrapper {
                 .query("opt_expand", PROJECT_FIELDS).execute();
     }
 
-    public Workspace getWorkspace() throws IOException  {
+    public Workspace getWorkspace() throws IOException {
         return client.workspaces.findById(workspaceId).execute();
     }
 
-    public List<ReportTask> getReportTasks(String projectId) throws IOException  {
+    public List<CustomTask> getCustomTasks(String projectId) throws IOException {
         return extendedTasks.findByProject(projectId)
                 .query("completed_since", "now")
                 .query("opt_fields", REPORT_TASK_FIELDS)
                 .execute();
     }
 
-    public List<Team> getUserTeams(String userId) throws IOException  {
+    public List<Team> getUserTeams(String userId) throws IOException {
         return userTeams.findByUser(userId)
                 .query("organization", workspaceId)
                 .execute();
@@ -147,9 +147,10 @@ public class AsanaClientWrapper {
                 .query("opt_fields", BACKUP_TASK_FIELDS)
                 .option("page_size", 100);
         //Redundant for loop is for Asana PageIterator so that it can page results
-        for(BackupTask task: tasksIterable) {
+        for (BackupTask task : tasksIterable) {
             tasks.add(task);
         }
         return tasks;
     }
+
 }

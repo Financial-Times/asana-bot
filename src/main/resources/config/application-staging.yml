@@ -261,3 +261,9 @@ backup:
         - claire.powell@ft.com
         - ola.okejimi@ft.com
         - mo.shawwa@ft.com
+
+spark:
+  apiKey: ${SPARK_API_KEY}
+  url: ${SPARK_API_URL}
+  desks:
+    FTfm: 5c406aeb9769670d4dafa977

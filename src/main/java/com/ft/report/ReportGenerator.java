@@ -2,6 +2,7 @@ package com.ft.report;
 
 import com.asana.models.Tag;
 import com.ft.asanaapi.AsanaClientWrapper;
+import com.ft.asanaapi.model.CustomTask;
 import com.ft.report.date.DueDatePredicateFactory;
 import com.ft.report.model.*;
 import lombok.Getter;
@@ -51,19 +52,19 @@ public class ReportGenerator {
         report.setProject(project);
         report.setGroupByTags(shouldGroupByTags(teamName));
 
-        List<ReportTask> reportTasks;
+        List<CustomTask> reportTasks;
         try {
-            reportTasks = defaultAsanaClientWrapper.getReportTasks(project.getId().toString());
+            reportTasks = defaultAsanaClientWrapper.getCustomTasks(project.getId().toString());
         } catch (IOException e) {
             logger.warn("Could not fetch report tasks for project: " + project.getId(), e);
             reportTasks = Collections.emptyList();
         }
-        Stream<ReportTask> reportTaskStream = reportTasks.stream()
+        Stream<CustomTask> reportTaskStream = reportTasks.stream()
                 .filter(rt -> rt.getDue_on() != null)
                 .filter(dueDatePredicateFactory.create(reportType));
 
-        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
-        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
+        Map<String, List<CustomTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
+        Map<String, List<CustomTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
         report.setTagTasks(sortedResult);
 
         return report;
@@ -75,12 +76,12 @@ public class ReportGenerator {
         project.setName(projectName.getName());
     }
 
-    private Map<String, List<ReportTask>> toTagsMap(String team, Stream<ReportTask> reportTaskStream) {
+    private Map<String, List<CustomTask>> toTagsMap(String team, Stream<CustomTask> reportTaskStream) {
         return reportTaskStream
                 .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())));
     }
 
-    private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {
+    private Map<String, List<CustomTask>> toOneTagMap(Stream<CustomTask> reportTaskStream) {
         return reportTaskStream
                 .collect(Collectors.groupingBy(rt -> NOT_TAGGED_TAG));
     }

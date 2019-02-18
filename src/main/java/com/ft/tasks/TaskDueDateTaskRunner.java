@@ -1,7 +1,7 @@
 package com.ft.tasks;
 
-import com.asana.models.Task;
 import com.ft.asanaapi.AsanaClientWrapper;
+import com.ft.asanaapi.model.CustomTask;
 import com.ft.config.TaskBot;
 import com.joestelmach.natty.Parser;
 import org.slf4j.Logger;
@@ -25,11 +25,11 @@ public class TaskDueDateTaskRunner implements TaskRunner {
     public void run(final TaskBot taskBot) {
         AsanaClientWrapper client = taskBot.getClient();
         try {
-            List<Task> tasks = client.getTasksByProject(taskBot.getProjectId());
+            List<CustomTask> tasks = client.getCustomTasks(taskBot.getProjectId());
             final String botName = taskBot.getName();
 
             tasks.stream().forEach(task -> {
-                Matcher matcher = TITLE_PATTERN.matcher(task.name);
+                Matcher matcher = TITLE_PATTERN.matcher(task.getName());
                 Map<String, Object> taskData = new HashMap<>();
                 while (matcher.find()) {
                     final String taskName = matcher.group(1);
@@ -39,7 +39,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                     taskData.put(dueDateField, parseDueDate(taskDueDate));
                     try {
                         client.updateTask(task, taskData);
-                        logger.info("{} bot successfully updated task: {} due date to {}.", botName, task.id, taskDueDate);
+                        logger.info("{} bot successfully updated task: {} due date to {}.", botName, task.getId(), taskDueDate);
                     } catch (IOException e) {
                         logger.error("error updating task", e);
                     }

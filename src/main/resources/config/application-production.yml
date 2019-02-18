@@ -79,6 +79,12 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
+      projectId: 48184142077370
+      name: FTfm Schedule
+      apiKey: ${FTFM_SCHEDULE_KEY}
+      runnerBean: sparkStoryRunner
+      runInterval: 20_000
+    -
       name: backup
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: backupTaskRunner
@@ -246,3 +252,9 @@ report:
     172199181928675: Magazine
     42850013094582: FT Money Ideas
     42850013094580: FT Money Topics
+
+spark:
+  apiKey: ${SPARK_API_KEY}
+  url: ${SPARK_API_URL}
+  desks:
+    FTfm: 5c406aeb9769670d4dafa977

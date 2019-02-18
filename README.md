@@ -27,6 +27,9 @@ Below environment variables must be set in order for the bot to be able to commu
 * ASANA_SCHEDULED_KEY
 * ASANA_OVERNIGHT_KEY
 * ASANA_GRAPHICS_DUE_DATE_BOT_KEY
+* FTFM_SCHEDULE_KEY
+* SPARK_API_KEY
+* SPARK_API_URL
 
 These need to be set with the corresponding [api](https://asana.com/guide/help/api/api) key of the user which the tasks will be moved as. 
 This user needs to have access to projects where tasks are being assigned and also the projects where tasks are being added. 

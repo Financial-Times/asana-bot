@@ -1,7 +1,7 @@
 package com.ft.report;
 
+import com.ft.asanaapi.model.CustomTask;
 import com.ft.report.model.Desk;
-import com.ft.report.model.ReportTask;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,14 +20,14 @@ public class ReportSorter {
     @Getter
     private Map<String, Desk> desks;
 
-    public Map<String, List<ReportTask>> sort(String team, Map<String, List<ReportTask>> reportTasksToSort) {
-        Map<String, List<ReportTask>> sortedResult = new LinkedHashMap<>();
+    public Map<String, List<CustomTask>> sort(String team, Map<String, List<CustomTask>> reportTasksToSort) {
+        Map<String, List<CustomTask>> sortedResult = new LinkedHashMap<>();
         List<String> tags = setupTags(team, reportTasksToSort);
 
         tags.stream().forEach(tag -> {
-                    List<ReportTask> reportTasks = reportTasksToSort.get(tag);
+                    List<CustomTask> reportTasks = reportTasksToSort.get(tag);
                     if (reportTasks != null) {
-                        List<ReportTask> sortedReportTasks = sortByTagNameAndDueDate(reportTasks);
+                        List<CustomTask> sortedReportTasks = sortByTagNameAndDueDate(reportTasks);
                         sortedResult.put(tag, sortedReportTasks);
                     }
                 }
@@ -35,7 +35,7 @@ public class ReportSorter {
         return sortedResult;
     }
 
-    private List<String> setupTags(String team, Map<String, List<ReportTask>> reportTasksToSort) {
+    private List<String> setupTags(String team, Map<String, List<CustomTask>> reportTasksToSort) {
         List<String> tags = desks.get(team).getPremiumTags();
 
         if (!arePremiumTagsConfigured(tags)) {
@@ -51,18 +51,18 @@ public class ReportSorter {
         return premiumTags != null;
     }
 
-    private List<String> addAllTags(Map<String, List<ReportTask>> result) {
+    private List<String> addAllTags(Map<String, List<CustomTask>> result) {
         return result.keySet().stream()
                 .filter(key -> !key.equals(ReportGenerator.NOT_TAGGED_TAG))
                 .collect(Collectors.toList());
     }
 
-    private List<ReportTask> sortByTagNameAndDueDate(List<ReportTask> reportTasks) {
+    private List<CustomTask> sortByTagNameAndDueDate(List<CustomTask> reportTasks) {
         return reportTasks.stream()
-                .peek(ReportTask::assignImportant)
-                .sorted(ReportTask.byImportance
-                        .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(ReportTask.byDueDate))
+                .peek(CustomTask::assignImportant)
+                .sorted(CustomTask.byImportance
+                        .thenComparing(CustomTask::getName, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(CustomTask.byDueDate))
                 .collect(Collectors.toList());
     }
 }

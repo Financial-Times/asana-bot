@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 public class DayAfterTomorrowPredicateFactory implements DayPredicateFactory {
     @Override
     public Predicate<ReportTask> create(LocalDate today) {
-        String tomorrow = today.plusDays(2).format(dateFormat);
-        return rt -> tomorrow.equals(rt.getDue_on());
+        String dayAfterTommorow = today.plusDays(2).format(dateFormat);
+        return rt -> dayAfterTommorow.equals(rt.getDue_on());
     }
 }

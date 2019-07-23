@@ -24,6 +24,7 @@ public class ReportDateBuilder {
         Map<ReportType, DateBuilder> dateBuilders = new HashMap<>();
         dateBuilders.put(ReportType.TODAY, new TodayDateBuilder());
         dateBuilders.put(ReportType.TOMORROW, new TomorrowDateBuilder());
+        dateBuilders.put(ReportType.DAY_AFTER_TOMORROW, new DayAfterTomorrowDateBuilder());
         dateBuilders.put(ReportType.SUNDAY_FOR_MONDAY, new ThisSundayDateBuilder());
         dateBuilders.put(ReportType.THIS_WEEK, new ThisWeekendDateBuilder());
         dateBuilders.put(ReportType.NEXT_WEEK, new NextWeekendDateBuilder());

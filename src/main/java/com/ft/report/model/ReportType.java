@@ -7,6 +7,7 @@ import java.util.*;
 public enum ReportType {
     SUNDAY_FOR_MONDAY(ReportCategory.WEEKDAY),
     TOMORROW(ReportCategory.WEEKDAY),
+    DAY_AFTER_TOMORROW(ReportCategory.WEEKDAY),
     TODAY(ReportCategory.WEEKDAY),
     THIS_WEEK(ReportCategory.WEEKEND),
     NEXT_WEEK(ReportCategory.WEEKEND),

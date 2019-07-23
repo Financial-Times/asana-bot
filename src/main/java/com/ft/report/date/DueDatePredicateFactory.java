@@ -26,6 +26,7 @@ public class DueDatePredicateFactory {
         Map<ReportType, DayPredicateFactory> dayPredicateFactories = new HashMap<>();
         dayPredicateFactories.put(ReportType.TODAY, new TodayPredicateFactory());
         dayPredicateFactories.put(ReportType.TOMORROW, new TomorrowPredicateFactory());
+        dayPredicateFactories.put(ReportType.DAY_AFTER_TOMORROW, new DayAfterTomorrowPredicateFactory());
         dayPredicateFactories.put(ReportType.SUNDAY_FOR_MONDAY, new SundayPredicateFactory());
         dayPredicateFactories.put(ReportType.THIS_WEEK, new ThisWeekPredicateFactory());
         dayPredicateFactories.put(ReportType.NEXT_WEEK, new NextWeekPredicateFactory());

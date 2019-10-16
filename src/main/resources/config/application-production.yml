@@ -55,18 +55,6 @@ asana:
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
     -
-      projectId: 144945446998057
-      name: 2ndfrontsbot
-      apiKey: ${ASANA_FRONT_UK_KEY}
-      runnerBean: taskOnProjectTaskRunner
-      runInterval: 20_000
-    -
-      projectId: 144945446998056
-      name: Frontsbot
-      apiKey: ${ASANA_FRONT_US_KEY}
-      runnerBean: taskOnProjectTaskRunner
-      runInterval: 20_000
-    -
       projectId: 181309235948088
       name: sunday plan
       apiKey: ${ASANA_SUNDAY_PLAN_KEY}

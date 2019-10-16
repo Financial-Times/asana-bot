@@ -32,6 +32,7 @@ public class TaskBot {
 
     public void setupClient(Map<String, String> tags, String workspaceId) {
         Client asanaClient = Client.accessToken(apiKey);
+        asanaClient.headers.put("Asana-Disable", "string_ids");
         client = new AsanaClientWrapper(asanaClient, workspaceId);
         this.tags = tags;
     }

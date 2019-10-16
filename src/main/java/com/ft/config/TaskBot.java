@@ -32,7 +32,7 @@ public class TaskBot {
 
     public void setupClient(Map<String, String> tags, String workspaceId) {
         Client asanaClient = Client.accessToken(apiKey);
-        asanaClient.headers.put("Asana-Disable", "string_ids");
+        asanaClient.headers.put("asana-disable", "string_ids"); // this is a short term fix for asana deprecation of integer id as per https://asana.com/developers/news/feed
         client = new AsanaClientWrapper(asanaClient, workspaceId);
         this.tags = tags;
     }

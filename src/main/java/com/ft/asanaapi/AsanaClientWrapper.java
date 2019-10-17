@@ -19,6 +19,7 @@ public class AsanaClientWrapper {
     private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields";
     private static final String BACKUP_TASK_FIELDS = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
+    private static final String DISABLE_HEADERS = "string_ids";
 
     private final Client client;
     private final ReportTasks extendedTasks;
@@ -28,6 +29,7 @@ public class AsanaClientWrapper {
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
+        this.client.headers.put("asana-disable", DISABLE_HEADERS); // this is a short term fix for asana deprecation of integer id as per https://asana.com/developers/news/feed
         this.extendedTasks = new ReportTasks(client);
         this.userTeams = new UserTeams(client);
         this.backupTasks = new BackupTasks(client);
@@ -48,6 +50,7 @@ public class AsanaClientWrapper {
         return client.tasks.findByProject(projectId)
                 .query("completed_since", "now")
                 .query("opt_fields", TASK_FIELDS)
+                .query("limit", 100)
                 .execute();
     }
 
@@ -147,8 +150,10 @@ public class AsanaClientWrapper {
                 .query("opt_fields", BACKUP_TASK_FIELDS)
                 .option("page_size", 100);
         //Redundant for loop is for Asana PageIterator so that it can page results
-        for(BackupTask task: tasksIterable) {
-            tasks.add(task);
+        if(tasksIterable != null) {
+            for (BackupTask task : tasksIterable) {
+                tasks.add(task);
+            }
         }
         return tasks;
     }

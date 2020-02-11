@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "id": 37354116382323,
+      "gid": "37354116382323",
       "name": "Weekend1, Weekend2",
       "notes": "some notes",
       "completed": false,
@@ -9,11 +9,11 @@
       "subtasks": [],
       "tags": [
         {
-          "id": 32896507462027,
+          "gid": "32896507462027",
           "name": "Law"
         },
         {
-          "id": 33751312101034,
+          "gid": "33751312101034",
           "name": "Justice"
         }
       ]

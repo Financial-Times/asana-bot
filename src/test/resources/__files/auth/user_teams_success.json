@@ -1,19 +1,19 @@
 {
   "data": [
     {
-      "id": 91001,
+      "gid": "91001",
       "name": "Markets"
     },
     {
-      "id": 91002,
+      "gid": "91002",
       "name": "World"
     },
     {
-      "id": 91003,
+      "gid": "91003",
       "name": "Companies"
     },
     {
-      "id": 91004,
+      "gid": "91004",
       "name": "Unauthorized team"
     }
   ]

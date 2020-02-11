@@ -18,7 +18,7 @@ class BackupTaskCellFormaterSpec extends Specification {
     void "execute - success"() {
         given:
             String expectedResult = 'test task'
-            BackupTask value = new BackupTask(id: 1, name: expectedResult)
+            BackupTask value = new BackupTask(gid: 1, name: expectedResult)
 
         expect:
             expectedResult == formatter.execute(value, TEST_CONTEXT)

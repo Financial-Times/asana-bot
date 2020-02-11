@@ -24,7 +24,7 @@ import static java.util.Comparator.nullsLast;
 @EqualsAndHashCode(exclude = "tags")
 @ToString(exclude = "tags")
 public class ReportTask {
-    private String id;
+    private String gid;
     private String name;
     public String notes;
     public String due_on;

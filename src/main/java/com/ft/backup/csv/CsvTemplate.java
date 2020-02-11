@@ -25,7 +25,7 @@ public class CsvTemplate {
     private static Map<String, CellProcessor> initMapping() {
         HashMap<String, CellProcessor> mapping = new LinkedHashMap<>();
         mapping.put("projects", PROJECTS_CELL_FORMATTER);
-        mapping.put("id", NOT_NULL_CELL_PROCESSOR);
+        mapping.put("gid", NOT_NULL_CELL_PROCESSOR);
         mapping.put("name", OPTIONAL_CELL_PROCESSOR);
         mapping.put("parent", PARENT_TASK_CELL_FORMATTER);
         mapping.put("notes", OPTIONAL_CELL_PROCESSOR);

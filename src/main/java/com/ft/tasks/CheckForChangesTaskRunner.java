@@ -57,7 +57,7 @@ public class CheckForChangesTaskRunner implements TaskRunner {
             Optional<Project> currentProjectCandidate = findMatchingProject(currentProjects, projectSummary.getId().toString());
             Project currentProject = currentProjectCandidate.isPresent() ? currentProjectCandidate.get() : null;
             Project asanaProject = new Project();
-            asanaProject.id = projectSummary.getId().toString();
+            asanaProject.gid = projectSummary.getId().toString();
             asanaProject.name = projectSummary.getName();
             Project previousProject = createReferenceProject(teamName, asanaProject);
             checkForChanges(projectChanges, previousProject, currentProject);
@@ -67,13 +67,13 @@ public class CheckForChangesTaskRunner implements TaskRunner {
 
     private Optional<Project> findMatchingProject(List<Project> currentProjects, String projectId) {
         return currentProjects.stream()
-                .filter(matchingProject -> matchingProject.id.equals(projectId))
+                .filter(matchingProject -> matchingProject.gid.equals(projectId))
                 .findFirst();
     }
 
     private Project createReferenceProject(String teamName, Project project) {
         Project previousProject = new Project();
-        previousProject.id= project.id;
+        previousProject.gid= project.gid;
         previousProject.isArchived = Boolean.FALSE;
         previousProject.name = project.name;
         Team previousTeam = new Team();

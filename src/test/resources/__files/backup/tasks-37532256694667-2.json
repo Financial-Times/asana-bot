@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "id": 37923809946088,
+      "gid": "37923809946088",
       "created_at": "2015-06-16T09:27:17.272Z",
       "modified_at": "2015-06-17T14:32:14.458Z",
       "name": "Sport task",
@@ -12,20 +12,20 @@
       "due_on": "2015-06-17",
       "due_at": null,
       "workspace": {
-        "id": 36628479813449,
+        "gid": "36628479813449",
         "name": "ftqa.org"
       },
       "assignee": null,
       "parent": null,
       "tags": [
         {
-          "id": 37923809946091,
+          "gid": "37923809946091",
           "name": "Sport"
         }
       ],
       "projects": [
         {
-          "id": 37532256694667,
+          "gid": "37532256694667",
           "name": "Test UK Topics"
         }
       ],
@@ -33,14 +33,14 @@
         {
           "section": null,
           "project": {
-            "id": 37532256694667,
+            "gid": "37532256694667",
             "name": "Test UK Topics"
           }
         }
       ],
       "subtasks": [
         {
-          "id": 38173635040235,
+          "gid": "38173635040235",
           "created_at": "2015-06-17T14:32:16.870Z",
           "modified_at": "2015-06-17T14:32:24.191Z",
           "name": "Sport substask 1",
@@ -51,12 +51,12 @@
           "due_on": null,
           "due_at": null,
           "workspace": {
-            "id": 36628479813449,
+            "gid": "36628479813449",
             "name": "ftqa.org"
           },
           "assignee": null,
           "parent": {
-            "id": 37923809946088,
+            "gid": "37923809946088",
             "name": "Sport task"
           },
           "subtasks": [],

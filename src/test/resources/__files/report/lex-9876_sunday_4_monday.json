@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "id": 37354116382321,
+      "gid": "37354116382321",
       "name": "Lex task 1",
       "notes": "some notes",
       "completed": false,
@@ -9,17 +9,17 @@
       "subtasks": [],
       "tags": [
         {
-          "id": 32896507462027,
+          "gid": "32896507462027",
           "name": "Law"
         },
         {
-          "id": 33751312101034,
+          "gid": "33751312101034",
           "name": "Justice"
         }
       ]
     },
     {
-      "id": 37354116382323,
+      "gid": "37354116382323",
       "name": "Important Lex task 2",
       "notes": "some important notes",
       "completed": false,
@@ -27,11 +27,11 @@
       "subtasks": [],
       "tags": [
         {
-          "id": 32896507462027,
+          "gid": "32896507462027",
           "name": "Law"
         },
         {
-          "id": 33751312101134,
+          "gid": "33751312101134",
           "name": "Level 1"
         }
       ]

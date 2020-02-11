@@ -44,7 +44,7 @@ public class AsanaBackupService {
 
     private void backupProject(Project project, File folder) {
         try {
-            List<BackupTask> tasks = defaultAsanaClientWrapper.findAllTasksByProject(project.id);
+            List<BackupTask> tasks = defaultAsanaClientWrapper.findAllTasksByProject(project.gid);
             String csv = toCSV(tasks);
             googleDriveService.uploadProjectFile(project, folder, csv);
         } catch (IOException e) {

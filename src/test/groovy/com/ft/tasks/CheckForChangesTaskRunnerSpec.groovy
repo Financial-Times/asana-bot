@@ -31,7 +31,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             deskConfig.desks = ['test desk': desk]
         and:
             Team team = new Team(name: 'test desk')
-            AsanaProject asanaProject = new AsanaProject(id: 12345, name: 'test project', team: team)
+            AsanaProject asanaProject = new AsanaProject(gid: 12345, name: 'test project', team: team)
         when:
             changesTaskRunner.run(mockTaskBot)
         then:
@@ -50,8 +50,8 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             deskConfig.desks = ['test desk': desk]
         and:
             Team team = new Team(name: 'test desk')
-            AsanaProject newProject = new AsanaProject(id: '12345', name: 'Project 1 renamed', team: team)
-            AsanaProject referenceProject = new AsanaProject(id: '12345', name: 'test project', team: team)
+            AsanaProject newProject = new AsanaProject(gid: '12345', name: 'Project 1 renamed', team: team)
+            AsanaProject referenceProject = new AsanaProject(gid: '12345', name: 'test project', team: team)
             ProjectChange projectChange = new ProjectChange(newProject, referenceProject)
             List<ProjectChange> changes = [projectChange]
         when:
@@ -73,8 +73,8 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             deskConfig.desks = ['test desk': desk]
         and:
             Team team = new Team(name: 'test desk')
-            AsanaProject newProject = new AsanaProject(id: '12345', name: 'Project 1 renamed', team: team, isArchived: true)
-            AsanaProject referenceProject = new AsanaProject(id: '12345', name: 'test project', team: team, isArchived: false)
+            AsanaProject newProject = new AsanaProject(gid: '12345', name: 'Project 1 renamed', team: team, isArchived: true)
+            AsanaProject referenceProject = new AsanaProject(gid: '12345', name: 'test project', team: team, isArchived: false)
             ProjectChange projectChange = new ProjectChange(newProject, referenceProject)
             List<ProjectChange> changes = [projectChange]
         when:
@@ -97,8 +97,8 @@ class CheckForChangesTaskRunnerSpec extends Specification {
         and:
             Team oldTeam = new Team(name: 'test desk')
             Team newTeam = new Team(name: 'another desk')
-            AsanaProject newProject = new AsanaProject(id: '12345', name: 'Project 1 renamed', team: newTeam)
-            AsanaProject referenceProject = new AsanaProject(id: '12345', name: 'test project', team: oldTeam)
+            AsanaProject newProject = new AsanaProject(gid: '12345', name: 'Project 1 renamed', team: newTeam)
+            AsanaProject referenceProject = new AsanaProject(gid: '12345', name: 'test project', team: oldTeam)
             ProjectChange projectChange = new ProjectChange(newProject, referenceProject)
             List<ProjectChange> changes = [projectChange]
         when:
@@ -120,7 +120,7 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             deskConfig.desks = ['test desk': desk]
         and:
             Team team = new Team(name: 'test desk')
-            AsanaProject referenceProject = new AsanaProject(id: '12345', name: 'test project', team: team)
+            AsanaProject referenceProject = new AsanaProject(gid: '12345', name: 'test project', team: team)
             ProjectChange projectChange = new ProjectChange(null, referenceProject)
             List<ProjectChange> changes = [projectChange]
         when:
@@ -142,8 +142,8 @@ class CheckForChangesTaskRunnerSpec extends Specification {
             deskConfig.desks = ['test desk': desk]
         and:
             Team team = new Team(name: 'test desk')
-            AsanaProject asanaProject = new AsanaProject(id: 12345, name: 'test project', team: team)
-            AsanaProject asanaProject2 = new AsanaProject(id: 456789, name: 'test project 2', team: team)
+            AsanaProject asanaProject = new AsanaProject(gid: 12345, name: 'test project', team: team)
+            AsanaProject asanaProject2 = new AsanaProject(gid: 456789, name: 'test project 2', team: team)
         when:
             changesTaskRunner.run(mockTaskBot)
         then:

@@ -19,7 +19,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 
 class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
 
-    private static final String DECODED_OPT_EXPAND = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name"
+    private static final String DECODED_OPT_EXPAND = "gid,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name"
     private static final String TEST_PICTURES_PROJECT_ID = "36788370362617"
     private static final String TEST_UK_PROJECT_ID = "37532256694667"
 
@@ -140,15 +140,17 @@ class AsanaBackupServiceIntegrationSpec extends IntegrationSpec {
     }
 
     private void listAndDeleteMyFiles(List<File> files) throws IOException {
-        BatchRequest batch = googleDriveService.drive.batch()
-        files.each { file ->
-            println file.getName()
-            try {
-                googleDriveService.drive.files().delete(file.getId()).queue(batch, callback)
-            } catch (Exception ignore) {
-                println "Didn't delete the file due to ${ignore.message}"
+        if(files != null) {
+            BatchRequest batch = googleDriveService.drive.batch()
+            files.each { file ->
+                println file.getName()
+                try {
+                    googleDriveService.drive.files().delete(file.getId()).queue(batch, callback)
+                } catch (Exception ignore) {
+                    println "Didn't delete the file due to ${ignore.message}"
+                }
             }
+            batch.execute()
         }
-        batch.execute()
     }
 }

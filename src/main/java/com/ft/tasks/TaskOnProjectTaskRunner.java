@@ -45,7 +45,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
                     client.unassignTask(task);
                     logTaskProcessingSuccess(botName,newProject, task);
                 } catch (IOException e) {
-                    logger.error("Could not process task: " + task.id, e);
+                    logger.error("Could not process task: " + task.gid, e);
                 }
             }
         } catch (IOException e) {
@@ -64,7 +64,7 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
         }
         Task parent = task.parent;
         if (parent == null) {
-            parent = client.getTask(task.id);
+            parent = client.getTask(task.gid);
         }
         if (attempts >= MAX_ATTEMPTS) {
             return null;
@@ -95,6 +95,6 @@ public class TaskOnProjectTaskRunner implements TaskRunner {
     }
 
     private void logTaskProcessingSuccess(final String botName, final Project project, final Task task) {
-        logger.info("{} bot successfully added task {} to {} project.", botName, task.id, project.id);
+        logger.info("{} bot successfully added task {} to {} project.", botName, task.gid, project.gid);
     }
 }

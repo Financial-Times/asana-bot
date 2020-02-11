@@ -36,7 +36,7 @@ public class TeamValidator {
         try {
             user = asanaClientWrapper.findUsersByWorkspace(email);
             if (user.isPresent()) {
-                teams = asanaClientWrapper.getUserTeams(user.get().id);
+                teams = asanaClientWrapper.getUserTeams(user.get().gid);
             } else {
                 throw new NonAsanaUserException();
             }

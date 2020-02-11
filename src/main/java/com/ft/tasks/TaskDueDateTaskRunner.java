@@ -39,7 +39,7 @@ public class TaskDueDateTaskRunner implements TaskRunner {
                     taskData.put(dueDateField, parseDueDate(taskDueDate));
                     try {
                         client.updateTask(task, taskData);
-                        logger.info("{} bot successfully updated task: {} due date to {}.", botName, task.id, taskDueDate);
+                        logger.info("{} bot successfully updated task: {} due date to {}.", botName, task.gid, taskDueDate);
                     } catch (IOException e) {
                         logger.error("error updating task", e);
                     }

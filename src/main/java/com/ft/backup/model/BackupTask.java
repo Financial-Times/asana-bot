@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 public class BackupTask {
 
-    private String id;
+    private String gid;
     private String name;
     @SerializedName("created_at")
     private String createdAt;

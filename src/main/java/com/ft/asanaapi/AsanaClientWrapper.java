@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class AsanaClientWrapper {
-    private static final String TASK_FIELDS = "id,name,projects,parent.id,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
+    private static final String TASK_FIELDS = "gid,name,projects,parent.gid,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
     private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields";
-    private static final String BACKUP_TASK_FIELDS = "id,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
+    private static final String BACKUP_TASK_FIELDS = "gid,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
-    private static final String DISABLE_HEADERS = "string_ids";
+    private static final String ENABLE_HEADERS = "string_ids,new_sections";
 
     private final Client client;
     private final ReportTasks extendedTasks;
@@ -29,7 +29,7 @@ public class AsanaClientWrapper {
 
     public AsanaClientWrapper(Client client, String workspaceId) {
         this.client = client;
-        this.client.headers.put("asana-disable", DISABLE_HEADERS); // this is a short term fix for asana deprecation of integer id as per https://asana.com/developers/news/feed
+        this.client.headers.put("asana-enable", ENABLE_HEADERS);
         this.extendedTasks = new ReportTasks(client);
         this.userTeams = new UserTeams(client);
         this.backupTasks = new BackupTasks(client);
@@ -59,7 +59,7 @@ public class AsanaClientWrapper {
     }
 
     public Task addTaskToProject(Task task, Project project) throws IOException {
-        return client.tasks.addProject(task.id).data("project", project.id).execute();
+        return client.tasks.addProject(task.gid).data("project", project.gid).execute();
     }
 
     public Task getTask(String taskId) throws IOException {
@@ -67,30 +67,23 @@ public class AsanaClientWrapper {
     }
 
     public Task tagTask(Task task, Tag tag) throws IOException {
-        return client.tasks.addTag(task.id).data("tag", tag.id).execute();
+        return client.tasks.addTag(task.gid).data("tag", tag.gid).execute();
     }
 
     public Task unassignTask(Task task) throws IOException {
-        return client.tasks.update(task.id).data("assignee", "null").execute();
+        return client.tasks.update(task.gid).data("assignee", "null").execute();
     }
 
     public Optional<Tag> findTagsByWorkspace(String tagName) throws IOException {
-        List<Workspace> tags = client.workspaces.typeahead(workspaceId)
+        List<Tag> tags = client.workspaces.tagTypeahead(workspaceId)
                 .query("query", tagName)
                 .query("type", "tag")
                 .execute();
-        return tags.stream().map(this::toTag).findFirst();
+        return tags.stream().findFirst();
     }
 
     public void updateTask(Task task, Map<String, Object> data) throws IOException {
-        client.tasks.update(task.id).data(data).execute();
-    }
-
-    private Tag toTag(Workspace workspace) {
-        Tag tag = new Tag();
-        tag.id = workspace.id;
-        tag.name = workspace.name;
-        return tag;
+        client.tasks.update(task.gid).data(data).execute();
     }
 
     public Tag createTag(String name) throws IOException {
@@ -98,7 +91,7 @@ public class AsanaClientWrapper {
     }
 
     public Task commentTask(Task task, String comment) throws IOException {
-        return client.tasks.addComment(task.id).data("text", comment).execute();
+        return client.tasks.addComment(task.gid).data("text", comment).execute();
     }
 
     public List<Project> getAllProjects() throws IOException {
@@ -124,18 +117,9 @@ public class AsanaClientWrapper {
     }
 
     public Optional<User> findUsersByWorkspace(String email) throws IOException {
-        List<Workspace> users = client.workspaces.typeahead(workspaceId)
-                .query("query", email)
-                .query("type", "user")
+        List<User> users = client.workspaces.userTypeahead(String.valueOf(workspaceId)).query("query", email)
                 .execute();
-        return users.stream().map(this::toUser).findFirst();
-    }
-
-    private User toUser(Workspace workspace) {
-        User user = new User();
-        user.id = workspace.id;
-        user.name = workspace.name;
-        return user;
+        return users.stream().findFirst();
     }
 
     public List<Project> findProjectsByWorkspace() throws IOException {

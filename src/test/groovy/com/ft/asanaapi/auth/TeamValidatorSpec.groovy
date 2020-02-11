@@ -37,7 +37,7 @@ class TeamValidatorSpec extends Specification {
 
         then:
             1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
-            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> teams
+            1 * mockAsanaClientWrapper.getUserTeams(USER.gid) >> teams
             1 * mockConfig.getAuthorizedTeams() >> configuredAuthorizedTeams
             0 * _
         and:
@@ -50,7 +50,7 @@ class TeamValidatorSpec extends Specification {
 
         then:
             1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
-            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> []
+            1 * mockAsanaClientWrapper.getUserTeams(USER.gid) >> []
             0 * _
         and:
             authorizedTeams == []
@@ -69,7 +69,7 @@ class TeamValidatorSpec extends Specification {
 
         then:
             1 * mockAsanaClientWrapper.findUsersByWorkspace(TEST_EMAIL) >> OPTIONAL_USER
-            1 * mockAsanaClientWrapper.getUserTeams(USER.id) >> userTeams
+            1 * mockAsanaClientWrapper.getUserTeams(USER.gid) >> userTeams
             1 * mockConfig.getAuthorizedTeams() >> configuredAuthorizedTeams
             0 * _
         and:

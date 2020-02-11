@@ -151,7 +151,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createFinservTasks() {
         ReportTask reportTask = new ReportTask()
-        reportTask.id = '37354116382321'
+        reportTask.gid = '37354116382321'
         reportTask.name = "Finserv task 1"
         reportTask.notes = "some notes"
         reportTask.completed = false
@@ -160,7 +160,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask.tags = [new Tag(id: 33751312101034, name: "Asia")]
 
         ReportTask importantReportTask = new ReportTask()
-        importantReportTask.id = '37354116382323'
+        importantReportTask.gid = '37354116382323'
         importantReportTask.name = "Finserv task 2"
         importantReportTask.notes = "some notes"
         importantReportTask.completed = false
@@ -173,15 +173,15 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createNotTaggedTask() {
         ReportTask reportTask1 = new ReportTask()
-        reportTask1.id = "37409461720410"
+        reportTask1.gid = "37409461720410"
         reportTask1.name = "Test task 1"
         reportTask1.notes = ""
         reportTask1.completed = false
         reportTask1.due_on = "2015-06-14"
         reportTask1.tags = []
         reportTask1.subtasks = [
-                new ReportTask(id: '37409461720415', name: "pictures for test task 1", completed: true),
-                new ReportTask(id: '37409461720418', name: "graphics for test task 1", completed: false)
+                new ReportTask(gid: '37409461720415', name: "pictures for test task 1", completed: true),
+                new ReportTask(gid: '37409461720418', name: "graphics for test task 1", completed: false)
         ]
 
         return [reportTask1] as List<ReportTask>
@@ -189,16 +189,16 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createEuropeTasks() {
         ReportTask reportTask1 = new ReportTask()
-        reportTask1.id = '37354116382321'
+        reportTask1.gid = '37354116382321'
         reportTask1.name = "Europe task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
         reportTask1.due_on = "2015-06-14"
-        reportTask1.tags = [new Tag(id: '33751312101034', name: 'Asia')]
+        reportTask1.tags = [new Tag(gid: '33751312101034', name: 'Asia')]
         reportTask1.subtasks = []
 
         ReportTask reportTask2 = new ReportTask()
-        reportTask2.id = '37354116382322'
+        reportTask2.gid = '37354116382322'
         reportTask2.name = "Europe task 2"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
@@ -207,7 +207,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask2.subtasks = []
 
         ReportTask reportTask3 = new ReportTask()
-        reportTask3.id = '37354116382323'
+        reportTask3.gid = '37354116382323'
         reportTask3.name = "Important Europe task 3"
         reportTask3.important = true
         reportTask3.notes = "some important notes"
@@ -222,7 +222,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
     private static List<ReportTask> createLexTasks() {
         Tag lawTag = new Tag(id: '32896507462027', name: 'Law')
         ReportTask reportTask1 = new ReportTask()
-        reportTask1.id = '37354116382321'
+        reportTask1.gid = '37354116382321'
         reportTask1.name = "Lex task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
@@ -231,7 +231,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.subtasks = []
 
         ReportTask reportTask2 = new ReportTask()
-        reportTask2.id = '37354116382323'
+        reportTask2.gid = '37354116382323'
         reportTask2.name = "Important Lex task 2"
         reportTask2.important = true
         reportTask2.notes = "some important notes"
@@ -249,7 +249,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         Tag level1Tag = new Tag(id: '33751312101134', name: 'Level 1')
 
         ReportTask reportTask1 = new ReportTask()
-        reportTask1.id = '37354116382321'
+        reportTask1.gid = '37354116382321'
         reportTask1.name = "Big read project 1 task 1"
         reportTask1.notes = "some notes"
         reportTask1.completed = false
@@ -258,7 +258,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
         reportTask1.subtasks = []
 
         ReportTask reportTask2 = new ReportTask()
-        reportTask2.id = '37354116382323'
+        reportTask2.gid = '37354116382323'
         reportTask2.name = "Important Big Read project 1 task 2"
         reportTask2.important = true
         reportTask2.notes = "some important notes"
@@ -272,7 +272,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createWeekendReport() {
         ReportTask reportTask2 = new ReportTask()
-        reportTask2.id = 37354116382323
+        reportTask2.gid = 37354116382323
         reportTask2.name = "Weekend1, Weekend2"
         reportTask2.notes = "some notes"
         reportTask2.completed = false
@@ -285,7 +285,7 @@ class ReportGeneratorIntegrationSpec extends IntegrationSpec {
 
     private static List<ReportTask> createOtherTask() {
         ReportTask reportTask2 = new ReportTask()
-        reportTask2.id = 37354116382322
+        reportTask2.gid = 37354116382322
         reportTask2.name = "Other task 1"
         reportTask2.notes = "some notes"
         reportTask2.completed = false

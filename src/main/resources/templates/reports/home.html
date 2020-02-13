@@ -1,90 +1,175 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
-<link rel="stylesheet" th:href="@{/css/report.css}" href="../../css/report.css"/>
-<link rel="shortcut icon" href="http://im.ft-static.com/m/icons/favicon.ico" type="image/x-icon" />
+  <link
+    rel="stylesheet"
+    media="all"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    th:href="@{/css/report.css}"
+    href="../../css/report.css"
+  />
+  <link
+    rel="shortcut icon"
+    href="http://im.ft-static.com/m/icons/favicon.ico"
+    type="image/x-icon"
+  />
 
-<!-- Origami imports -->
-<link rel="stylesheet" href="//origami-build.ft.com/v2/bundles/css?modules=o-header@^3.0.6,o-ft-icons@^2.3.7"/>
-<script src="//origami-build.ft.com/v2/bundles/js?modules=o-header@^3.0.6"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <!-- Origami imports -->
+  <link
+    rel="stylesheet"
+    href="//origami-build.ft.com/v2/bundles/css?modules=o-header@^3.0.6,o-ft-icons@^2.3.7"
+  />
+  <script src="//origami-build.ft.com/v2/bundles/js?modules=o-header@^3.0.6"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-<head>
+  <head>
     <title>Conference report</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div th:include="common :: body"></div>
+    <div class="clearfix"></div>
 
-<div th:include="common :: body"></div>
-<div class="clearfix"></div>
-
-<div class="printable-container">
-    <th:block th:each="reportMap, iterStat: ${reports}" th:with="reportList=${reportMap.value},reportName=${reportMap.key}">
-        <th:block th:each="report,listIterStat: ${reportList}" th:with="project=${report.project}">
-        <div th:if="${report.tagTasks.size() > 0}" class="container-fluid">
+    <div class="printable-container">
+      <th:block
+        th:each="reportMap, iterStat: ${reports}"
+        th:with="reportList=${reportMap.value},reportName=${reportMap.key}"
+      >
+        <th:block
+          th:each="report,listIterStat: ${reportList}"
+          th:with="project=${report.project}"
+        >
+          <div th:if="${report.tagTasks.size() > 0}" class="container-fluid">
             <div class="panel panel-default">
-                <div class="panel-heading" th:if="${listIterStat.count == 1}">
-                    <h3 class="panel-title">Report Output <a class="btn btn-default" role="button"
-                                                             href="javascript:window.print()">Print this report</a>
-                        <a th:if="${reports.size() > 0  and showEmailLink}" id="email-report" class="btn btn-default" role="button"
-                           href="#">Email Report</a>
-                    </h3>
+              <div class="panel-heading" th:if="${listIterStat.count == 1}">
+                <h3 class="panel-title"
+                  >Report Output
+                  <a
+                    class="btn btn-default"
+                    role="button"
+                    href="javascript:window.print()"
+                    >Print this report</a
+                  >
+                  <a
+                    th:if="${reports.size() > 0  and showEmailLink}"
+                    id="email-report"
+                    class="btn btn-default"
+                    role="button"
+                    href="#"
+                    >Email Report</a
+                  >
+                </h3>
+              </div>
+              <div class="panel-body printable">
+                <header>
+                  <img
+                    src="http://im.test.ft-static.com/m/img/masthead_main.jpg"
+                    width="115px"
+                  />
+                  <span
+                    th:text="${criteria.getReportType().formatAndAppendCategory()} + ${reportDate}"
+                    >title</span
+                  >
+                  <span th:text="'(' + ${criteria.getTeam()} + ' desk)'"
+                    >Selected team</span
+                  >
+                  <b
+                    th:if="${userTeams['__${criteria.team}__'].projects.size() > 1}"
+                    th:text="'(' + (${displayTitles['__${project.id}__']} ? ${displayTitles['__${project.id}__']} : ${reportName}) + ' project)'"
+                    >Multi-project team</b
+                  >
+                </header>
+
+                <div>
+                  <th:block th:each="tt: ${report.tagTasks}">
+                    <span
+                      th:if="${report.groupByTags}"
+                      class="tags"
+                      th:text="${tt.key}"
+                      >Tag</span
+                    >
+                    <span
+                      th:if="${report.groupBySections}"
+                      class="tags"
+                      th:text="${tt.key}"
+                      >Section</span
+                    >
+                    <table class="table table-condensed">
+                      <tbody
+                        th:if="${#lists.isEmpty(tt.value)}"
+                        th:text="None"
+                      ></tbody>
+                      <tbody th:unless="${#lists.isEmpty(tt.value)}">
+                        <tr th:each="task: ${tt.value}">
+                          <td>
+                            <div>
+                              <span
+                                th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"
+                              ></span>
+                              <b th:text="${task.name}"></b>
+                              <span
+                                class="tags_sm"
+                                th:unless="${#lists.isEmpty(task.tags)}"
+                              >
+                                <span
+                                  th:each="tag,iter : ${task.tags}"
+                                  th:text="${iter.last}? ${tag.name} : ${tag.name} + ','"
+                                  th:remove="tag"
+                                  >Secondary tags</span
+                                >
+                              </span>
+                              <span
+                                class="tags_sm bold"
+                                th:unless="${#lists.isEmpty(task.custom_fields)}"
+                              >
+                                <span
+                                  th:each="custom_field,iter : ${task.custom_fields}"
+                                  th:if="${custom_field.enum_value != null and custom_field.enum_value.name == 'Published'}"
+                                  th:text="${iter.last}? ${custom_field.name} +': '+ ${custom_field.enum_value.name} : ${custom_field.name} + ': ' + ${custom_field.enum_value.name} + ','"
+                                  th:remove="tag"
+                                  >Custom fields</span
+                                >
+                              </span>
+                              <span
+                                th:remove="tag"
+                                th:with="dateMask=${task.due_at != null ? 'dd-MMM-yyyy HH:mm:ss' : 'dd-MMM-yyyy'}"
+                              >
+                                <span
+                                  th:text="'Due: ' + ${#dates.format(task.getDateToUse(), dateMask)}"
+                                  >due date</span
+                                >
+                              </span>
+                            </div>
+                            <span
+                              th:if="${task.notes}"
+                              th:utext="${task.notes}"
+                              class="notes"
+                            ></span>
+                            <ul>
+                              <li th:each="subtask : ${task.subtasks}">
+                                <span th:text="${subtask.name}"
+                                  >Subtask name</span
+                                >
+                                <span
+                                  th:if="${subtask.completed}"
+                                  class="complete"
+                                  >&#10003;</span
+                                >
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </th:block>
                 </div>
-                <div class="panel-body printable">
-
-                    <header>
-                        <img src="http://im.test.ft-static.com/m/img/masthead_main.jpg" width="115px"/>
-                        <span th:text="${criteria.getReportType().formatAndAppendCategory()} + ${reportDate}">title</span>
-                        <span th:text="'(' + ${criteria.getTeam()} + ' desk)'">Selected team</span>
-                        <b th:if="${userTeams['__${criteria.team}__'].projects.size() > 1}" th:text="'(' + (${displayTitles['__${project.id}__']} ? ${displayTitles['__${project.id}__']} : ${reportName}) + ' project)'">Multi-project team</b>
-                    </header>
-
-                    <div>
-                        <th:block th:each="tt: ${report.tagTasks}">
-                            <span th:if="${report.groupByTags}" class="tags" th:text="${tt.key}">Tag</span>
-                            <table class="table table-condensed">
-                                <tbody th:if="${#lists.isEmpty(tt.value)}" th:text="None"></tbody>
-                                <tbody th:unless="${#lists.isEmpty(tt.value)}">
-                                <tr th:each="task: ${tt.value}">
-                                    <td>
-                                        <div>
-                                            <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
-                                            <b th:text="${task.name}" ></b>
-                                            <span class="tags_sm" th:unless="${#lists.isEmpty(task.tags)}">
-                                                <span th:each="tag,iter : ${task.tags}"
-                                                      th:text="${iter.last}? ${tag.name} : ${tag.name} + ','" th:remove="tag"
-                                                      >Secondary tags</span>
-                                            </span>
-                                            <span class="tags_sm bold" th:unless="${#lists.isEmpty(task.custom_fields)}">
-                                                <span th:each="custom_field,iter : ${task.custom_fields}" th:if="${custom_field.enum_value != null and custom_field.enum_value.name == 'Published'}"
-                                                      th:text="${iter.last}? ${custom_field.name} +': '+ ${custom_field.enum_value.name} : ${custom_field.name} + ': ' + ${custom_field.enum_value.name} + ','" th:remove="tag"
-                                                >Custom fields</span>
-                                            </span>
-                                            <span th:remove="tag" th:with="dateMask=${task.due_at != null ? 'dd-MMM-yyyy HH:mm:ss' : 'dd-MMM-yyyy'}">
-                                            <span th:text="'Due: ' + ${#dates.format(task.getDateToUse(), dateMask)}">due date</span>
-                                                </span>
-
-                                        </div>
-                                        <span th:if="${task.notes}" th:utext="${task.notes}" class="notes"></span>
-                                        <ul>
-                                            <li th:each="subtask : ${task.subtasks}">
-                                                <span th:text="${subtask.name}">Subtask name</span>
-                                                <span th:if="${subtask.completed}" class="complete">&#10003;</span>
-                                            </li>
-                                        </ul>
-
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </th:block>
-                    </div>
-                </div>
+              </div>
             </div>
-        </div>
+          </div>
         </th:block>
-    </th:block>
-</div>
-<div th:include="common :: footer"></div>
-
-</body>
+      </th:block>
+    </div>
+    <div th:include="common :: footer"></div>
+  </body>
 </html>

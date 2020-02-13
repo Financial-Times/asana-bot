@@ -173,6 +173,7 @@ report:
         - id: 1160158476341609
           name: Morning Conference
       groupTags: false
+      groupSections: true
       premiumTags: []
     Weekend:
       projects:

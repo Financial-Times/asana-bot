@@ -49,6 +49,7 @@
                                         <div>
                                             <span th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"></span>
                                             <b th:text="${task.name}" ></b>
+                                            <i class="tags_sm" th:text="${task.sectionName}" ></i>
                                             <span class="tags_sm" th:unless="${#lists.isEmpty(task.tags)}">
                                                 <span th:each="tag,iter : ${task.tags}"
                                                       th:text="${iter.last}? ${tag.name} : ${tag.name} + ','" th:remove="tag"

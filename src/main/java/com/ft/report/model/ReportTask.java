@@ -1,9 +1,8 @@
 package com.ft.report.model;
 
 import com.asana.models.Tag;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.asana.models.Task;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
@@ -34,6 +33,9 @@ public class ReportTask {
     public List<ReportTask> subtasks;
     public boolean important = false;
     private List<CustomField> custom_fields;
+    private List<Task.Membership> memberships;
+    @Getter(AccessLevel.NONE)
+    private String sectionName;
 
     public ReportTask() {
     }
@@ -68,5 +70,12 @@ public class ReportTask {
         LocalDateTime date = LocalDateTime.ofInstant(dateInstant, ZoneOffset.UTC);
         return Timestamp.valueOf(date);
 
+    }
+
+    public String getSectionName() {
+        if(memberships == null || memberships.isEmpty() || memberships.get(0).section == null) {
+            return null;
+        }
+        return memberships.get(0).section.name;
     }
 }

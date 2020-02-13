@@ -8,6 +8,7 @@ import java.util.List;
 public class Desk {
     private List<Project> projects;
     private boolean groupTags = false;
+    private boolean groupSections = false;
     private List<String> premiumTags;
     private boolean showProjects = false;
     private ReportCategory reportCategory = ReportCategory.WEEKDAY;

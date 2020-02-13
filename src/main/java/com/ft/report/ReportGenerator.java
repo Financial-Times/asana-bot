@@ -50,6 +50,7 @@ public class ReportGenerator {
         updateProject(project);
         report.setProject(project);
         report.setGroupByTags(shouldGroupByTags(teamName));
+        report.setGroupBySections(shouldGroupBySections(teamName));
 
         List<ReportTask> reportTasks;
         try {
@@ -62,7 +63,7 @@ public class ReportGenerator {
                 .filter(rt -> rt.getDue_on() != null)
                 .filter(dueDatePredicateFactory.create(reportType));
 
-        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
+        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : report.isGroupBySections() ? toSectionsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
         Map<String, List<ReportTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
         report.setTagTasks(sortedResult);
 
@@ -78,6 +79,11 @@ public class ReportGenerator {
     private Map<String, List<ReportTask>> toTagsMap(String team, Stream<ReportTask> reportTaskStream) {
         return reportTaskStream
                 .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())));
+    }
+
+    private Map<String, List<ReportTask>> toSectionsMap(String team, Stream<ReportTask> reportTaskStream) {
+        return reportTaskStream
+                .collect(Collectors.groupingBy(rt -> rt.getSectionName()));
     }
 
     private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {
@@ -108,5 +114,8 @@ public class ReportGenerator {
     private boolean shouldGroupByTags(String team) {
         desks.get(team).getPremiumTags();
         return desks.get(team).isGroupTags();
+    }
+    private boolean shouldGroupBySections(String team) {
+        return desks.get(team).isGroupSections();
     }
 }

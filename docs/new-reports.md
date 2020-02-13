@@ -37,6 +37,8 @@ report:
       premiumTags: []
 ```
 
-Importantly, the `id` is the id for the list and not the id for the overview!
+Importantly, the `id` is the id for the list and not the id for the overview.
+You can find the id in the URL for the list, eg:
+`https://app.asana.com/0/1160158476341609/list`
 
 4. Test with [asana reports](http://asanareports.ft.com/)

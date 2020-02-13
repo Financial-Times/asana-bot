@@ -89,6 +89,12 @@
                       th:text="${tt.key}"
                       >Tag</span
                     >
+                    <span
+                      th:if="${report.groupBySections}"
+                      class="sections"
+                      th:text="${tt.key}"
+                      >Section</span
+                    >
                     <table class="table table-condensed">
                       <tbody
                         th:if="${#lists.isEmpty(tt.value)}"
@@ -102,10 +108,6 @@
                                 th:class="${task.important} ? 'o-ft-icons-icon o-ft-icons-icon--arrow-upwards'"
                               ></span>
                               <b th:text="${task.name}"></b>
-                              <i
-                                class="tags_sm"
-                                th:text="${task.sectionName}"
-                              ></i>
                               <span
                                 class="tags_sm"
                                 th:unless="${#lists.isEmpty(task.tags)}"

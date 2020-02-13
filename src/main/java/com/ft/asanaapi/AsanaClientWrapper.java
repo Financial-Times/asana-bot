@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class AsanaClientWrapper {
     private static final String TASK_FIELDS = "gid,name,projects,parent.gid,parent.name,parent.projects.team.name,projects.team.name,due_on,due_at";
-    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields";
+    private static final String REPORT_TASK_FIELDS = "name,tags.name,due_on,notes,completed,subtasks.name,subtasks.completed,due_at,custom_fields,new_sections";
     private static final String BACKUP_TASK_FIELDS = "gid,name,created_at,modified_at,completed,completed_at,assignee.name,due_on,tags.name,notes,projects.name,parent.name";
     private static final String PROJECT_FIELDS = "this";
     private static final String ENABLE_HEADERS = "string_ids,new_sections";

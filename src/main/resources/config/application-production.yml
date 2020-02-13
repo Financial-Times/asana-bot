@@ -1,83 +1,69 @@
 asana:
   bots:
-    -
-      projectId: 108406100432614
+    - projectId: 108406100432614
       name: scheduled
       apiKey: ${ASANA_SCHEDULED_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 138637266190867
+    - projectId: 138637266190867
       name: Homepage UK
       apiKey: ${ASANA_OVERNIGHT_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 164832224821432
+    - projectId: 164832224821432
       name: homepage international
       apiKey: ${ASANA_HOMEPAGE_INTL_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 102068710859175
+    - projectId: 102068710859175
       name: design
       apiKey: ${ASANA_DESIGN_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 29414423499815
+    - projectId: 29414423499815
       name: picture
       apiKey: ${ASANA_PICTURES_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 28686036279645
+    - projectId: 28686036279645
       name: graphics
       apiKey: ${ASANA_GRAPHICS_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 28686036279645
+    - projectId: 28686036279645
       name: graphicsEmail
       apiKey: ${ASANA_GRAPHICS_DUE_DATE_BOT_KEY}
       runnerBean: taskDueDateTaskRunner
       runInterval: 20_000
-    -
-      projectId: 32896507461944
+    - projectId: 32896507461944
       name: companiesEmail
       apiKey: ${ASANA_COMPANIES_DUE_DATE_BOT_KEY}
       runnerBean: taskDueDateTaskRunner
       runInterval: 20_000
-    -
-      projectId: 37074265374689
+    - projectId: 37074265374689
       name: social
       apiKey: ${ASANA_SOCIAL_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 181309235948088
+    - projectId: 181309235948088
       name: sunday plan
       apiKey: ${ASANA_SUNDAY_PLAN_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      projectId: 189631157487152
+    - projectId: 189631157487152
       name: vizbot plan
       apiKey: ${VIZBOT_KEY}
       runnerBean: taskOnProjectTaskRunner
       runInterval: 20_000
-    -
-      name: backup
+    - name: backup
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: backupTaskRunner
       runInterval: 3_600_000 # one hour in milliseconds
-    -
-      name: check for changes
+    - name: check for changes
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: checkForChangesTaskRunner
       runInterval: 3_600_000 # one hour in milliseconds
-    -
-      name: Remove old backup files
+    - name: Remove old backup files
       apiKey: ${ASANA_REPORT_PERSONAL_KEY} # name will be aligned with standard once reportAsanaClient is removed
       runnerBean: removeOldBackupFilesTaskRunner
       runInterval: 3_600_000 # one hour in milliseconds
@@ -99,8 +85,7 @@ report:
   desks:
     Companies:
       projects:
-        -
-          id: 32896507461944
+        - id: 32896507461944
           name: Companies Topics
       groupTags: true
       premiumTags:
@@ -112,106 +97,94 @@ report:
         - Comment
     World:
       projects:
-        -
-          id: 28687437659749
+        - id: 28687437659749
           name: World Topics
       groupTags: true
       premiumTags: []
     UK:
       projects:
-        -
-          id: 33167799661044
+        - id: 33167799661044
           name: UK Topics
       groupTags: false
       premiumTags: []
     Markets:
       projects:
-        -
-          id: 32052433501773
+        - id: 32052433501773
           name: Markets Topics
       groupTags: false
       premiumTags: []
     Lex:
       projects:
-        -
-          id: 38342535680181
+        - id: 38342535680181
           name: Lex Topics
       groupTags: false
       premiumTags: []
     FTfm:
       projects:
-        -
-          id: 48184142077370
+        - id: 48184142077370
           name: FTfm Topics
       groupTags: false
       premiumTags: []
     Comment and Leaders:
       projects:
-        -
-          id: 48119832269549
+        - id: 48119832269549
           name: Comment and Leaders Forward Plan
           primary: true
       groupTags: false
       premiumTags: []
     Work & Careers:
       projects:
-        -
-          id: 50514423082937
+        - id: 50514423082937
           name: Work & Careers Daily
           primary: false
-        -
-          id: 50514423082939
+        - id: 50514423082939
           name: Business Life Forward Plan
           primary: true
       groupTags: false
       premiumTags: []
     Big Read:
       projects:
-        -
-          id: 50514423082943
+        - id: 50514423082943
           name: Big Read Topics
           primary: false
-        -
-          id: 50514423082945
+        - id: 50514423082945
           name: Big Read Forward Plan
           primary: true
       groupTags: false
       premiumTags: []
     Features Production:
       projects:
-        -
-          id: 50514423082949
+        - id: 50514423082949
           name: Features Production Daily Plan
           primary: false
-        -
-          id: 50514423082952
+        - id: 50514423082952
           name: Features Production Forward Plan
           primary: true
       groupTags: false
       premiumTags: []
     Video:
       projects:
-        -
-          id: 56381527297830
+        - id: 56381527297830
           name: Video
+      groupTags: false
+      premiumTags: []
+    Morning Conference:
+      projects:
+        - id: 1160911695141537
+          name: Morning Conference
       groupTags: false
       premiumTags: []
     Weekend:
       projects:
-        -
-          id: "172199181928665,172199181928664,172199181928666,172199181928667,172199181928670"
+        - id: "172199181928665,172199181928664,172199181928666,172199181928667,172199181928670"
           name: "Style,Arts,Books,Travel,Life & Arts"
-        -
-          id: "172199181928673,172199181928675"
+        - id: "172199181928673,172199181928675"
           name: "Food & Drink,Magazine"
-        -
-          id: 172199181928674
+        - id: 172199181928674
           name: House & Home
-        -
-          id: "42850013094582,42850013094580"
+        - id: "42850013094582,42850013094580"
           name: "FT Money Ideas,FT Money Topics"
-        -
-          id: 172199181928676
+        - id: 172199181928676
           name: Weekend Schedule
       groupTags: true
       premiumTags: []
@@ -219,8 +192,7 @@ report:
       reportCategory: WEEKEND
     US Newsdesk:
       projects:
-        -
-          id: 364505742664889
+        - id: 364505742664889
           name: US Overnight List
       groupTags: false
       premiumTags: []

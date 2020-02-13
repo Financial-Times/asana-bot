@@ -14,14 +14,13 @@ asana:
     - Big Read
     - Features Production
     - Video
+    - Morning Conference
     - Weekend
     - US Newsdesk
   emailTeams:
-    -
-      name: Video
+    - name: Video
       email: ${VIDEO_PLANNER_EMAIL}
-    -
-      name: Weekend
+    - name: Weekend
       email: ${WEEKEND_PROJECT_EMAIL}
   tags:
     Companies: COS
@@ -39,10 +38,10 @@ security:
   sessions: ALWAYS
 ---
 logging:
-    level:
-      com.ft: DEBUG
-      org.springframework.security: INFO
-      com.netflix.discovery: 'OFF'
+  level:
+    com.ft: DEBUG
+    org.springframework.security: INFO
+    com.netflix.discovery: "OFF"
 ---
 security:
   oauth2:
@@ -63,8 +62,8 @@ security:
 spring:
   thymeleaf.cache: false
   mail:
-      host: smtp.svc.ft.com
-      port: 25
+    host: smtp.svc.ft.com
+    port: 25
 ---
 report:
   hostDomain: ft.com

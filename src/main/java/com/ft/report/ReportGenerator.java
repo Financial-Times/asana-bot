@@ -64,7 +64,7 @@ public class ReportGenerator {
                 .filter(dueDatePredicateFactory.create(reportType));
 
         Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : report.isGroupBySections() ? toSectionsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
-        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
+        Map<String, List<ReportTask>> sortedResult = report.isGroupBySections ? reportSorter.sortBySections(unsortedTasks) : reportSorter.sort(teamName, unsortedTasks);
         report.setTagTasks(sortedResult);
 
         return report;
@@ -82,6 +82,7 @@ public class ReportGenerator {
     }
 
     private Map<String, List<ReportTask>> toSectionsMap(String team, Stream<ReportTask> reportTaskStream) {
+        
         return reportTaskStream
                 .collect(Collectors.groupingBy(rt -> rt.getSectionName()));
     }

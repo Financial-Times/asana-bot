@@ -35,6 +35,21 @@ public class ReportSorter {
         return sortedResult;
     }
 
+    public Map<String, List<ReportTask>> sortSections(Map<String, List<ReportTask>> reportTasksToSort) {
+      Map<String, List<ReportTask>> sortedResult = new LinkedHashMap<>();
+      List<String> sections = sortedResult;
+
+      sections.stream().forEach(section -> {
+                  List<ReportTask> reportTasks = reportTasksToSort.get(section);
+                  if (reportTasks != null) {
+                      List<ReportTask> sortedReportTasks = sortBySectionNameAndDueDate(reportTasks);
+                      sortedResult.put(tag, sortedReportTasks);
+                  }
+              }
+      );
+      return sortedResult;
+  }
+
     private List<String> setupTags(String team, Map<String, List<ReportTask>> reportTasksToSort) {
         List<String> tags = desks.get(team).getPremiumTags();
 
@@ -58,11 +73,22 @@ public class ReportSorter {
     }
 
     private List<ReportTask> sortByTagNameAndDueDate(List<ReportTask> reportTasks) {
-        return reportTasks.stream()
-                .peek(ReportTask::assignImportant)
-                .sorted(ReportTask.byImportance
-                        .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(ReportTask.byDueDate))
-                .collect(Collectors.toList());
+      return reportTasks.stream()
+              .peek(ReportTask::assignImportant)
+              .sorted(ReportTask.byImportance
+                      .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
+                      .thenComparing(ReportTask.byDueDate))
+              .collect(Collectors.toList());
+    }
+
+
+    // SORTING ORDER: Hong Kong, Markets, Companies, Tech, Lex, World, UK, Big Read, Comment, Work & Careers, Video, Special Reports, Magazine, Life & Arts, House & Home, Money
+    private List<ReportTask> sortBySectionNameAndDueDate(List<ReportTask> reportTasks) {
+      return reportTasks.stream()
+              .peek(ReportTask::assignImportant)
+              .sorted(ReportTask.byImportance
+                      .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
+                      .thenComparing(ReportTask.byDueDate))
+              .collect(Collectors.toList());
     }
 }

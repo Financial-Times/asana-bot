@@ -44,6 +44,23 @@ public class ReportGenerator {
         return reports;
     }
 
+    private Map<String, Integer> sectionsLoopUP = Stream.of(
+            new AbstractMap.SimpleEntry<>(1, "HONG KONG"),
+            new AbstractMap.SimpleEntry<>(2, "MARKETS"),
+            new AbstractMap.SimpleEntry<>(3, "COMPANIES"),
+            new AbstractMap.SimpleEntry<>(4, "TECH"),
+            new AbstractMap.SimpleEntry<>(5, "LEX"),
+            new AbstractMap.SimpleEntry<>(6, "WORLD"),
+            new AbstractMap.SimpleEntry<>(7, "UK"),
+            new AbstractMap.SimpleEntry<>(8, "BIG READ"),
+            new AbstractMap.SimpleEntry<>(9, "COMMENT"),
+            new AbstractMap.SimpleEntry<>(10, "VIDEO"),
+            new AbstractMap.SimpleEntry<>(11, "SPECIAL REPORTS"),
+            new AbstractMap.SimpleEntry<>(12, "MAGAZINE"),
+            new AbstractMap.SimpleEntry<>(13, "LIFE & ARTS"),
+            new AbstractMap.SimpleEntry<>(14, "HOUSE & HOME"),
+            new AbstractMap.SimpleEntry<>(15, "MONEY")).collect(Collectors.toMap(AbstractMap.SimpleEntry::getValue, AbstractMap.SimpleEntry::getKey));
+
     public Report generate(String teamName, Project project, ReportType reportType) {
 
         Report report = new Report();
@@ -63,8 +80,8 @@ public class ReportGenerator {
                 .filter(rt -> rt.getDue_on() != null)
                 .filter(dueDatePredicateFactory.create(reportType));
 
-        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : report.isGroupBySections() ? toSectionsMap(teamName, reportTaskStream) : toOneTagMap(reportTaskStream);
-        Map<String, List<ReportTask>> sortedResult = report.isGroupBySections ? reportSorter.sortBySections(unsortedTasks) : reportSorter.sort(teamName, unsortedTasks);
+        Map<String, List<ReportTask>> unsortedTasks = report.isGroupByTags() ? toTagsMap(teamName, reportTaskStream) : report.isGroupBySections() ? toSectionsMap(reportTaskStream) : toOneTagMap(reportTaskStream);
+        Map<String, List<ReportTask>> sortedResult = reportSorter.sort(teamName, unsortedTasks);
         report.setTagTasks(sortedResult);
 
         return report;
@@ -81,10 +98,21 @@ public class ReportGenerator {
                 .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())));
     }
 
-    private Map<String, List<ReportTask>> toSectionsMap(String team, Stream<ReportTask> reportTaskStream) {
-        
-        return reportTaskStream
+    private Map<String, List<ReportTask>> toSectionsMap(Stream<ReportTask> reportTaskStream) {
+
+        Map<String, List<ReportTask>> unsortedMap =  reportTaskStream
                 .collect(Collectors.groupingBy(rt -> rt.getSectionName()));
+
+        return unsortedMap
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey((a, b) -> {
+                    Integer firstValue = sectionsLoopUP.containsKey(a) ? sectionsLoopUP.get(a) : 100;
+                    Integer secondValue = sectionsLoopUP.containsKey(b) ? sectionsLoopUP.get(b) : 100;
+                    return firstValue.compareTo(secondValue);
+                }))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                        LinkedHashMap::new));
     }
 
     private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {

@@ -175,7 +175,7 @@ report:
       groupTags: false
       groupSections: true
       premiumTags: []
-      sortedSections: ["HONG KONG1", "MARKETS", "COMPANIES", "TECH", "LEX", "WORLD", "UK", "BIG READ", "COMMENT", "VIDEO", "SPECIAL REPORTS", "MAGAZINE", "LIFE & ARTS", "HOUSE & HOME", "MONEY"]
+      sortedSections: ["HONG KONG", "MARKETS", "COMPANIES", "TECH", "LEX", "WORLD", "UK", "BIG READ", "COMMENT", "VIDEO", "SPECIAL REPORTS", "MAGAZINE", "LIFE & ARTS", "HOUSE & HOME", "MONEY"]
     Weekend:
       projects:
         - id: "172199181928665,172199181928664,172199181928666,172199181928667,172199181928670"

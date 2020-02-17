@@ -35,21 +35,6 @@ public class ReportSorter {
         return sortedResult;
     }
 
-//    public Map<String, List<ReportTask>> sortBySections(Map<String, List<ReportTask>> reportTasksToSort) {
-//      Map<String, List<ReportTask>> sortedResult = new LinkedHashMap<>();
-//      List<String> sections = new ;
-//
-//      sections.stream().forEach(section -> {
-//                  List<ReportTask> reportTasks = reportTasksToSort.get(section);
-//                  if (reportTasks != null) {
-//                      List<ReportTask> sortedReportTasks = sortBySectionNameAndDueDate(reportTasks);
-//                      sortedResult.put(tag, sortedReportTasks);
-//                  }
-//              }
-//      );
-//      return sortedResult;
-//  }
-
     private List<String> setupTags(String team, Map<String, List<ReportTask>> reportTasksToSort) {
         List<String> tags = desks.get(team).getPremiumTags();
 

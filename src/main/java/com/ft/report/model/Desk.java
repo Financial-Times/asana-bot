@@ -12,4 +12,5 @@ public class Desk {
     private List<String> premiumTags;
     private boolean showProjects = false;
     private ReportCategory reportCategory = ReportCategory.WEEKDAY;
+    private List<String> sortedSections;
 }

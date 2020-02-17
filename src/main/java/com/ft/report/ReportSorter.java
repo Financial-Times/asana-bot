@@ -58,11 +58,12 @@ public class ReportSorter {
     }
 
     private List<ReportTask> sortByTagNameAndDueDate(List<ReportTask> reportTasks) {
-        return reportTasks.stream()
-                .peek(ReportTask::assignImportant)
-                .sorted(ReportTask.byImportance
-                        .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
-                        .thenComparing(ReportTask.byDueDate))
-                .collect(Collectors.toList());
+      return reportTasks.stream()
+              .peek(ReportTask::assignImportant)
+              .sorted(ReportTask.byImportance
+                      .thenComparing(ReportTask::getName, String.CASE_INSENSITIVE_ORDER)
+                      .thenComparing(ReportTask.byDueDate))
+              .collect(Collectors.toList());
     }
+
 }

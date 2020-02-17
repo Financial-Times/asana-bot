@@ -44,6 +44,7 @@ public class ReportGenerator {
         return reports;
     }
 
+
     public Report generate(String teamName, Project project, ReportType reportType) {
 
         Report report = new Report();
@@ -81,9 +82,19 @@ public class ReportGenerator {
                 .collect(Collectors.groupingBy(rt -> extractTagName(team, rt.getTags())));
     }
 
-    private Map<String, List<ReportTask>> toSectionsMap(String team, Stream<ReportTask> reportTaskStream) {
-        return reportTaskStream
+    private Map<String, List<ReportTask>> toSectionsMap(String teamName, Stream<ReportTask> reportTaskStream) {
+
+        Map<String, List<ReportTask>> unsortedMap =  reportTaskStream
                 .collect(Collectors.groupingBy(rt -> rt.getSectionName()));
+
+        List<String> sortedSections = desks.get(teamName).getSortedSections();
+
+        return unsortedMap
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.comparing(sortedSections::indexOf)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                        LinkedHashMap::new));
     }
 
     private Map<String, List<ReportTask>> toOneTagMap(Stream<ReportTask> reportTaskStream) {

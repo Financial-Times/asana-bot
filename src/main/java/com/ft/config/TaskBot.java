@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Getter @Setter
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"apiKey", "client"})
 public class TaskBot {
     private String name;
     private String projectId;

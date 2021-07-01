@@ -5,11 +5,13 @@ import com.ft.asanaapi.AsanaClientWrapper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Map;
 
 @Getter @Setter
 @NoArgsConstructor
+@ToString
 public class TaskBot {
     private String name;
     private String projectId;
